@@ -638,6 +638,39 @@
   }
 }
 
+@media (width >= 1800px) {
+  .header {
+    --header-company-column: 8.2%;
+    --header-news-column: 5.2%;
+    --header-products-column: 12.2%;
+    --header-technology-column: 11.8%;
+    --header-contact-column: 7%;
+    --header-actions-column: 6.6%;
+  }
+
+  .headerInner,
+  .desktopMegaGrid {
+    grid-template-columns:
+      minmax(0, 49%) var(--header-company-column) var(--header-news-column)
+      var(--header-products-column) var(--header-technology-column)
+      var(--header-contact-column) var(--header-actions-column);
+  }
+
+  .logoLink {
+    width: 320px;
+    margin-left: 76px;
+  }
+
+  .desktopTrigger {
+    padding: 0 8px;
+    font-size: 18px;
+  }
+
+  .headerActions {
+    gap: 22px;
+  }
+}
+
 @media (width <= 767px) {
   .header,
   .headerScrolled {

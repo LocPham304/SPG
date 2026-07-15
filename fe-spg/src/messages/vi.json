@@ -68,6 +68,28 @@
     "hero": {
       "firstLine": "Xây dựng thương hiệu hàng đầu trong nước",
       "secondLine": "Nhà sản xuất thiết bị cao cấp nổi tiếng thế giới"
+    },
+    "news": {
+      "eyebrow": "TIN TỨC",
+      "title": "Tin tức",
+      "readMore": "Đọc thêm",
+      "viewMore": "Xem thêm",
+      "tabsLabel": "Danh mục tin tức",
+      "backToTop": "Về đầu trang",
+      "loading": "Đang tải tin tức trang chủ",
+      "categories": {
+        "groupNews": "Tin tức tập đoàn",
+        "productDelivery": "Tiến độ bàn giao sản phẩm",
+        "notices": "Thông báo"
+      },
+      "empty": {
+        "title": "Chưa có tin đã xuất bản",
+        "description": "Tin tức sẽ xuất hiện tại đây sau khi được xuất bản."
+      },
+      "error": {
+        "title": "Tạm thời không thể tải tin tức",
+        "description": "Vui lòng thử lại sau."
+      }
     }
   },
   "about": {

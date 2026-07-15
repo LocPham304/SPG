@@ -68,6 +68,28 @@
     "hero": {
       "firstLine": "建设国内一流企业",
       "secondLine": "打造世界知名的高端装备制造商"
+    },
+    "news": {
+      "eyebrow": "新闻",
+      "title": "新闻资讯",
+      "readMore": "阅读更多",
+      "viewMore": "查看更多",
+      "tabsLabel": "新闻分类",
+      "backToTop": "返回顶部",
+      "loading": "正在加载首页新闻",
+      "categories": {
+        "groupNews": "集团新闻",
+        "productDelivery": "产品交付动态",
+        "notices": "公示公告"
+      },
+      "empty": {
+        "title": "暂无已发布新闻",
+        "description": "新闻发布后将在此处显示。"
+      },
+      "error": {
+        "title": "新闻暂时无法加载",
+        "description": "请稍后重试。"
+      }
     }
   },
   "about": {

@@ -68,6 +68,28 @@
     "hero": {
       "firstLine": "To build a domestic first-class",
       "secondLine": "A world-renowned manufacturer of high-end equipment"
+    },
+    "news": {
+      "eyebrow": "NEWS",
+      "title": "News",
+      "readMore": "Read more",
+      "viewMore": "View more",
+      "tabsLabel": "News categories",
+      "backToTop": "Back to top",
+      "loading": "Loading homepage news",
+      "categories": {
+        "groupNews": "Group news",
+        "productDelivery": "Product delivery dynamics",
+        "notices": "Notices"
+      },
+      "empty": {
+        "title": "No published news yet",
+        "description": "Published news will appear here when it becomes available."
+      },
+      "error": {
+        "title": "News is temporarily unavailable",
+        "description": "Please try again later."
+      }
     }
   },
   "about": {
