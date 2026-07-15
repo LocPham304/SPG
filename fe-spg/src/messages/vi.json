@@ -1,0 +1,55 @@
+{
+  "metadata": {
+    "siteName": "Shandong Port Equipment Group",
+    "defaultTitle": "Shandong Port Equipment Group",
+    "defaultDescription": "Sản phẩm, giải pháp và thông tin doanh nghiệp về thiết bị cảng.",
+    "pages": {
+      "home": { "title": "Trang chủ", "description": "Tổng quan về sản phẩm, giải pháp và hoạt động của doanh nghiệp." },
+      "companyProfile": { "title": "Hồ sơ công ty", "description": "Thông tin tổng quan về doanh nghiệp." },
+      "organization": { "title": "Sơ đồ tổ chức", "description": "Cấu trúc tổ chức của doanh nghiệp." },
+      "qualifications": { "title": "Năng lực công ty", "description": "Năng lực và chứng nhận của doanh nghiệp." },
+      "corporateCulture": { "title": "Văn hóa doanh nghiệp", "description": "Nền tảng văn hóa của doanh nghiệp." },
+      "products": { "title": "Sản phẩm và Giải pháp", "description": "Danh mục sản phẩm và giải pháp thiết bị cảng." },
+      "technology": { "title": "Đổi mới công nghệ", "description": "Năng lực nghiên cứu và đổi mới công nghệ." },
+      "news": { "title": "Tin tức", "description": "Tin tức và thông báo mới từ doanh nghiệp." },
+      "contact": { "title": "Liên hệ", "description": "Thông tin liên hệ và mạng lưới tiếp thị." }
+    }
+  },
+  "navigation": {
+    "home": "Trang chủ",
+    "about": "Giới thiệu",
+    "products": "Sản phẩm & Giải pháp",
+    "technology": "Đổi mới công nghệ",
+    "news": "Tin tức",
+    "contact": "Liên hệ",
+    "language": "Ngôn ngữ",
+    "primaryNavigation": "Điều hướng chính"
+  },
+  "common": {
+    "home": "Trang chủ",
+    "breadcrumb": "Điều hướng phân cấp",
+    "learnMore": "Tìm hiểu thêm",
+    "loading": "Đang tải",
+    "retry": "Thử lại",
+    "emptyTitle": "Chưa có nội dung",
+    "emptyDescription": "Nội dung sẽ được cập nhật sau.",
+    "foundationReady": "Nền tảng kỹ thuật đã sẵn sàng cho bước triển khai nội dung tiếp theo."
+  },
+  "home": { "title": "Trang chủ", "eyebrow": "Shandong Port Equipment Group" },
+  "about": {
+    "title": "Giới thiệu",
+    "companyProfile": { "title": "Hồ sơ công ty" },
+    "organization": { "title": "Sơ đồ tổ chức" },
+    "qualifications": { "title": "Năng lực công ty" },
+    "corporateCulture": { "title": "Văn hóa doanh nghiệp" }
+  },
+  "products": { "title": "Sản phẩm & Giải pháp" },
+  "technology": { "title": "Đổi mới công nghệ" },
+  "news": { "title": "Tin tức" },
+  "contact": { "title": "Liên hệ" },
+  "footer": { "copyright": "© {year} Shandong Port Equipment Group. Bảo lưu mọi quyền." },
+  "errors": {
+    "notFound": { "title": "Không tìm thấy trang", "description": "Trang bạn yêu cầu không tồn tại hoặc đã được di chuyển." },
+    "generic": { "title": "Đã xảy ra lỗi", "description": "Vui lòng thử lại sau." }
+  }
+}

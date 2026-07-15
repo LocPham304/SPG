@@ -1,0 +1,95 @@
+@use "../../styles/mixins" as *;
+
+.container {
+  @include container;
+}
+
+.sectionHeading {
+  display: grid;
+  gap: 10px;
+  max-width: 760px;
+}
+
+.sectionHeadingCenter {
+  margin-inline: auto;
+  text-align: center;
+}
+
+.eyebrow {
+  color: var(--color-primary);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.heading {
+  font-family: var(--font-heading);
+  font-size: clamp(2rem, 4vw, 3.75rem);
+  line-height: 1.12;
+  letter-spacing: -0.025em;
+}
+
+.description {
+  color: var(--color-text-muted);
+  font-size: clamp(1rem, 1.4vw, 1.125rem);
+}
+
+.breadcrumbs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+  list-style: none;
+}
+
+.breadcrumbLink:hover {
+  color: var(--color-primary);
+}
+
+.separator {
+  color: var(--color-border);
+}
+
+.pageHero {
+  display: grid;
+  min-height: 280px;
+  align-items: end;
+  padding-block: calc(var(--header-height) + 48px) 48px;
+  background: var(--color-surface-muted);
+}
+
+.pageHeroInner {
+  display: grid;
+  gap: 18px;
+}
+
+.pageTitle {
+  max-width: 900px;
+  font-family: var(--font-heading);
+  font-size: clamp(2.25rem, 5vw, 4.5rem);
+  line-height: 1.08;
+  letter-spacing: -0.035em;
+}
+
+.foundationSection {
+  padding-block: var(--section-space-desktop);
+}
+
+.foundationCopy {
+  max-width: 720px;
+  color: var(--color-text-muted);
+}
+
+@include mobile {
+  .pageHero {
+    min-height: 220px;
+    padding-block: calc(var(--header-height) + 40px) 36px;
+  }
+
+  .foundationSection {
+    padding-block: var(--section-space-mobile);
+  }
+}

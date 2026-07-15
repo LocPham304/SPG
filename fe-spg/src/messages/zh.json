@@ -1,0 +1,55 @@
+{
+  "metadata": {
+    "siteName": "Shandong Port Equipment Group",
+    "defaultTitle": "Shandong Port Equipment Group",
+    "defaultDescription": "港口设备产品、解决方案与企业信息。",
+    "pages": {
+      "home": { "title": "首页", "description": "企业产品、解决方案和业务动态概览。" },
+      "companyProfile": { "title": "公司简介", "description": "企业概况信息。" },
+      "organization": { "title": "组织架构", "description": "企业组织结构。" },
+      "qualifications": { "title": "企业资质", "description": "企业能力与资质信息。" },
+      "corporateCulture": { "title": "企业文化", "description": "企业文化基础。" },
+      "products": { "title": "产品与解决方案", "description": "港口设备产品与解决方案分类。" },
+      "technology": { "title": "技术创新", "description": "研发与技术创新能力。" },
+      "news": { "title": "新闻资讯", "description": "企业最新新闻与公告。" },
+      "contact": { "title": "联系我们", "description": "联系信息与营销网络。" }
+    }
+  },
+  "navigation": {
+    "home": "首页",
+    "about": "公司简介",
+    "products": "产品与解决方案",
+    "technology": "技术创新",
+    "news": "新闻资讯",
+    "contact": "联系我们",
+    "language": "语言",
+    "primaryNavigation": "主导航"
+  },
+  "common": {
+    "home": "首页",
+    "breadcrumb": "面包屑导航",
+    "learnMore": "了解更多",
+    "loading": "加载中",
+    "retry": "重试",
+    "emptyTitle": "暂无内容",
+    "emptyDescription": "内容将在后续更新。",
+    "foundationReady": "技术基础已准备好，可进入下一步内容实施。"
+  },
+  "home": { "title": "首页", "eyebrow": "Shandong Port Equipment Group" },
+  "about": {
+    "title": "公司简介",
+    "companyProfile": { "title": "公司简介" },
+    "organization": { "title": "组织架构" },
+    "qualifications": { "title": "企业资质" },
+    "corporateCulture": { "title": "企业文化" }
+  },
+  "products": { "title": "产品与解决方案" },
+  "technology": { "title": "技术创新" },
+  "news": { "title": "新闻资讯" },
+  "contact": { "title": "联系我们" },
+  "footer": { "copyright": "© {year} Shandong Port Equipment Group。保留所有权利。" },
+  "errors": {
+    "notFound": { "title": "页面未找到", "description": "您访问的页面不存在或已被移动。" },
+    "generic": { "title": "发生错误", "description": "请稍后重试。" }
+  }
+}

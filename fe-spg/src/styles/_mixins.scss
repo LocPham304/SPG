@@ -1,0 +1,18 @@
+@mixin focus-ring {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 3px;
+}
+
+@mixin container {
+  width: min(
+    calc(100% - (2 * var(--container-gutter))),
+    var(--container-width)
+  );
+  margin-inline: auto;
+}
+
+@mixin mobile {
+  @media (width <= 767px) {
+    @content;
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "metadata": {
+    "siteName": "Shandong Port Equipment Group",
+    "defaultTitle": "Shandong Port Equipment Group",
+    "defaultDescription": "Port equipment products, solutions and corporate information.",
+    "pages": {
+      "home": { "title": "Home", "description": "An overview of the company's products, solutions and activities." },
+      "companyProfile": { "title": "Company Profile", "description": "An overview of the company." },
+      "organization": { "title": "Organization Chart", "description": "The company's organizational structure." },
+      "qualifications": { "title": "Company Qualifications", "description": "The company's capabilities and qualifications." },
+      "corporateCulture": { "title": "Corporate Culture", "description": "The company's cultural foundation." },
+      "products": { "title": "Products & Solutions", "description": "Port equipment products and solution categories." },
+      "technology": { "title": "Technical Innovation", "description": "Research, development and technical innovation capabilities." },
+      "news": { "title": "News", "description": "The latest company news and notices." },
+      "contact": { "title": "Contact", "description": "Contact information and marketing network." }
+    }
+  },
+  "navigation": {
+    "home": "Home",
+    "about": "Company Profile",
+    "products": "Products & Solutions",
+    "technology": "Technical Innovation",
+    "news": "News",
+    "contact": "Contact",
+    "language": "Language",
+    "primaryNavigation": "Primary navigation"
+  },
+  "common": {
+    "home": "Home",
+    "breadcrumb": "Breadcrumb",
+    "learnMore": "Learn more",
+    "loading": "Loading",
+    "retry": "Try again",
+    "emptyTitle": "No content yet",
+    "emptyDescription": "Content will be available soon.",
+    "foundationReady": "The technical foundation is ready for the next content implementation step."
+  },
+  "home": { "title": "Home", "eyebrow": "Shandong Port Equipment Group" },
+  "about": {
+    "title": "Company Profile",
+    "companyProfile": { "title": "Company Profile" },
+    "organization": { "title": "Organization Chart" },
+    "qualifications": { "title": "Company Qualifications" },
+    "corporateCulture": { "title": "Corporate Culture" }
+  },
+  "products": { "title": "Products & Solutions" },
+  "technology": { "title": "Technical Innovation" },
+  "news": { "title": "News" },
+  "contact": { "title": "Contact" },
+  "footer": { "copyright": "© {year} Shandong Port Equipment Group. All rights reserved." },
+  "errors": {
+    "notFound": { "title": "Page not found", "description": "The requested page does not exist or has been moved." },
+    "generic": { "title": "Something went wrong", "description": "Please try again later." }
+  }
+}
