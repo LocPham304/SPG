@@ -156,6 +156,25 @@
           "status": "Đang xây dựng"
         }
       }
+    },
+    "solutions": {
+      "title": "Giải pháp hệ thống",
+      "subtitle": "Lĩnh vực kinh doanh bao phủ toàn bộ các kịch bản ứng dụng tại cảng",
+      "learnMore": "Tìm hiểu thêm",
+      "sliderLabel": "Danh mục giải pháp hệ thống",
+      "previous": "Xem các giải pháp trước",
+      "next": "Xem các giải pháp tiếp theo",
+      "imageAlt": "Thiết bị và ứng dụng của {category}",
+      "items": {
+        "containerHandling": "Hệ thống xếp dỡ container",
+        "dryBulk": "Hệ thống xếp dỡ hàng rời",
+        "breakbulk": "Hệ thống xếp dỡ hàng tổng hợp",
+        "liquefiedOil": "Hệ thống xếp dỡ dầu hóa lỏng",
+        "grainSilo": "Hệ thống bốc xếp silo ngũ cốc",
+        "smartLogistics": "Khu logistics thông minh",
+        "shipbuildingRepair": "Hệ thống đóng và sửa chữa tàu",
+        "otherServices": "Sản phẩm và dịch vụ khác"
+      }
     }
   },
   "about": {

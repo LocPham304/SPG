@@ -39,11 +39,11 @@
     "closeMenu": "关闭菜单",
     "closeSearch": "关闭搜索",
     "companyProfile": "公司简介",
-    "containerHandling": "集装箱装卸系统",
+    "containerHandling": "集装箱装卸系统解决方案",
     "contactPage": "联系我们",
     "corporateCulture": "企业文化",
     "currentAffairs": "时事新闻",
-    "dryBulk": "干散货装卸系统",
+    "dryBulk": "干散货装卸输送系统解决方案",
     "grainSilo": "粮食筒仓装卸系统",
     "groupNews": "集团新闻",
     "liquefiedOil": "液化油品装卸系统",
@@ -146,6 +146,25 @@
           "title": "淮海基地",
           "status": "建设中"
         }
+      }
+    },
+    "solutions": {
+      "title": "系统解决方案",
+      "subtitle": "业务领域全面覆盖港口应用场景",
+      "learnMore": "了解更多",
+      "sliderLabel": "系统解决方案分类",
+      "previous": "查看上一组解决方案",
+      "next": "查看下一组解决方案",
+      "imageAlt": "{category}设备与应用场景",
+      "items": {
+        "containerHandling": "集装箱装卸系统解决方案",
+        "dryBulk": "干散货装卸输送系统解决方案",
+        "breakbulk": "件杂货装卸系统",
+        "liquefiedOil": "液化油品装卸系统",
+        "grainSilo": "粮食筒仓装卸系统",
+        "smartLogistics": "智慧物流园区",
+        "shipbuildingRepair": "船舶建造与维修系统",
+        "otherServices": "其他产品与服务"
       }
     }
   },

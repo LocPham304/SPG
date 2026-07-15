@@ -156,6 +156,25 @@
           "status": "Under construction"
         }
       }
+    },
+    "solutions": {
+      "title": "System solutions",
+      "subtitle": "The business field realizes full coverage of port application scenarios",
+      "learnMore": "Learn more",
+      "sliderLabel": "System solution categories",
+      "previous": "Previous solutions",
+      "next": "Next solutions",
+      "imageAlt": "{category} equipment and application",
+      "items": {
+        "containerHandling": "Container handling systems",
+        "dryBulk": "Dry bulk handling systems",
+        "breakbulk": "Breakbulk handling systems",
+        "liquefiedOil": "Liquefied oil handling systems",
+        "grainSilo": "Grain silo loading and unloading system",
+        "smartLogistics": "Smart logistics park",
+        "shipbuildingRepair": "Shipbuilding and repairing systems",
+        "otherServices": "Other products and services"
+      }
     }
   },
   "about": {

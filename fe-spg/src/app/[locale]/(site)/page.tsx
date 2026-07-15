@@ -11,6 +11,7 @@ import {
   NewsSkeleton,
   type HomeNewsQaState,
 } from "@/components/home/HomeNews";
+import { HomeSolutionsSection } from "@/components/home/HomeSolutions";
 import { isAppLocale } from "@/i18n/routing";
 import { getStaticPageMetadata } from "@/lib/seo";
 
@@ -55,6 +56,7 @@ export default async function HomePage({ params, searchParams }: HomePageProps) 
       </Suspense>
       <HomeAboutSection locale={locale} />
       <HomeBasesSection locale={locale} />
+      <HomeSolutionsSection locale={locale} />
     </>
   );
 }

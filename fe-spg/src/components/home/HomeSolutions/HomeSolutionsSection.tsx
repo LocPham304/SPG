@@ -1,0 +1,60 @@
+import { getTranslations } from "next-intl/server";
+
+import { LocalizedLink } from "@/components/common/LocalizedLink";
+import { homeSolutionItems } from "@/data/home-solutions";
+import type { AppLocale } from "@/i18n/routing";
+
+import { HomeSolutionsSlider } from "./HomeSolutionsSlider.client";
+import styles from "./HomeSolutions.module.scss";
+
+type HomeSolutionsSectionProps = {
+  locale: AppLocale;
+};
+
+export async function HomeSolutionsSection({
+  locale,
+}: HomeSolutionsSectionProps) {
+  const t = await getTranslations({ locale, namespace: "home.solutions" });
+  const items = homeSolutionItems.map((item) => {
+    const title = t(`items.${item.id}`);
+
+    return {
+      ...item,
+      title,
+      imageAlt: t("imageAlt", { category: title }),
+    };
+  });
+
+  return (
+    <section
+      className={styles.section}
+      aria-labelledby="home-solutions-title"
+      data-home-solutions
+    >
+      <div className={styles.background} aria-hidden="true" />
+      <div className={styles.inner}>
+        <header className={styles.header}>
+          <div>
+            <h2 id="home-solutions-title" className={styles.heading}>
+              {t("title")}
+            </h2>
+            <p className={styles.subtitle}>{t("subtitle")}</p>
+          </div>
+
+          <LocalizedLink className={styles.learnMore} href="/products">
+            <span>{t("learnMore")}</span>
+            <span className={styles.linkArrow} aria-hidden="true" />
+          </LocalizedLink>
+        </header>
+
+        <HomeSolutionsSlider
+          items={items}
+          sliderLabel={t("sliderLabel")}
+          previousLabel={t("previous")}
+          nextLabel={t("next")}
+        />
+      </div>
+    </section>
+  );
+}
+
