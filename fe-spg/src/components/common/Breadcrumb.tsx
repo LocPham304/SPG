@@ -9,9 +9,14 @@ export type BreadcrumbItem = {
 type BreadcrumbProps = {
   items: readonly BreadcrumbItem[];
   ariaLabel: string;
+  separator?: string;
 };
 
-export function Breadcrumb({ items, ariaLabel }: BreadcrumbProps) {
+export function Breadcrumb({
+  items,
+  ariaLabel,
+  separator = "/",
+}: BreadcrumbProps) {
   return (
     <nav aria-label={ariaLabel}>
       <ol className={styles.breadcrumbs}>
@@ -19,7 +24,7 @@ export function Breadcrumb({ items, ariaLabel }: BreadcrumbProps) {
           <li key={`${item.label}-${index}`}>
             {index > 0 ? (
               <span aria-hidden="true" className={styles.separator}>
-                /
+                {separator}
               </span>
             ) : null}{" "}
             {item.href ? (

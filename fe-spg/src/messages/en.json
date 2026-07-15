@@ -83,6 +83,8 @@
     "home": "Home",
     "breadcrumb": "Breadcrumb",
     "learnMore": "Learn more",
+    "previous": "Previous bases",
+    "next": "Next bases",
     "loading": "Loading",
     "retry": "Try again",
     "emptyTitle": "No content yet",
@@ -240,7 +242,11 @@
   },
   "about": {
     "title": "Company Profile",
-    "companyProfile": { "title": "Company Profile" },
+    "subNavigationLabel": "Company profile navigation",
+    "companyProfile": {
+      "title": "Company Profile",
+      "groupProfile": "Group profile"
+    },
     "organization": { "title": "Organization Chart" },
     "qualifications": { "title": "Company Qualifications" },
     "corporateCulture": { "title": "Corporate Culture" }

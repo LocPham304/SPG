@@ -1,0 +1,209 @@
+.section {
+  overflow: hidden;
+  padding-block: clamp(72px, 5.7vw, 110px) clamp(92px, 7.3vw, 140px);
+  background: #fff;
+}
+
+.container {
+  width: min(calc(100% - 20vw), 1520px);
+  max-width: none;
+}
+
+.heading {
+  margin: 0 0 clamp(34px, 2.4vw, 46px);
+  color: #147bc1;
+  font-size: clamp(28px, 1.8vw, 35px);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.sliderShell,
+.slider {
+  overflow: visible;
+}
+
+.slide {
+  height: auto;
+}
+
+.card {
+  position: relative;
+  height: 100%;
+  min-height: clamp(310px, 18.2vw, 350px);
+  overflow: hidden;
+  padding: clamp(36px, 2.6vw, 50px);
+  background: #fff;
+  box-shadow: 0 5px 24px rgb(31 55 73 / 10%);
+}
+
+.cardTitle {
+  position: relative;
+  z-index: 1;
+  margin: 0 0 clamp(32px, 2.25vw, 44px);
+  color: #147bc1;
+  font-size: clamp(20px, 1.25vw, 24px);
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.cardDescriptions {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  max-width: 83%;
+  gap: 8px;
+  color: #666;
+  font-size: clamp(14px, 0.94vw, 18px);
+  font-weight: 600;
+  line-height: 1.75;
+}
+
+.cardDescriptions p {
+  margin: 0;
+}
+
+.learnMore {
+  position: absolute;
+  z-index: 2;
+  bottom: clamp(38px, 2.5vw, 48px);
+  left: clamp(36px, 2.6vw, 50px);
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  color: #147bc1;
+  font-size: clamp(13px, 0.83vw, 16px);
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.learnMoreArrow {
+  position: relative;
+  width: 26px;
+  height: 1px;
+  background: currentcolor;
+}
+
+.learnMoreArrow::after {
+  position: absolute;
+  top: -3px;
+  right: 0;
+  width: 7px;
+  height: 7px;
+  border-top: 1px solid currentcolor;
+  border-right: 1px solid currentcolor;
+  content: "";
+  transform: rotate(45deg);
+}
+
+.illustration {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: auto;
+  max-width: 42%;
+  height: auto;
+  object-fit: contain;
+}
+
+.controls {
+  display: flex;
+  justify-content: flex-end;
+  gap: 14px;
+  margin-top: 34px;
+  padding-right: 2.2vw;
+}
+
+.controlButton {
+  display: grid;
+  width: clamp(50px, 3.1vw, 60px);
+  height: clamp(50px, 3.1vw, 60px);
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  place-items: center;
+  background: #a8a8a8;
+  color: #fff;
+  cursor: pointer;
+  transition:
+    background-color 220ms ease,
+    transform 220ms ease;
+}
+
+.controlButton svg {
+  width: 22px;
+  height: 22px;
+  stroke-width: 2.5;
+}
+
+.controlButton:hover:not(:disabled) {
+  background: #8f8f8f;
+  transform: translateY(-2px);
+}
+
+.controlButton:focus-visible {
+  outline: 3px solid rgb(20 123 193 / 35%);
+  outline-offset: 3px;
+}
+
+.controlButton:disabled {
+  background: #e5e5e5;
+  cursor: default;
+}
+
+@media (width <= 767px) {
+  .section {
+    padding-block: 56px 76px;
+  }
+
+  .container {
+    width: calc(100% - 40px);
+  }
+
+  .heading {
+    margin-bottom: 28px;
+    font-size: 26px;
+  }
+
+  .card {
+    min-height: 330px;
+    padding: 32px 28px;
+  }
+
+  .cardTitle {
+    margin-bottom: 26px;
+    font-size: 21px;
+  }
+
+  .cardDescriptions {
+    max-width: 88%;
+    font-size: 14px;
+    line-height: 1.65;
+  }
+
+  .learnMore {
+    bottom: 34px;
+    left: 28px;
+    font-size: 13px;
+  }
+
+  .illustration {
+    max-width: 43%;
+  }
+
+  .controls {
+    gap: 10px;
+    margin-top: 26px;
+    padding-right: 0;
+  }
+
+  .controlButton {
+    width: 48px;
+    height: 48px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .controlButton {
+    transition: none;
+  }
+}

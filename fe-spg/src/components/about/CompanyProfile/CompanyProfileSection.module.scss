@@ -1,0 +1,194 @@
+.section {
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+  padding-block: clamp(72px, 6.25vw, 120px) clamp(84px, 7.3vw, 140px);
+  background-color: #fff;
+}
+
+.section::before,
+.section::after {
+  position: absolute;
+  z-index: -1;
+  width: min(100%, 1264px);
+  aspect-ratio: 1264 / 923;
+  background: url("/images/public/files/image/about_introduction_img1.jpg") center /
+    contain no-repeat;
+  content: "";
+  pointer-events: none;
+}
+
+.section::before {
+  top: 0;
+  right: -11%;
+}
+
+.section::after {
+  bottom: -4%;
+  left: -25%;
+  transform: rotate(180deg);
+}
+
+.container {
+  width: min(calc(100% - 9.6vw), 1520px);
+}
+
+.introduction {
+  display: grid;
+  gap: clamp(34px, 2.7vw, 52px);
+}
+
+.heading {
+  color: #147bc1;
+  font-family: var(--font-heading);
+  font-size: clamp(26px, 1.72vw, 33px);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.introCopy,
+.blockCopy,
+.advantages {
+  color: #565d63;
+  font-size: clamp(14px, 0.83vw, 16px);
+  font-weight: 500;
+  line-height: 1.85;
+}
+
+.introCopy {
+  display: grid;
+  gap: 18px;
+}
+
+.blocks {
+  display: grid;
+  gap: 24px;
+  margin-top: clamp(58px, 4.6vw, 88px);
+}
+
+.block {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(28px, 3vw, 58px);
+  align-items: center;
+  padding: clamp(24px, 2.1vw, 40px);
+  background: rgb(255 255 255 / 96%);
+  box-shadow: 0 8px 28px rgb(18 44 64 / 11%);
+}
+
+.blockCopy {
+  display: grid;
+  gap: 18px;
+}
+
+.media {
+  align-self: stretch;
+  overflow: hidden;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.block:not(:last-child) .media {
+  aspect-ratio: 698 / 425;
+}
+
+.block:last-child {
+  align-items: stretch;
+}
+
+.block:last-child .media {
+  aspect-ratio: 698 / 734;
+}
+
+.advantages {
+  display: grid;
+  gap: 18px;
+  margin-top: clamp(72px, 5.4vw, 104px);
+}
+
+@media (width <= 1023px) {
+  .container {
+    width: calc(100% - 56px);
+  }
+
+  .block {
+    gap: 26px;
+    padding: 24px;
+  }
+
+  .introCopy,
+  .blockCopy,
+  .advantages {
+    font-size: 13px;
+    line-height: 1.75;
+  }
+}
+
+@media (width <= 767px) {
+  .section {
+    padding-block: 48px 72px;
+  }
+
+  .section::before {
+    right: -46%;
+    width: 150%;
+  }
+
+  .section::after {
+    bottom: 0;
+    left: -60%;
+    width: 155%;
+  }
+
+  .container {
+    width: calc(100% - 40px);
+  }
+
+  .introduction {
+    gap: 26px;
+  }
+
+  .heading {
+    font-size: 25px;
+  }
+
+  .introCopy,
+  .blockCopy,
+  .advantages {
+    font-size: 14px;
+    line-height: 1.72;
+  }
+
+  .blocks {
+    gap: 18px;
+    margin-top: 42px;
+  }
+
+  .block {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    padding: 18px;
+  }
+
+  .blockCopy {
+    gap: 15px;
+  }
+
+  .block:not(:last-child) .media,
+  .block:last-child .media {
+    aspect-ratio: auto;
+  }
+
+  .image {
+    height: auto;
+  }
+
+  .advantages {
+    gap: 15px;
+    margin-top: 48px;
+  }
+}

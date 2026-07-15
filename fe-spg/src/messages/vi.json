@@ -83,6 +83,8 @@
     "home": "Trang chủ",
     "breadcrumb": "Điều hướng phân cấp",
     "learnMore": "Tìm hiểu thêm",
+    "previous": "Xem các cơ sở trước",
+    "next": "Xem các cơ sở tiếp theo",
     "loading": "Đang tải",
     "retry": "Thử lại",
     "emptyTitle": "Chưa có nội dung",
@@ -240,7 +242,11 @@
   },
   "about": {
     "title": "Giới thiệu",
-    "companyProfile": { "title": "Hồ sơ công ty" },
+    "subNavigationLabel": "Điều hướng giới thiệu",
+    "companyProfile": {
+      "title": "Hồ sơ công ty",
+      "groupProfile": "Hồ sơ tập đoàn"
+    },
     "organization": { "title": "Sơ đồ tổ chức" },
     "qualifications": { "title": "Năng lực công ty" },
     "corporateCulture": { "title": "Văn hóa doanh nghiệp" }

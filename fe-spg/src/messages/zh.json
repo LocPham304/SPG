@@ -74,6 +74,8 @@
     "home": "首页",
     "breadcrumb": "面包屑导航",
     "learnMore": "了解更多",
+    "previous": "查看上一组基地",
+    "next": "查看下一组基地",
     "loading": "加载中",
     "retry": "重试",
     "emptyTitle": "暂无内容",
@@ -231,7 +233,11 @@
   },
   "about": {
     "title": "公司简介",
-    "companyProfile": { "title": "公司简介" },
+    "subNavigationLabel": "公司简介导航",
+    "companyProfile": {
+      "title": "公司简介",
+      "groupProfile": "集团概况"
+    },
     "organization": { "title": "组织架构" },
     "qualifications": { "title": "企业资质" },
     "corporateCulture": { "title": "企业文化" }
