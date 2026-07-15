@@ -9,7 +9,6 @@ import type { AppLocale } from "@/i18n/routing";
 import { formatNewsDate } from "@/lib/news-date";
 import type { NewsCategory, PublicNewsArticle } from "@/types/news";
 
-import { BackToTop } from "./BackToTop";
 import styles from "./HomeNews.module.scss";
 import { NewsEmptyState } from "./NewsStates";
 
@@ -19,7 +18,6 @@ export type HomeNewsCopy = {
   readMore: string;
   viewMore: string;
   tabsLabel: string;
-  backToTop: string;
   emptyTitle: string;
   emptyDescription: string;
 };
@@ -222,7 +220,6 @@ export function HomeNewsClient({
         sizes="100vw"
         aria-hidden="true"
       />
-      <BackToTop label={copy.backToTop} />
     </section>
   );
 }

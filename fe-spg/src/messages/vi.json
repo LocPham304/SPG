@@ -250,7 +250,19 @@
   "news": { "title": "Tin tức" },
   "contact": { "title": "Liên hệ" },
   "footer": {
-    "copyright": "© {year} Shandong Port Equipment Group. Bảo lưu mọi quyền."
+    "address": "Địa chỉ văn phòng tại Việt Nam",
+    "backToTop": "Về đầu trang",
+    "copyright": "© {year} Shandong Port Equipment Group. Bảo lưu mọi quyền.",
+    "designer": "Thiết kế: {name}",
+    "links": "Liên kết",
+    "navigationLabel": "Điều hướng chân trang",
+    "partnerLinksLabel": "Liên kết đối tác",
+    "phone": "Điện thoại",
+    "qrMiniProgram": "WeChat Mini Program",
+    "qrMiniProgramAlt": "Mã QR WeChat Mini Program của Shandong Port Equipment Group",
+    "qrPublicAccount": "Tài khoản WeChat chính thức",
+    "qrPublicAccountAlt": "Mã QR tài khoản WeChat chính thức của Shandong Port Equipment Group",
+    "sitemap": "Sơ đồ trang"
   },
   "errors": {
     "notFound": {

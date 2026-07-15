@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Be_Vietnam_Pro } from "next/font/google";
 import { notFound } from "next/navigation";
 import { NextIntlClientProvider } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
@@ -19,6 +20,13 @@ type LocaleLayoutProps = {
   children: ReactNode;
   params: Promise<{ locale: string }>;
 };
+
+const beVietnamPro = Be_Vietnam_Pro({
+  display: "swap",
+  subsets: ["latin", "vietnamese"],
+  variable: "--font-be-vietnam-pro",
+  weight: ["400", "500", "600", "700", "800"],
+});
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
@@ -57,7 +65,11 @@ export default async function LocaleLayout({
   setRequestLocale(locale);
 
   return (
-    <html lang={localeLanguageTags[locale]} suppressHydrationWarning>
+    <html
+      className={beVietnamPro.variable}
+      lang={localeLanguageTags[locale]}
+      suppressHydrationWarning
+    >
       <body suppressHydrationWarning>
         <NextIntlClientProvider>
           <div className={styles.site}>

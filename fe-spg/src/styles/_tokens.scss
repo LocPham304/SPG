@@ -20,8 +20,10 @@
   --section-space-desktop: clamp(72px, 8vw, 128px);
   --section-space-mobile: 56px;
 
-  --font-body: Arial, "Helvetica Neue", Helvetica, sans-serif;
-  --font-heading: Arial, "Helvetica Neue", Helvetica, sans-serif;
+  --font-body: var(--font-be-vietnam-pro), Arial, "Helvetica Neue", Helvetica,
+    sans-serif;
+  --font-heading: var(--font-be-vietnam-pro), Arial, "Helvetica Neue", Helvetica,
+    sans-serif;
 
   --radius-sm: 4px;
   --radius-md: 8px;

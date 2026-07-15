@@ -24,7 +24,6 @@ export async function HomeNewsSection({ locale, qaState }: HomeNewsSectionProps)
     readMore: t("readMore"),
     viewMore: t("viewMore"),
     tabsLabel: t("tabsLabel"),
-    backToTop: t("backToTop"),
     emptyTitle: t("empty.title"),
     emptyDescription: t("empty.description"),
   };
