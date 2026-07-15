@@ -16,7 +16,7 @@ export function HeaderLogo({ homeLabel, isDark = false }: HeaderLogoProps) {
         className={`${styles.logoImage} ${isDark ? styles.logoVisible : ""}`}
         height={32}
         priority
-        sizes="(max-width: 767px) 213px, (max-width: 1199px) 320px, 315px"
+        sizes="(max-width: 767px) 213px, (max-width: 1199px) 320px, 22vw"
         src="/images/public/files/image/logo.png"
         width={320}
       />
@@ -26,7 +26,7 @@ export function HeaderLogo({ homeLabel, isDark = false }: HeaderLogoProps) {
         className={`${styles.logoImage} ${styles.logoWhite} ${isDark ? "" : styles.logoVisible}`}
         height={32}
         priority
-        sizes="(max-width: 767px) 213px, (max-width: 1199px) 320px, 315px"
+        sizes="(max-width: 767px) 213px, (max-width: 1199px) 320px, 22vw"
         src="/images/public/files/image/logo_white.png"
         width={320}
       />

@@ -24,6 +24,7 @@ export function HeaderClient({ items, labels }: HeaderClientProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isHeaderHovered, setIsHeaderHovered] = useState(false);
 
   const closeMenu = useCallback(() => setIsMenuOpen(false), []);
   const closeSearch = useCallback(() => setIsSearchOpen(false), []);
@@ -73,12 +74,22 @@ export function HeaderClient({ items, labels }: HeaderClientProps) {
   return (
     <>
       <header
-        className={`${styles.header} ${isScrolled ? styles.headerScrolled : ""} ${isMenuOpen ? styles.headerMenuOpen : ""}`}
+        className={`${styles.header} ${isScrolled ? styles.headerScrolled : ""} ${isHeaderHovered || activeDropdown !== null ? styles.headerInteractive : ""} ${isMenuOpen ? styles.headerMenuOpen : ""}`}
+        onMouseEnter={() => setIsHeaderHovered(true)}
+        onMouseLeave={() => {
+          setIsHeaderHovered(false);
+          setActiveDropdown(null);
+        }}
       >
         <div className={styles.headerInner}>
           <HeaderLogo
             homeLabel={labels.home}
-            isDark={isScrolled || isMenuOpen}
+            isDark={
+              isScrolled ||
+              isHeaderHovered ||
+              activeDropdown !== null ||
+              isMenuOpen
+            }
           />
           <DesktopNavigation
             activeDropdown={activeDropdown}

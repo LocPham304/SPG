@@ -32,10 +32,13 @@ export function DesktopNavigation({
   pathname,
   setActiveDropdown,
 }: DesktopNavigationProps) {
-  function focusFirstChild(event: KeyboardEvent<HTMLButtonElement>) {
-    const firstLink = event.currentTarget.parentElement?.querySelector<HTMLElement>(
-      "[data-submenu-link]",
-    );
+  const isMegaMenuOpen = activeDropdown !== null;
+
+  function focusFirstChild(index: number) {
+    const firstLink = document
+      .getElementById(`desktop-submenu-${index}`)
+      ?.querySelector<HTMLElement>("[data-submenu-link]");
+
     window.requestAnimationFrame(() => firstLink?.focus());
   }
 
@@ -52,23 +55,29 @@ export function DesktopNavigation({
     if (event.key === "ArrowDown") {
       event.preventDefault();
       setActiveDropdown(index);
-      focusFirstChild(event);
+      focusFirstChild(index);
       return;
     }
 
     if (event.key === "Escape") {
       setActiveDropdown(null);
+      event.currentTarget.focus();
     }
   }
 
-  function handleBlur(event: FocusEvent<HTMLLIElement>) {
+  function handleBlur(event: FocusEvent<HTMLElement>) {
     if (!event.currentTarget.contains(event.relatedTarget)) {
       setActiveDropdown(null);
     }
   }
 
   return (
-    <nav aria-label={ariaLabel} className={styles.desktopNavigation}>
+    <nav
+      aria-label={ariaLabel}
+      className={styles.desktopNavigation}
+      onBlur={handleBlur}
+      onMouseLeave={() => setActiveDropdown(null)}
+    >
       <ul className={styles.desktopList}>
         {items.map((item, index) => {
           const isOpen = activeDropdown === index;
@@ -77,11 +86,9 @@ export function DesktopNavigation({
 
           return (
             <li
-              className={styles.desktopItem}
+              className={`${styles.desktopItem} ${isOpen ? styles.desktopItemOpen : ""}`}
               key={item.href}
-              onBlur={handleBlur}
               onMouseEnter={() => setActiveDropdown(index)}
-              onMouseLeave={() => setActiveDropdown(null)}
             >
               <button
                 aria-controls={panelId}
@@ -94,27 +101,44 @@ export function DesktopNavigation({
               >
                 {item.label}
               </button>
+            </li>
+          );
+        })}
+      </ul>
+
+      <div
+        aria-hidden={!isMegaMenuOpen}
+        className={`${styles.desktopMegaMenu} ${isMegaMenuOpen ? styles.desktopMegaMenuOpen : ""}`}
+      >
+        <div className={styles.desktopMegaGrid}>
+          <div aria-hidden="true" className={styles.desktopMegaSpacer} />
+          {items.map((item, index) => {
+            const isOpen = activeDropdown === index;
+
+            return (
               <div
-                aria-hidden={!isOpen}
-                className={`${styles.desktopDropdown} ${isOpen ? styles.desktopDropdownOpen : ""}`}
-                id={panelId}
+                className={`${styles.desktopMegaColumn} ${isOpen ? styles.desktopMegaColumnOpen : ""}`}
+                id={`desktop-submenu-${index}`}
+                key={item.href}
+                onMouseEnter={() => setActiveDropdown(index)}
               >
                 {item.children.map((child) => (
                   <LocalizedLink
-                    className={styles.desktopDropdownLink}
+                    className={styles.desktopMegaLink}
                     data-submenu-link
                     href={child.href}
                     key={child.href}
-                    tabIndex={isOpen ? 0 : -1}
+                    tabIndex={isMegaMenuOpen ? 0 : -1}
                   >
                     {child.label}
                   </LocalizedLink>
                 ))}
               </div>
-            </li>
-          );
-        })}
-      </ul>
+            );
+          })}
+          <div aria-hidden="true" className={styles.desktopMegaSpacer} />
+        </div>
+      </div>
     </nav>
   );
 }

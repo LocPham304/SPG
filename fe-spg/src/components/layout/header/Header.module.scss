@@ -1,4 +1,11 @@
 .header {
+  --header-company-column: 11.1579%;
+  --header-news-column: 7.1579%;
+  --header-products-column: 15%;
+  --header-technology-column: 14.0526%;
+  --header-contact-column: 8.7368%;
+  --header-actions-column: 10.6316%;
+
   position: fixed;
   z-index: 80;
   top: 0;
@@ -23,25 +30,34 @@
   color: #333;
 }
 
+.headerInteractive {
+  background: var(--color-surface);
+  color: #111;
+}
+
 .headerMenuOpen {
   color: #333;
 }
 
 .headerInner {
-  display: flex;
+  display: grid;
   width: 100%;
   height: 100%;
   align-items: center;
-  padding-inline: clamp(32px, 2.6vw, 50px);
+  grid-template-columns:
+    minmax(0, 1fr) var(--header-company-column) var(--header-news-column)
+    var(--header-products-column) var(--header-technology-column)
+    var(--header-contact-column) var(--header-actions-column);
 }
 
 .logoLink {
   position: relative;
   z-index: 2;
   display: block;
-  width: clamp(260px, 21.875vw, 315px);
+  width: clamp(260px, 22.1vw, 420px);
   aspect-ratio: 1601 / 158;
   flex: 0 0 auto;
+  margin-left: clamp(32px, 2.6vw, 44px);
 }
 
 .logoImage {
@@ -63,109 +79,163 @@
 }
 
 .desktopNavigation {
+  display: grid;
   height: 100%;
-  margin-left: auto;
+  grid-column: 2 / 7;
+  grid-template-columns: subgrid;
 }
 
 .desktopList {
-  display: flex;
+  display: grid;
   height: 100%;
   align-items: stretch;
-  gap: clamp(4px, 0.95vw, 14px);
+  grid-column: 1 / -1;
+  grid-template-columns: subgrid;
   list-style: none;
 }
 
 .desktopItem {
-  position: relative;
   display: flex;
   height: 100%;
   align-items: stretch;
+  justify-content: stretch;
+  transition:
+    background-color 180ms ease,
+    color 180ms ease;
+}
+
+.desktopItemOpen {
+  background: #147bc1;
+  color: #fff;
 }
 
 .desktopTrigger {
-  position: relative;
   display: flex;
+  width: 100%;
   border: 0;
   align-items: center;
-  padding: 0 clamp(12px, 1.25vw, 18px);
+  justify-content: center;
+  padding: 0 10px;
   background: transparent;
   color: inherit;
-  font-size: clamp(14px, 1.087vw, 16px);
+  font-size: clamp(15px, 1.1579vw, 22px);
   font-weight: 400;
-  line-height: 1.4;
+  line-height: 1.25;
+  text-align: center;
   white-space: nowrap;
 }
 
-.desktopTrigger::after {
-  position: absolute;
-  right: 18px;
-  bottom: 0;
-  left: 18px;
-  height: 2px;
-  background: var(--color-primary);
-  content: "";
-  opacity: 0;
-  transform: scaleX(0.35);
-  transition:
-    opacity 200ms ease,
-    transform 250ms var(--ease-brand);
+.desktopItemOpen .desktopTrigger {
+  font-weight: 700;
 }
 
-.desktopTrigger:hover::after,
-.desktopTrigger[aria-expanded="true"]::after,
-.activeTrigger::after {
+.desktopTrigger:focus-visible {
+  outline: 2px solid currentcolor;
+  outline-offset: -6px;
+}
+
+.activeTrigger:not([aria-expanded="true"]) {
+  font-weight: 600;
+}
+
+.desktopMegaMenu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  height: 390px;
+  background: #f9f9f9;
+  color: #666;
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 180ms ease,
+    visibility 180ms ease;
+  visibility: hidden;
+}
+
+.desktopMegaMenuOpen {
+  opacity: 1;
+  pointer-events: auto;
+  visibility: visible;
+}
+
+.desktopMegaGrid {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  grid-template-columns:
+    minmax(0, 1fr) var(--header-company-column) var(--header-news-column)
+    var(--header-products-column) var(--header-technology-column)
+    var(--header-contact-column) var(--header-actions-column);
+  grid-template-rows: minmax(0, 1fr);
+  overflow: hidden;
+}
+
+.desktopMegaSpacer {
+  min-width: 0;
+}
+
+.desktopMegaColumn {
+  display: grid;
+  align-content: start;
+  justify-items: center;
+  row-gap: clamp(12px, 0.8421vw, 16px);
+  padding: clamp(26px, 1.7895vw, 34px) 10px 24px;
+  transition:
+    background-color 180ms ease,
+    color 180ms ease;
+}
+
+.desktopMegaColumnOpen {
+  background: #147bc1;
+  color: #fff;
+}
+
+.desktopMegaLink {
+  position: relative;
+  display: inline-block;
+  max-width: 100%;
+  padding-block: 2px;
+  color: inherit;
+  font-size: clamp(13px, 0.9474vw, 18px);
+  font-weight: 600;
+  line-height: 1.06;
+  text-align: center;
+  transition:
+    color 180ms ease,
+    opacity 180ms ease;
+}
+
+.desktopMegaLink::after {
+  position: absolute;
+  right: 0;
+  bottom: -2px;
+  left: 0;
+  height: 1px;
+  background: currentcolor;
+  content: "";
+  opacity: 0;
+  transform: scaleX(0.45);
+  transition:
+    opacity 160ms ease,
+    transform 180ms ease;
+}
+
+.desktopMegaLink:hover::after,
+.desktopMegaLink:focus-visible::after {
   opacity: 1;
   transform: scaleX(1);
 }
 
-.desktopDropdown {
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  display: grid;
-  width: max-content;
-  min-width: 238px;
-  max-width: 360px;
-  padding: 14px 0;
-  border-top: 2px solid var(--color-primary);
-  background: rgb(255 255 255 / 98%);
-  box-shadow: 0 14px 34px rgb(0 0 0 / 14%);
-  color: #333;
-  opacity: 0;
-  pointer-events: none;
-  transform: translate(-50%, 9px);
-  transition:
-    opacity 180ms ease,
-    visibility 180ms ease,
-    transform 220ms var(--ease-brand);
-  visibility: hidden;
+.desktopMegaColumn:not(.desktopMegaColumnOpen) .desktopMegaLink:hover,
+.desktopMegaColumn:not(.desktopMegaColumnOpen) .desktopMegaLink:focus-visible {
+  color: #147bc1;
 }
 
-.desktopDropdownOpen {
-  opacity: 1;
-  pointer-events: auto;
-  transform: translate(-50%, 0);
-  visibility: visible;
-}
-
-.desktopDropdownLink {
-  position: relative;
-  display: block;
-  padding: 9px 24px;
-  color: #454545;
-  font-size: 14px;
-  line-height: 1.45;
-  transition:
-    background-color 180ms ease,
-    color 180ms ease,
-    padding-left 220ms ease;
-}
-
-.desktopDropdownLink:hover,
-.desktopDropdownLink:focus-visible {
-  padding-left: 29px;
-  background: rgb(29 32 136 / 6%);
-  color: var(--color-primary);
+.desktopMegaLink:focus-visible {
+  outline: none;
 }
 
 .headerActions {
@@ -174,8 +244,9 @@
   display: flex;
   height: 100%;
   align-items: center;
-  gap: clamp(20px, 1.8vw, 27px);
-  margin-left: clamp(22px, 2.4vw, 36px);
+  justify-content: center;
+  grid-column: 7;
+  gap: clamp(20px, 1.4211vw, 27px);
 }
 
 .languageSwitcher {
@@ -412,11 +483,13 @@
 
 @media (width <= 1199px) {
   .headerInner {
+    display: flex;
     padding-inline: clamp(20px, 2.6vw, 32px);
   }
 
   .logoLink {
     width: min(32vw, 320px);
+    margin-left: 0;
   }
 
   .desktopNavigation {
@@ -424,6 +497,7 @@
   }
 
   .headerActions {
+    width: auto;
     gap: clamp(12px, 1.8vw, 22px);
     margin-left: auto;
   }
@@ -576,6 +650,7 @@
 
   .logoLink {
     width: min(56.8vw, 213px);
+    margin-left: 0;
   }
 
   .headerActions {
@@ -645,9 +720,11 @@
 @media (prefers-reduced-motion: reduce) {
   .header,
   .logoImage,
-  .desktopTrigger::after,
-  .desktopDropdown,
-  .desktopDropdownLink,
+  .desktopItem,
+  .desktopMegaMenu,
+  .desktopMegaColumn,
+  .desktopMegaLink,
+  .desktopMegaLink::after,
   .languageMenu,
   .menuButton span,
   .searchPanel,

@@ -14,7 +14,11 @@ Observed on 2026-07-15 with the existing project screenshots and a live browser 
 - At 1366px the logo is about `299 x 29.5px`; at 1440px it is about `315 x 31px`.
 - Desktop navigation order is Company Profile, News, Products & Solutions, Technical Innovation, Contact us. The logo is the home link.
 - Desktop navigation uses a DIN-like medium face with Microsoft YaHei/PingFang fallbacks. Measured menu text is about `15.65px` at 1366px, regular weight.
-- Each desktop item owns an absolute submenu. Submenu content and link order were verified from the rendered DOM.
+- User-provided hover screenshots supersede the earlier hidden-DOM inference: desktop navigation opens one full-width mega menu beneath the header, with every navigation group's children visible at the same time.
+- In the supplied `1900 x 872` open-state screenshot, the header is `120px` high and the mega panel continues to `y = 510px`, for a `390px` panel height. The panel background is `#f9f9f9`.
+- The hovered Company Profile column spans `x = 632..843` (`212px`) and uses `#147bc1` continuously across the header trigger and mega panel. Its trigger and child links become white and bold; a hovered child link receives a thin white underline.
+- Inactive mega-menu columns retain the light panel background and use centered gray links. Hovering another top-level group transfers the blue active column to that group's aligned trigger and child column.
+- Hovering the desktop header changes its transparent top state to a white surface with the colored logo and dark navigation/actions without changing header height.
 - A language control and search control appear at the right. The English reference exposes a single `中文` link.
 - The search panel is a fixed, white, full-width header-height panel positioned above the viewport while closed. It contains the colored logo, search field, submit control and close control.
 - After scrolling, the header uses a white surface, colored logo, dark navigation/actions, a subtle shadow and a `0.4s` transition. The observed scrolled height was about `74px`.
@@ -26,7 +30,7 @@ Observed on 2026-07-15 with the existing project screenshots and a live browser 
 
 ### Partially verified or not verified
 
-- Exact desktop hover-panel visual state and easing: the hidden submenu structure was verified, but browser pointer input repeatedly timed out. Use conservative opacity/translate transitions and keep the pointer bridge intact.
+- Exact mega-menu easing remains unverified from still screenshots. The verified final state is reproduced with a conservative opacity/visibility transition and no unverified large movement.
 - Exact mobile open-state overlay, focus behavior and whether multiple accordions may remain open: browser input timed out before a stable open state could be captured. The rebuilt menu will use a closing overlay at tablet widths, one-open accordion behavior and an accessible focus trap as safe project requirements.
 - Hide-on-scroll-direction behavior was inconsistent during remote input. The stable verified behavior is a visible white sticky header after the threshold; the rebuild should not hide it on downward scroll.
 - Exact active-route decoration was not visible in the captured top states. The rebuild should use a subtle brand underline without inventing a stronger visual treatment.
