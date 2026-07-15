@@ -71,3 +71,7 @@
 **/*.agent.tmp
 **/agent-cache/
 **/agent-output/
+
+# Browser test artifacts
+**/playwright-report/
+**/test-results/

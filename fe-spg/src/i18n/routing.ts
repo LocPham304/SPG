@@ -24,6 +24,12 @@ export const localeNames: Record<AppLocale, string> = {
   zh: "简体中文",
 };
 
+export const localeShortNames: Record<AppLocale, string> = {
+  vi: "VI",
+  en: "EN",
+  zh: "中文",
+};
+
 export function isAppLocale(value: unknown): value is AppLocale {
   return typeof value === "string" && locales.includes(value as AppLocale);
 }

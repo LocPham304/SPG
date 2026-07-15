@@ -13,7 +13,8 @@
 
   --container-width: 1200px;
   --container-gutter: clamp(20px, 4vw, 64px);
-  --header-height: 88px;
+  --header-height: clamp(80px, 6.25vw, 90px);
+  --header-height-scrolled: 74px;
   --section-space-desktop: clamp(72px, 8vw, 128px);
   --section-space-mobile: 56px;
 
@@ -24,4 +25,18 @@
   --radius-md: 8px;
   --shadow-soft: 0 16px 40px rgb(16 24 40 / 8%);
   --ease-brand: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (width <= 1199px) {
+  :root {
+    --header-height: clamp(64px, 7.4vw, 80px);
+    --header-height-scrolled: 64px;
+  }
+}
+
+@media (width <= 767px) {
+  :root {
+    --header-height: 56px;
+    --header-height-scrolled: 56px;
+  }
 }

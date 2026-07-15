@@ -106,10 +106,6 @@ ol {
 }
 
 @media (width <= 767px) {
-  :root {
-    --header-height: 53px;
-  }
-
   .desktop-only {
     display: none !important;
   }

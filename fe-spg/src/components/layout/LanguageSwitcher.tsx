@@ -2,58 +2,114 @@
 
 import { useLocale, useTranslations } from "next-intl";
 import { useSearchParams } from "next/navigation";
-import { useTransition, type ChangeEvent } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 
 import { usePathname, useRouter } from "@/i18n/navigation";
 import {
-  isAppLocale,
   localeNames,
+  localeShortNames,
   locales,
   type AppLocale,
 } from "@/i18n/routing";
 
-import styles from "./SiteLayout.module.scss";
+import styles from "./header/Header.module.scss";
 
-export function LanguageSwitcher() {
+type LanguageSwitcherProps = {
+  newsLocaleLinks?: Partial<Record<AppLocale, string>>;
+  onNavigate?: () => void;
+};
+
+export function LanguageSwitcher({
+  newsLocaleLinks,
+  onNavigate,
+}: LanguageSwitcherProps) {
   const locale = useLocale();
   const t = useTranslations("navigation");
   const pathname = usePathname();
   const router = useRouter();
   const searchParams = useSearchParams();
+  const rootRef = useRef<HTMLDivElement>(null);
+  const [isOpen, setIsOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
 
-  function handleChange(event: ChangeEvent<HTMLSelectElement>) {
-    const nextLocale = event.target.value;
+  useEffect(() => {
+    function handlePointerDown(event: PointerEvent) {
+      if (!rootRef.current?.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    }
 
-    if (!isAppLocale(nextLocale) || nextLocale === locale) {
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setIsOpen(false);
+      }
+    }
+
+    document.addEventListener("pointerdown", handlePointerDown);
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("pointerdown", handlePointerDown);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+
+  function changeLocale(nextLocale: AppLocale) {
+    if (nextLocale === locale) {
+      setIsOpen(false);
       return;
     }
 
-    const query = searchParams.toString();
+    const isNewsDetail = pathname.startsWith("/news/");
+    const translatedNewsPath = newsLocaleLinks?.[nextLocale];
+    const nextPathname = isNewsDetail
+      ? (translatedNewsPath ?? "/news")
+      : pathname;
+    const query = isNewsDetail && !translatedNewsPath ? "" : searchParams.toString();
     const hash = window.location.hash;
-    const nextPath = `${pathname}${query ? `?${query}` : ""}${hash}`;
+    const nextPath = `${nextPathname}${query ? `?${query}` : ""}${hash}`;
 
+    setIsOpen(false);
+    onNavigate?.();
     startTransition(() => {
-      router.replace(nextPath, { locale: nextLocale as AppLocale });
+      router.replace(nextPath, { locale: nextLocale });
     });
   }
 
   return (
-    <label className={styles.languageField}>
-      <span className={styles.languageLabel}>{t("language")}</span>
-      <select
+    <div className={styles.languageSwitcher} ref={rootRef}>
+      <button
+        aria-expanded={isOpen}
+        aria-haspopup="listbox"
         aria-label={t("language")}
-        className={styles.languageSelect}
+        className={styles.languageTrigger}
         disabled={isPending}
-        onChange={handleChange}
-        value={locale}
+        onClick={() => setIsOpen((current) => !current)}
+        type="button"
+      >
+        {localeShortNames[locale as AppLocale]}
+        <span aria-hidden="true" className={styles.languageChevron} />
+      </button>
+      <div
+        aria-label={t("language")}
+        className={`${styles.languageMenu} ${isOpen ? styles.languageMenuOpen : ""}`}
+        role="listbox"
       >
         {locales.map((item) => (
-          <option key={item} value={item}>
-            {localeNames[item]}
-          </option>
+          <button
+            aria-selected={item === locale}
+            className={styles.languageOption}
+            key={item}
+            onClick={() => changeLocale(item)}
+            role="option"
+            tabIndex={isOpen ? 0 : -1}
+            type="button"
+          >
+            <span>{localeShortNames[item]}</span>
+            <span className={styles.languageName}>{localeNames[item]}</span>
+          </button>
         ))}
-      </select>
-    </label>
+      </div>
+    </div>
   );
 }
