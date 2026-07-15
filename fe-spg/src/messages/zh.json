@@ -166,6 +166,67 @@
         "shipbuildingRepair": "船舶建造与维修系统",
         "otherServices": "其他产品与服务"
       }
+    },
+    "technology": {
+      "title": "技术创新",
+      "learnMore": "了解更多",
+      "tabsLabel": "技术创新分类",
+      "activateLabel": "显示{category}",
+      "imageAlt": "{category}港口背景",
+      "categories": {
+        "rdLayout": {
+          "title": "研发布局",
+          "stats": {
+            "highTech": {
+              "suffix": "家",
+              "label": "高新技术企业"
+            },
+            "specialized": {
+              "suffix": "家",
+              "label": "省级专精特新企业"
+            },
+            "platforms": {
+              "suffix": "家",
+              "label": "省部级研发平台"
+            }
+          }
+        },
+        "achievements": {
+          "title": "技术成果",
+          "stats": {
+            "majorEquipment": {
+              "suffix": "项",
+              "label": "首台套重大技术装备"
+            },
+            "progressAwards": {
+              "suffix": "项",
+              "label": "中国航海学会及中国港口协会科技进步奖"
+            },
+            "governmentAwards": {
+              "suffix": "项",
+              "label": "政府科学技术奖"
+            },
+            "standards": {
+              "suffix": "项",
+              "label": "标准化成果"
+            },
+            "patents": {
+              "suffix": "项",
+              "label": "专利成果奖"
+            }
+          }
+        },
+        "majorProject": {
+          "title": "重大项目",
+          "projects": {
+            "scatterSet": "散改集项目",
+            "deepSeaCages": "深远海智能网箱研发",
+            "railCrane": "新型智能供电自动化轨道起重机研发",
+            "provincialPlan": "2020年山东省重点研发计划",
+            "transportProject": "2020年交通运输行业重点科技项目"
+          }
+        }
+      }
     }
   },
   "about": {

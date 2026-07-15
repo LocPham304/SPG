@@ -97,7 +97,7 @@ export function HomeNewsClient({
       data-home-news
       aria-labelledby="home-news-title"
     >
-      <div className={styles.container}>
+      <div className={styles.container} suppressHydrationWarning>
         <header className={styles.header}>
           <div className={styles.headingGroup}>
             {/* <p className={styles.eyebrow}>{copy.eyebrow}</p> */}

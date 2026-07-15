@@ -82,7 +82,11 @@ export function HomeSolutionsSlider({
         onBreakpoint={syncState}
       >
         {items.map((item) => (
-          <SwiperSlide className={styles.slide} key={item.id}>
+          <SwiperSlide
+            className={styles.slide}
+            key={item.id}
+            suppressHydrationWarning
+          >
             <LocalizedLink className={styles.card} href={item.href}>
               <span className={styles.media}>
                 <Image

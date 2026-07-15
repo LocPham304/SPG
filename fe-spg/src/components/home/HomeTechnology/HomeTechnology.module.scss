@@ -1,0 +1,432 @@
+.section {
+  position: relative;
+  min-height: 960px;
+  overflow: hidden;
+  background: #0879ad;
+  color: #ffffff;
+}
+
+.backgroundImage {
+  object-fit: cover;
+  object-position: center;
+  animation: background-fade 360ms ease both;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgb(0 77 113 / 42%), rgb(0 72 106 / 18%));
+}
+
+.inner {
+  position: relative;
+  z-index: 1;
+  padding: 103px 6.3vw 226px;
+}
+
+.heading {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: clamp(31px, 2.05vw, 39px);
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.activeContent {
+  margin-block-start: 70px;
+  animation: content-fade 260ms ease both;
+}
+
+.categoryTitle {
+  margin: 0;
+  font-size: clamp(21px, 1.35vw, 26px);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.stats {
+  display: grid;
+  width: min(1000px, 70vw);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 32px;
+  margin-block-start: 47px;
+}
+
+.fiveStats {
+  width: min(1580px, 86vw);
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 28px;
+}
+
+.stat {
+  text-align: center;
+}
+
+.statValue {
+  display: flex;
+  min-height: 67px;
+  align-items: baseline;
+  justify-content: center;
+  font-size: clamp(55px, 4.15vw, 80px);
+  font-weight: 500;
+  line-height: 0.9;
+  white-space: nowrap;
+}
+
+.statSuffix {
+  margin-inline-start: 12px;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.statLabel {
+  max-width: 300px;
+  margin: auto 0;
+  font-size: clamp(17px, 1.05vw, 20px);
+  font-weight: 700;
+  line-height: 1.18;
+}
+
+.projectList {
+  display: grid;
+  width: min(1280px, 80vw);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px 86px;
+  margin-block-start: 52px;
+}
+
+.projectList p {
+  margin: 0;
+  overflow: hidden;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.4;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.learnMore {
+  display: inline-flex;
+  width: 199px;
+  min-height: 53px;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin-block-start: 60px;
+  border: 1px solid rgb(255 255 255 / 90%);
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 700;
+  text-transform: uppercase;
+  transition:
+    background-color 180ms ease,
+    color 180ms ease;
+}
+
+.linkArrow,
+.cardArrow {
+  position: relative;
+  width: 25px;
+  height: 8px;
+}
+
+.linkArrow::before,
+.cardArrow::before {
+  position: absolute;
+  top: 4px;
+  left: 0;
+  width: 24px;
+  height: 1px;
+  background: currentcolor;
+  content: "";
+}
+
+.linkArrow::after,
+.cardArrow::after {
+  position: absolute;
+  top: 2px;
+  right: 0;
+  width: 5px;
+  height: 5px;
+  border-block-start: 1px solid currentcolor;
+  border-inline-end: 1px solid currentcolor;
+  content: "";
+  transform: rotate(45deg);
+}
+
+.navigation {
+  position: absolute;
+  z-index: 2;
+  top: 600px;
+  bottom: auto;
+  left: 6.3vw;
+  display: grid;
+  width: 62.5vw;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.navigationCard {
+  position: relative;
+  display: flex;
+  height: 204px;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 28px 62px 33px;
+  border: 1px solid rgb(255 255 255 / 48%);
+  background: transparent;
+  color: #ffffff;
+  text-align: start;
+  transition:
+    background-color 220ms ease,
+    color 220ms ease;
+}
+
+.navigationCard + .navigationCard {
+  border-inline-start: 0;
+}
+
+.activeCard {
+  border-color: #ffffff;
+  background: #ffffff;
+  color: #087fc4;
+}
+
+.cardIcon {
+  display: block;
+  width: 57px;
+  height: 57px;
+}
+
+.cardIcon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.cardTitle {
+  max-width: 240px;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.12;
+}
+
+.cardArrow {
+  position: absolute;
+  right: 62px;
+  bottom: 38px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .learnMore:hover {
+    background: #ffffff;
+    color: #087fc4;
+  }
+
+  .navigationCard:not(.activeCard):hover {
+    background: rgb(255 255 255 / 12%);
+  }
+}
+
+.learnMore:focus-visible,
+.navigationCard:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: -4px;
+}
+
+@media (width <= 1100px) {
+  .inner {
+    padding: 68px 5.2vw 205px;
+  }
+
+  .activeContent {
+    margin-block-start: 62px;
+  }
+
+  .stats,
+  .fiveStats {
+    width: 100%;
+    gap: 24px;
+  }
+
+  .fiveStats {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .statValue {
+    font-size: 55px;
+  }
+
+  .statSuffix {
+    font-size: 15px;
+  }
+
+  .statLabel {
+    font-size: 16px;
+  }
+
+  .projectList {
+    width: 100%;
+    gap: 14px 42px;
+  }
+
+  .navigation {
+    left: 0;
+    width: 100%;
+  }
+
+  .navigationCard {
+    height: 180px;
+    padding: 24px 36px 28px;
+  }
+
+  .cardArrow {
+    right: 36px;
+    bottom: 32px;
+  }
+}
+
+@media (width <= 767px) {
+  .section {
+    min-height: 960px;
+  }
+
+  .backgroundImage {
+    object-position: 62% center;
+  }
+
+  .overlay {
+    background: rgb(0 73 106 / 48%);
+  }
+
+  .inner {
+    padding: 42px 16px 220px;
+  }
+
+  .heading {
+    font-size: 28px;
+    text-align: center;
+  }
+
+  .activeContent {
+    margin-block-start: 44px;
+  }
+
+  .categoryTitle {
+    font-size: 21px;
+    text-align: center;
+  }
+
+  .stats,
+  .fiveStats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 30px 12px;
+    margin-block-start: 34px;
+  }
+
+  .statValue {
+    min-height: 46px;
+    font-size: 43px;
+  }
+
+  .statSuffix {
+    margin-inline-start: 6px;
+    font-size: 12px;
+  }
+
+  .statLabel {
+    margin-block-start: 8px;
+    font-size: 14px;
+  }
+
+  .projectList {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-block-start: 34px;
+  }
+
+  .projectList p {
+    overflow: visible;
+    font-size: 15px;
+    white-space: normal;
+  }
+
+  .learnMore {
+    display: flex;
+    width: 166px;
+    min-height: 48px;
+    margin: 42px auto 0;
+    font-size: 13px;
+  }
+
+  .navigation {
+    position: absolute;
+    top: auto;
+    bottom: 32px;
+    left: 16px;
+    display: grid;
+    width: calc(100% - 32px);
+    padding-bottom: 0;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    overflow: visible;
+  }
+
+  .navigationCard {
+    width: auto;
+    min-width: 0;
+    height: 150px;
+    padding: 18px 12px 20px;
+  }
+
+  .navigationCard + .navigationCard {
+    border-inline-start: 0;
+  }
+
+  .cardIcon {
+    width: 38px;
+    height: 38px;
+  }
+
+  .cardTitle {
+    max-width: 100%;
+    font-size: 13px;
+    line-height: 1.16;
+  }
+
+  .cardArrow {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .backgroundImage,
+  .activeContent {
+    animation: none;
+  }
+
+  .learnMore,
+  .navigationCard {
+    transition: none;
+  }
+}
+
+@keyframes background-fade {
+  from {
+    opacity: 0.72;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes content-fade {
+  from {
+    opacity: 0.72;
+    transform: translateY(5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

@@ -57,8 +57,8 @@ export default async function LocaleLayout({
   setRequestLocale(locale);
 
   return (
-    <html lang={localeLanguageTags[locale]}>
-      <body>
+    <html lang={localeLanguageTags[locale]} suppressHydrationWarning>
+      <body suppressHydrationWarning>
         <NextIntlClientProvider>
           <div className={styles.site}>
             <SiteHeader />

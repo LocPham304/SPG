@@ -175,6 +175,67 @@
         "shipbuildingRepair": "Shipbuilding and repairing systems",
         "otherServices": "Other products and services"
       }
+    },
+    "technology": {
+      "title": "Technical Innovation",
+      "learnMore": "Learn more",
+      "tabsLabel": "Technical innovation categories",
+      "activateLabel": "Show {category}",
+      "imageAlt": "Port background for {category}",
+      "categories": {
+        "rdLayout": {
+          "title": "R&D layout",
+          "stats": {
+            "highTech": {
+              "suffix": "units",
+              "label": "High-tech enterprises"
+            },
+            "specialized": {
+              "suffix": "units",
+              "label": "Provincial-level specialized and special new enterprises"
+            },
+            "platforms": {
+              "suffix": "units",
+              "label": "Provincial and ministerial R&D platforms"
+            }
+          }
+        },
+        "achievements": {
+          "title": "Technological achievements",
+          "stats": {
+            "majorEquipment": {
+              "suffix": "items",
+              "label": "The first set of major technical equipment"
+            },
+            "progressAwards": {
+              "suffix": "items",
+              "label": "Science and Technology Progress Awards of the Institute of Navigation and China Port Association"
+            },
+            "governmentAwards": {
+              "suffix": "units",
+              "label": "Government Science and Technology Awards"
+            },
+            "standards": {
+              "suffix": "items",
+              "label": "Standardized results"
+            },
+            "patents": {
+              "suffix": "items",
+              "label": "Patent Achievement Awards"
+            }
+          }
+        },
+        "majorProject": {
+          "title": "Major project",
+          "projects": {
+            "scatterSet": "Scatter to set",
+            "deepSeaCages": "Development of deep-sea intelligent cages",
+            "railCrane": "Development of a new type of intelligent power supply automatic rail crane",
+            "provincialPlan": "2020 Shandong Provincial Key R&D Plan",
+            "transportProject": "Key science and technology projects in the transportation industry in 2020"
+          }
+        }
+      }
     }
   },
   "about": {

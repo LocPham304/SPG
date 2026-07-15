@@ -175,6 +175,67 @@
         "shipbuildingRepair": "Hệ thống đóng và sửa chữa tàu",
         "otherServices": "Sản phẩm và dịch vụ khác"
       }
+    },
+    "technology": {
+      "title": "Đổi mới công nghệ",
+      "learnMore": "Tìm hiểu thêm",
+      "tabsLabel": "Danh mục đổi mới công nghệ",
+      "activateLabel": "Hiển thị {category}",
+      "imageAlt": "Toàn cảnh cảng cho {category}",
+      "categories": {
+        "rdLayout": {
+          "title": "Bố trí nghiên cứu và phát triển",
+          "stats": {
+            "highTech": {
+              "suffix": "đơn vị",
+              "label": "Doanh nghiệp công nghệ cao"
+            },
+            "specialized": {
+              "suffix": "đơn vị",
+              "label": "Doanh nghiệp chuyên môn hóa và đổi mới cấp tỉnh"
+            },
+            "platforms": {
+              "suffix": "đơn vị",
+              "label": "Nền tảng R&D cấp tỉnh và cấp bộ"
+            }
+          }
+        },
+        "achievements": {
+          "title": "Thành tựu công nghệ",
+          "stats": {
+            "majorEquipment": {
+              "suffix": "hạng mục",
+              "label": "Bộ thiết bị kỹ thuật trọng điểm đầu tiên"
+            },
+            "progressAwards": {
+              "suffix": "giải",
+              "label": "Giải thưởng Tiến bộ Khoa học và Công nghệ của Viện Hàng hải và Hiệp hội Cảng Trung Quốc"
+            },
+            "governmentAwards": {
+              "suffix": "giải",
+              "label": "Giải thưởng Khoa học và Công nghệ của Chính phủ"
+            },
+            "standards": {
+              "suffix": "hạng mục",
+              "label": "Kết quả tiêu chuẩn hóa"
+            },
+            "patents": {
+              "suffix": "hạng mục",
+              "label": "Giải thưởng thành tựu sáng chế"
+            }
+          }
+        },
+        "majorProject": {
+          "title": "Dự án trọng điểm",
+          "projects": {
+            "scatterSet": "Tập hợp các dự án phân tán",
+            "deepSeaCages": "Phát triển lồng nuôi biển sâu thông minh",
+            "railCrane": "Phát triển cần trục đường ray cấp điện tự động thông minh thế hệ mới",
+            "provincialPlan": "Kế hoạch R&D trọng điểm tỉnh Sơn Đông năm 2020",
+            "transportProject": "Dự án khoa học và công nghệ trọng điểm ngành giao thông vận tải năm 2020"
+          }
+        }
+      }
     }
   },
   "about": {
