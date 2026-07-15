@@ -1,0 +1,73 @@
+# Dependencies
+**/node_modules/
+**/.pnp/
+**/.pnp.*
+**/.yarn/cache/
+**/.yarn/unplugged/
+
+# Build output and caches
+**/.next/
+**/out/
+**/build/
+**/dist/
+**/coverage/
+**/.turbo/
+**/.cache/
+**/__pycache__/
+**/*.py[cod]
+**/*.tsbuildinfo
+
+# Environment and local secrets
+**/.env
+**/.env.*
+!**/.env.example
+
+# Logs
+**/npm-debug.log*
+**/yarn-debug.log*
+**/yarn-error.log*
+**/.pnpm-debug.log*
+**/*.log
+
+# Deployment and operating-system files
+**/.vercel/
+**/.DS_Store
+**/Thumbs.db
+**/Desktop.ini
+**/*.pem
+
+# AI agents and local assistant workspaces
+**/.git-backups/
+**/.agent/
+**/.agents/
+**/agent/
+**/agents/
+**/.codex/
+**/.codex-*/
+**/.claude/
+**/.cursor/
+**/.windsurf/
+**/.continue/
+**/.aider/
+**/.roo/
+**/.openhands/
+**/.kilocode/
+**/.qodo/
+**/.gemini/
+**/.copilot/
+**/.mcp/
+**/.mcp.json
+
+# Agent-specific instructions and state
+**/AGENT.md
+**/AGENTS.md
+**/CLAUDE.md
+**/GEMINI.md
+**/.cursorrules
+**/.windsurfrules
+**/.aider*
+**/copilot-instructions.md
+**/*.agent.log
+**/*.agent.tmp
+**/agent-cache/
+**/agent-output/
