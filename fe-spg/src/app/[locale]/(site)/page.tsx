@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { getTranslations } from "next-intl/server";
 
+import { HomeAboutSection } from "@/components/home/HomeAbout";
+import { HomeBasesSection } from "@/components/home/HomeBases";
 import { HomeHero } from "@/components/home/HomeHero";
 import {
   HomeNewsSection,
@@ -51,6 +53,8 @@ export default async function HomePage({ params, searchParams }: HomePageProps) 
       <Suspense fallback={<NewsSkeleton label={newsT("loading")} />}>
         <HomeNewsSection locale={locale} qaState={qaState} />
       </Suspense>
+      <HomeAboutSection locale={locale} />
+      <HomeBasesSection locale={locale} />
     </>
   );
 }

@@ -4,15 +4,42 @@
     "defaultTitle": "Shandong Port Equipment Group",
     "defaultDescription": "Sản phẩm, giải pháp và thông tin doanh nghiệp về thiết bị cảng.",
     "pages": {
-      "home": { "title": "Trang chủ", "description": "Tổng quan về sản phẩm, giải pháp và hoạt động của doanh nghiệp." },
-      "companyProfile": { "title": "Hồ sơ công ty", "description": "Thông tin tổng quan về doanh nghiệp." },
-      "organization": { "title": "Sơ đồ tổ chức", "description": "Cấu trúc tổ chức của doanh nghiệp." },
-      "qualifications": { "title": "Năng lực công ty", "description": "Năng lực và chứng nhận của doanh nghiệp." },
-      "corporateCulture": { "title": "Văn hóa doanh nghiệp", "description": "Nền tảng văn hóa của doanh nghiệp." },
-      "products": { "title": "Sản phẩm và Giải pháp", "description": "Danh mục sản phẩm và giải pháp thiết bị cảng." },
-      "technology": { "title": "Đổi mới công nghệ", "description": "Năng lực nghiên cứu và đổi mới công nghệ." },
-      "news": { "title": "Tin tức", "description": "Tin tức và thông báo mới từ doanh nghiệp." },
-      "contact": { "title": "Liên hệ", "description": "Thông tin liên hệ và mạng lưới tiếp thị." }
+      "home": {
+        "title": "Trang chủ",
+        "description": "Tổng quan về sản phẩm, giải pháp và hoạt động của doanh nghiệp."
+      },
+      "companyProfile": {
+        "title": "Hồ sơ công ty",
+        "description": "Thông tin tổng quan về doanh nghiệp."
+      },
+      "organization": {
+        "title": "Sơ đồ tổ chức",
+        "description": "Cấu trúc tổ chức của doanh nghiệp."
+      },
+      "qualifications": {
+        "title": "Năng lực công ty",
+        "description": "Năng lực và chứng nhận của doanh nghiệp."
+      },
+      "corporateCulture": {
+        "title": "Văn hóa doanh nghiệp",
+        "description": "Nền tảng văn hóa của doanh nghiệp."
+      },
+      "products": {
+        "title": "Sản phẩm và Giải pháp",
+        "description": "Danh mục sản phẩm và giải pháp thiết bị cảng."
+      },
+      "technology": {
+        "title": "Đổi mới công nghệ",
+        "description": "Năng lực nghiên cứu và đổi mới công nghệ."
+      },
+      "news": {
+        "title": "Tin tức",
+        "description": "Tin tức và thông báo mới từ doanh nghiệp."
+      },
+      "contact": {
+        "title": "Liên hệ",
+        "description": "Thông tin liên hệ và mạng lưới tiếp thị."
+      }
     }
   },
   "navigation": {
@@ -90,6 +117,45 @@
         "title": "Tạm thời không thể tải tin tức",
         "description": "Vui lòng thử lại sau."
       }
+    },
+    "about": {
+      "title": "Giới thiệu",
+      "companyName": "Công ty TNHH Tập đoàn Thiết bị Sealand Sơn Đông",
+      "paragraphs": {
+        "introduction": "Công ty TNHH Tập đoàn Thiết bị Sealand Sơn Đông (sau đây gọi tắt là \"Tập đoàn Thiết bị Cảng Sơn Đông\") là một doanh nghiệp cấp một trực thuộc Công ty TNHH Tập đoàn Cảng Sơn Đông, được thành lập vào tháng 3 năm 2020, sở hữu 4 cơ sở sản xuất và nghiên cứu & phát triển (R&D) gồm: Thiết bị Thanh Đảo, Máy móc Hàng hải Nhật Chiếu, Công nghiệp nặng Lục Hải và Kỹ thuật Ngoài khơi Sơn Cảng, cùng với 1 Trung tâm Thiết kế và R&D tại Thượng Hải.",
+        "business": "Tập đoàn Thiết bị Shandong Sealand chủ yếu hoạt động trong ba lĩnh vực kinh doanh chính: thiết bị cảng, thiết bị ngoài khơi và các sản phẩm, dịch vụ khác, phục vụ các ngành cảng biển, vận tải biển, đóng tàu, nạo vét thủy lực, nuôi trồng thủy sản, kỹ thuật đô thị, logistics đường sắt, kho chứa ngũ cốc, hóa dầu, khai thác mỏ, điện lực, xi măng, luyện kim, sản xuất giấy, hóa chất và các ngành công nghiệp khác. Sản phẩm được sử dụng tại Cảng Thiên Tân, Cảng Trấn Giang, Cảng Phúc Châu, Cảng Phương Thành, Cảng An Huy và Vận tải biển cùng hàng trăm khách hàng doanh nghiệp lớn khác trong nước, trải rộng khắp 28 tỉnh thành của Trung Quốc, và xuất khẩu sang hơn 59 quốc gia và khu vực như Indonesia, Singapore, Việt Nam, Thái Lan, Philippines, Guinea, Châu Âu, Châu Mỹ và Úc."
+      },
+      "imageAlt": "Cẩu cảng và tàu tại khu vực khai thác của Shandong Port Equipment Group"
+    },
+    "bases": {
+      "title": "Các cơ sở trực thuộc",
+      "description": "Đơn vị sản xuất thiết bị hạng nặng cho cảng và các thiết bị trọng điểm của quốc gia",
+      "underConstructionLabel": "{base} đang được xây dựng",
+      "items": {
+        "qingdao": {
+          "title": "Cơ sở Thanh Đảo",
+          "companyOne": "Qingdao Port Equipment Manufacturing Co., Ltd",
+          "companyTwo": "Shanghai Xiadong Lifting Equipment Technology Co., Ltd"
+        },
+        "rizhao": {
+          "title": "Cơ sở Nhật Chiếu",
+          "companyOne": "Rizhao Port Marine Machinery Industry Co., Ltd",
+          "companyTwo": "Rizhao Gangda Shipbuilding Heavy Industry Co., Ltd",
+          "companyThree": "Shangang (Shandong) Offshore Equipment Co., Ltd"
+        },
+        "yantai": {
+          "title": "Cơ sở Yên Đài",
+          "companyOne": "Shandong Luhai Heavy Industry Co., Ltd"
+        },
+        "haiyang": {
+          "title": "Cơ sở Hải Dương",
+          "status": "Đang xây dựng"
+        },
+        "huaihai": {
+          "title": "Cơ sở Hoài Hải",
+          "status": "Đang xây dựng"
+        }
+      }
     }
   },
   "about": {
@@ -103,9 +169,17 @@
   "technology": { "title": "Đổi mới công nghệ" },
   "news": { "title": "Tin tức" },
   "contact": { "title": "Liên hệ" },
-  "footer": { "copyright": "© {year} Shandong Port Equipment Group. Bảo lưu mọi quyền." },
+  "footer": {
+    "copyright": "© {year} Shandong Port Equipment Group. Bảo lưu mọi quyền."
+  },
   "errors": {
-    "notFound": { "title": "Không tìm thấy trang", "description": "Trang bạn yêu cầu không tồn tại hoặc đã được di chuyển." },
-    "generic": { "title": "Đã xảy ra lỗi", "description": "Vui lòng thử lại sau." }
+    "notFound": {
+      "title": "Không tìm thấy trang",
+      "description": "Trang bạn yêu cầu không tồn tại hoặc đã được di chuyển."
+    },
+    "generic": {
+      "title": "Đã xảy ra lỗi",
+      "description": "Vui lòng thử lại sau."
+    }
   }
 }

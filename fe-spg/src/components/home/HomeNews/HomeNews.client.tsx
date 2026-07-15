@@ -54,7 +54,9 @@ export function HomeNewsClient({
 }: HomeNewsClientProps) {
   const [activeCategory, setActiveCategory] = useState(categories[0]?.key);
   const tabRefs = useRef<Array<HTMLButtonElement | null>>([]);
-  const activeIndex = categories.findIndex((category) => category.key === activeCategory);
+  const activeIndex = categories.findIndex(
+    (category) => category.key === activeCategory,
+  );
   const activeArticles = useMemo(
     () => articles.filter((article) => article.categoryKey === activeCategory),
     [activeCategory, articles],
@@ -98,13 +100,17 @@ export function HomeNewsClient({
       <div className={styles.container}>
         <header className={styles.header}>
           <div className={styles.headingGroup}>
-            <p className={styles.eyebrow}>{copy.eyebrow}</p>
+            {/* <p className={styles.eyebrow}>{copy.eyebrow}</p> */}
             <h2 id="home-news-title" className={styles.heading}>
               {copy.title}
             </h2>
           </div>
           <div className={styles.tabsViewport}>
-            <div className={styles.tabs} role="tablist" aria-label={copy.tabsLabel}>
+            <div
+              className={styles.tabs}
+              role="tablist"
+              aria-label={copy.tabsLabel}
+            >
               {categories.map((category, index) => {
                 const isActive = category.key === activeCategory;
                 return (
@@ -135,7 +141,9 @@ export function HomeNewsClient({
           id="home-news-panel"
           className={styles.panel}
           role="tabpanel"
-          aria-labelledby={activeCategory ? `news-tab-${activeCategory}` : undefined}
+          aria-labelledby={
+            activeCategory ? `news-tab-${activeCategory}` : undefined
+          }
           key={activeCategory}
         >
           {featured ? (
@@ -155,8 +163,12 @@ export function HomeNewsClient({
                     className={styles.dateBadge}
                     dateTime={featured.publishedAt}
                   >
-                    <strong>{formatNewsDate(featured.publishedAt, locale).dayMonth}</strong>
-                    <span>{formatNewsDate(featured.publishedAt, locale).year}</span>
+                    <strong>
+                      {formatNewsDate(featured.publishedAt, locale).dayMonth}
+                    </strong>
+                    <span>
+                      {formatNewsDate(featured.publishedAt, locale).year}
+                    </span>
                   </time>
                   <div className={styles.featuredContent}>
                     <h3>{featured.title}</h3>
@@ -173,7 +185,10 @@ export function HomeNewsClient({
                 <ul className={styles.secondaryList}>
                   {secondary.map((article) => (
                     <li key={article.id} className={styles.secondaryItem}>
-                      <LocalizedLink href="/news" className={styles.secondaryLink}>
+                      <LocalizedLink
+                        href="/news"
+                        className={styles.secondaryLink}
+                      >
                         <time dateTime={article.publishedAt}>
                           {formatNewsDate(article.publishedAt, locale).full}
                         </time>
