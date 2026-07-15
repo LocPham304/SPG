@@ -62,7 +62,14 @@
     "emptyDescription": "Nội dung sẽ được cập nhật sau.",
     "foundationReady": "Nền tảng kỹ thuật đã sẵn sàng cho bước triển khai nội dung tiếp theo."
   },
-  "home": { "title": "Trang chủ", "eyebrow": "Shandong Port Equipment Group" },
+  "home": {
+    "title": "Trang chủ",
+    "eyebrow": "Shandong Port Equipment Group",
+    "hero": {
+      "firstLine": "Xây dựng thương hiệu hàng đầu trong nước",
+      "secondLine": "Nhà sản xuất thiết bị cao cấp nổi tiếng thế giới"
+    }
+  },
   "about": {
     "title": "Giới thiệu",
     "companyProfile": { "title": "Hồ sơ công ty" },

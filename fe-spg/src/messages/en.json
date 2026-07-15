@@ -62,7 +62,14 @@
     "emptyDescription": "Content will be available soon.",
     "foundationReady": "The technical foundation is ready for the next content implementation step."
   },
-  "home": { "title": "Home", "eyebrow": "Shandong Port Equipment Group" },
+  "home": {
+    "title": "Home",
+    "eyebrow": "Shandong Port Equipment Group",
+    "hero": {
+      "firstLine": "To build a domestic first-class",
+      "secondLine": "A world-renowned manufacturer of high-end equipment"
+    }
+  },
   "about": {
     "title": "Company Profile",
     "companyProfile": { "title": "Company Profile" },

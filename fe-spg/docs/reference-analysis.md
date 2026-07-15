@@ -39,3 +39,49 @@ Observed on 2026-07-15 with the existing project screenshots and a live browser 
 - Technical Innovation: R&D Layout, Technological Achievements, Major Project.
 - Contact: Contact, Marketing Network.
 
+## Homepage Hero scope
+
+Reference: `http://en.spe.cn/`
+
+Observed on 2026-07-15 from the live English homepage and the existing
+`home-top-*` screenshots.
+
+### Verified
+
+- The Hero is one full-viewport video, not an image slider. The live DOM contains
+  one video and no Swiper pagination, arrows, progress bar or scroll indicator.
+- The reference video is muted, autoplaying, looping and inline, without native
+  controls. Its measured duration is approximately `13.87s`.
+- The supplied `/videos/spe-indexbanner1.mp4` is the matching `1280 x 720`
+  company video. `/images/public/files/image/index_banner1.jpg` is the matching
+  `1920 x 960` poster/fallback.
+- Media fills the Hero with `object-fit: cover` and centered object positioning.
+- At the measured `1280 x 720` live viewport, the Hero is exactly `720px` high.
+  Existing desktop and tablet top screenshots also show a viewport-height Hero.
+- The content contains two lines only: `To build a domestic first-class` and
+  `A world-renowned manufacturer of high-end equipment`. There is no eyebrow,
+  description or action button.
+- Content is left aligned. At `1280px` it begins at approximately `85.6px`
+  (`6.77vw`). The two text rows use a DIN-like medium family, approximately
+  `36.9px / 48px`, weight `700`, in white.
+- The content block is vertically centered while accounting for the overlaid
+  Header height. At `1280 x 720`, the first row begins near `351.6px` and the
+  second near `399.5px`.
+- Two Hero overlays are present: a vertical brand-blue-to-transparent gradient
+  over the top half and a left-to-right brand-blue-to-transparent gradient over
+  roughly 60% of the Hero width. Both start around `rgba(42, 63, 126, 0.3)`.
+- Mobile keeps the same video and text, uses a centered cover crop, wraps the
+  heading naturally, and remains viewport height. No separate mobile Hero asset
+  exists in the supplied project.
+
+### Partially verified or not verified
+
+- A stable initial-load sample showed the text in its final visible state with
+  no persistent CSS animation. The exact original entrance timing/easing could
+  not be isolated from remote page load, so the rebuild should use only a short,
+  conservative GSAP line reveal and disclose the timing as partially verified.
+- There is no slide autoplay delay or slide transition because the reference has
+  a single video. There is no verified media zoom or crossfade to reproduce.
+- The reference video can pause when the remote browser tab is backgrounded.
+  The rebuilt video should pause while the document is hidden and resume when
+  visible, while retaining the poster if playback is unavailable.

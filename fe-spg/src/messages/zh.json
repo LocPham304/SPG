@@ -62,7 +62,14 @@
     "emptyDescription": "内容将在后续更新。",
     "foundationReady": "技术基础已准备好，可进入下一步内容实施。"
   },
-  "home": { "title": "首页", "eyebrow": "Shandong Port Equipment Group" },
+  "home": {
+    "title": "首页",
+    "eyebrow": "Shandong Port Equipment Group",
+    "hero": {
+      "firstLine": "建设国内一流企业",
+      "secondLine": "打造世界知名的高端装备制造商"
+    }
+  },
   "about": {
     "title": "公司简介",
     "companyProfile": { "title": "公司简介" },

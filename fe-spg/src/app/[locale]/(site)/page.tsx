@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 
-import { StaticPageShell } from "@/components/common/StaticPageShell";
+import { HomeHero } from "@/components/home/HomeHero";
 import { getStaticPageMetadata } from "@/lib/seo";
 
 type HomePageProps = {
@@ -16,14 +16,12 @@ export async function generateMetadata({
 }
 
 export default async function HomePage() {
-  const t = await getTranslations();
+  const t = await getTranslations("home.hero");
 
   return (
-    <StaticPageShell
-      breadcrumbLabel={t("common.breadcrumb")}
-      foundationMessage={t("common.foundationReady")}
-      homeLabel={t("common.home")}
-      title={t("home.title")}
+    <HomeHero
+      firstLine={t("firstLine")}
+      secondLine={t("secondLine")}
     />
   );
 }
