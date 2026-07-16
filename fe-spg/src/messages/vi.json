@@ -299,7 +299,8 @@
   "errors": {
     "notFound": {
       "title": "Không tìm thấy trang",
-      "description": "Trang bạn yêu cầu không tồn tại hoặc đã được di chuyển."
+      "description": "Trang bạn yêu cầu không tồn tại hoặc đã được di chuyển.",
+      "action": "Về trang chủ"
     },
     "generic": {
       "title": "Đã xảy ra lỗi",

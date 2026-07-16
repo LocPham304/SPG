@@ -290,7 +290,8 @@
   "errors": {
     "notFound": {
       "title": "页面未找到",
-      "description": "您访问的页面不存在或已被移动。"
+      "description": "您访问的页面不存在或已被移动。",
+      "action": "返回首页"
     },
     "generic": { "title": "发生错误", "description": "请稍后重试。" }
   }

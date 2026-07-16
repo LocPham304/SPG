@@ -1,18 +1,17 @@
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 
-import { Container } from "@/components/common/Container";
-import { ErrorState } from "@/components/ui/ErrorState";
+import { NotFoundPage } from "@/components/common/NotFoundPage";
 
 export default async function LocaleNotFound() {
+  const locale = await getLocale();
   const t = await getTranslations("errors.notFound");
 
   return (
-    <Container>
-      <ErrorState
-        centered
-        description={t("description")}
-        title={t("title")}
-      />
-    </Container>
+    <NotFoundPage
+      actionLabel={t("action")}
+      description={t("description")}
+      homeHref={`/${locale}`}
+      title={t("title")}
+    />
   );
 }

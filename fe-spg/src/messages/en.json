@@ -299,7 +299,8 @@
   "errors": {
     "notFound": {
       "title": "Page not found",
-      "description": "The requested page does not exist or has been moved."
+      "description": "The requested page does not exist or has been moved.",
+      "action": "Return home"
     },
     "generic": {
       "title": "Something went wrong",
