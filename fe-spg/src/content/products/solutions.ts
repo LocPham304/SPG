@@ -15,6 +15,7 @@ export type ProductSolutionItem = {
   title: string;
   image: string;
   href: string;
+  external: boolean;
 };
 
 export type ProductMapHotspot = {
@@ -132,7 +133,11 @@ function createItems(
     id,
     title: titles[id],
     image: solutionImages[id],
-    href: routes[id],
+    href:
+      id === "containerHandling"
+        ? "/products/container-handling-systems"
+        : routes[id],
+    external: id !== "containerHandling",
   }));
 }
 

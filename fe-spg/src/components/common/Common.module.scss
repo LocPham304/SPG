@@ -80,7 +80,8 @@
 
 .pageHeroAbout,
 .pageHeroNews,
-.pageHeroProducts {
+.pageHeroProducts,
+.pageHeroProductDetail {
   position: relative;
   min-height: clamp(340px, 23.44vw, 450px);
   align-items: stretch;
@@ -106,18 +107,32 @@
     url("/images/products/banner_solution.jpg") center center / cover no-repeat;
 }
 
+.pageHeroProductDetail {
+  min-height: clamp(260px, 20vw, 384px);
+  background:
+    linear-gradient(rgb(8 27 61 / 12%), rgb(8 27 61 / 12%)),
+    url("/images/Container handling systems/article_solution_banner.jpg") center / cover no-repeat;
+}
+
 .pageHeroAbout .pageHeroInner,
 .pageHeroNews .pageHeroInner,
-.pageHeroProducts .pageHeroInner {
+.pageHeroProducts .pageHeroInner,
+.pageHeroProductDetail .pageHeroInner {
   position: relative;
   z-index: 1;
   min-height: calc(clamp(340px, 23.44vw, 450px) - var(--header-height));
   grid-template-rows: 1fr auto;
 }
 
+.pageHeroProductDetail .pageHeroInner {
+  min-height: calc(clamp(260px, 20vw, 384px) - var(--header-height));
+  grid-template-rows: 1fr;
+}
+
 .pageHeroAbout .pageHeroContent,
 .pageHeroNews .pageHeroContent,
-.pageHeroProducts .pageHeroContent {
+.pageHeroProducts .pageHeroContent,
+.pageHeroProductDetail .pageHeroContent {
   align-self: center;
   justify-items: center;
   gap: 12px;
@@ -127,15 +142,21 @@
 
 .pageHeroAbout .pageTitle,
 .pageHeroNews .pageTitle,
-.pageHeroProducts .pageTitle {
+.pageHeroProducts .pageTitle,
+.pageHeroProductDetail .pageTitle {
   font-size: clamp(32px, 2.35vw, 45px);
   font-weight: 700;
   letter-spacing: -0.02em;
 }
 
+.pageHeroProductDetail .pageTitle {
+  font-size: clamp(28px, 2vw, 38px);
+}
+
 .pageHeroAbout .breadcrumbs,
 .pageHeroNews .breadcrumbs,
-.pageHeroProducts .breadcrumbs {
+.pageHeroProducts .breadcrumbs,
+.pageHeroProductDetail .breadcrumbs {
   justify-content: center;
   gap: 4px;
   color: #fff;
@@ -145,13 +166,15 @@
 
 .pageHeroAbout .separator,
 .pageHeroNews .separator,
-.pageHeroProducts .separator {
+.pageHeroProducts .separator,
+.pageHeroProductDetail .separator {
   color: rgb(255 255 255 / 82%);
 }
 
 .pageHeroAbout .breadcrumbLink:hover,
 .pageHeroNews .breadcrumbLink:hover,
-.pageHeroProducts .breadcrumbLink:hover {
+.pageHeroProducts .breadcrumbLink:hover,
+.pageHeroProductDetail .breadcrumbLink:hover {
   color: #fff;
   text-decoration: underline;
   text-underline-offset: 4px;
@@ -174,7 +197,8 @@
 
   .pageHeroAbout,
   .pageHeroNews,
-  .pageHeroProducts {
+  .pageHeroProducts,
+  .pageHeroProductDetail {
     min-height: 320px;
     padding-block: var(--header-height) 0;
     background-position: 58% center;
@@ -188,28 +212,60 @@
     background-position: 48% center;
   }
 
+  .pageHeroProductDetail {
+    min-height: 184px;
+    background-position: 54% center;
+  }
+
   .pageHeroAbout .pageHeroInner,
   .pageHeroNews .pageHeroInner,
-  .pageHeroProducts .pageHeroInner {
+  .pageHeroProducts .pageHeroInner,
+  .pageHeroProductDetail .pageHeroInner {
     min-height: calc(320px - var(--header-height));
+  }
+
+  .pageHeroProductDetail .breadcrumbs {
+    flex-wrap: nowrap;
+    justify-content: center;
+    overflow: hidden;
+    max-width: calc(100vw - (var(--container-gutter) * 2));
+    white-space: nowrap;
+  }
+
+  .pageHeroProductDetail .breadcrumbs li {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .pageHeroProductDetail .pageHeroInner {
+    min-height: calc(184px - var(--header-height));
   }
 
   .pageHeroAbout .pageHeroContent,
   .pageHeroNews .pageHeroContent,
-  .pageHeroProducts .pageHeroContent {
+  .pageHeroProducts .pageHeroContent,
+  .pageHeroProductDetail .pageHeroContent {
     gap: 10px;
     padding-top: 8px;
   }
 
   .pageHeroAbout .pageTitle,
   .pageHeroNews .pageTitle,
-  .pageHeroProducts .pageTitle {
+  .pageHeroProducts .pageTitle,
+  .pageHeroProductDetail .pageTitle {
     font-size: 30px;
+  }
+
+  .pageHeroProductDetail .pageTitle {
+    max-width: 100%;
+    font-size: 18px;
+    letter-spacing: -0.01em;
   }
 
   .pageHeroAbout .breadcrumbs,
   .pageHeroNews .breadcrumbs,
-  .pageHeroProducts .breadcrumbs {
+  .pageHeroProducts .breadcrumbs,
+  .pageHeroProductDetail .breadcrumbs {
     font-size: 12px;
   }
 

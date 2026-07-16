@@ -2,6 +2,7 @@ import type { CSSProperties } from "react";
 import Image from "next/image";
 
 import { Container } from "@/components/common/Container";
+import { LocalizedLink } from "@/components/common/LocalizedLink";
 import type { ProductSolutionsContent } from "@/content/products/solutions";
 
 import styles from "./ProductsSolutions.module.scss";
@@ -71,14 +72,9 @@ export function ProductsSolutionsSection({
 
       <h2 className={styles.heading}>{title}</h2>
       <ul className={styles.grid}>
-        {items.map((item) => (
-          <li key={item.id}>
-            <a
-              className={styles.card}
-              href={item.href}
-              rel="noreferrer"
-              target="_blank"
-            >
+        {items.map((item) => {
+          const cardContent = (
+            <>
               <span className={styles.cardImage}>
                 <Image
                   alt={item.title}
@@ -92,9 +88,28 @@ export function ProductsSolutionsSection({
                 </span>
               </span>
               <strong>{item.title}</strong>
-            </a>
-          </li>
-        ))}
+            </>
+          );
+
+          return (
+            <li key={item.id}>
+              {item.external ? (
+                <a
+                  className={styles.card}
+                  href={item.href}
+                  rel="noreferrer"
+                  target="_blank"
+                >
+                  {cardContent}
+                </a>
+              ) : (
+                <LocalizedLink className={styles.card} href={item.href}>
+                  {cardContent}
+                </LocalizedLink>
+              )}
+            </li>
+          );
+        })}
       </ul>
     </Container>
   );

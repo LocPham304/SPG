@@ -1,0 +1,291 @@
+@use "../../styles/mixins" as *;
+
+.main {
+  color: #20262b;
+}
+
+.overviewSection {
+  padding-block: clamp(54px, 4.7vw, 90px) clamp(64px, 5vw, 96px);
+}
+
+.overviewMedia {
+  position: relative;
+  margin-inline: auto;
+  box-shadow: 0 5px 24px rgb(28 52 73 / 11%);
+}
+
+.overviewImage {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.introOverlay,
+.introCopy {
+  display: grid;
+}
+
+.introOverlay {
+  position: absolute;
+  right: 1.6%;
+  bottom: 3.5%;
+  width: min(42%, 620px);
+  gap: 12px;
+  padding: clamp(22px, 2.1vw, 40px);
+  border-radius: 4px;
+  background: linear-gradient(135deg, rgb(12 25 37 / 88%), rgb(21 22 24 / 70%));
+  box-shadow: 0 12px 34px rgb(0 0 0 / 18%);
+  color: #fff;
+  backdrop-filter: blur(7px);
+}
+
+.introLabel {
+  width: fit-content;
+  color: #c2942c;
+  font-size: clamp(13px, 0.83vw, 16px);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.introOverlay h2,
+.introCopy h2 {
+  font-family: var(--font-heading);
+  font-size: clamp(20px, 1.4vw, 32px);
+  line-height: 1.2;
+}
+
+.introOverlay p,
+.introCopy p {
+  font-size: clamp(11px, 0.7vw, 16px);
+  line-height: 1.7;
+}
+
+.introCopy {
+  display: none;
+  max-width: 1100px;
+  justify-items: center;
+  gap: 13px;
+  margin: clamp(28px, 2.8vw, 54px) auto 0;
+  text-align: center;
+}
+
+.productSection {
+  padding-block: clamp(58px, 4.7vw, 90px) clamp(64px, 5.4vw, 104px);
+  scroll-margin-top: var(--header-height);
+}
+
+.productSectionTinted {
+  background: #f1f9ff;
+}
+
+.productSectionInner > h2 {
+  margin-bottom: clamp(20px, 1.5vw, 29px);
+  font-family: var(--font-heading);
+  font-size: clamp(23px, 1.5vw, 29px);
+  line-height: 1.25;
+}
+
+.productCopy {
+  display: grid;
+  gap: 4px;
+  max-width: 100%;
+  color: #343b40;
+  font-size: clamp(13px, 0.8vw, 15px);
+  line-height: 1.65;
+}
+
+.gallery {
+  position: relative;
+  margin-top: clamp(30px, 2.6vw, 50px);
+}
+
+.gallerySlider {
+  width: 100%;
+}
+
+.gallerySlide {
+  height: auto;
+}
+
+.galleryCard {
+  position: relative;
+  height: 100%;
+  min-height: 0;
+  margin: 0;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: #dfe9ef;
+}
+
+.galleryImage {
+  object-fit: cover;
+  transition: transform 420ms ease;
+}
+
+.galleryCard figcaption {
+  position: absolute;
+  z-index: 1;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  max-width: none;
+  padding: 8px 14px;
+  background: rgb(0 0 0 / 68%);
+  color: #fff;
+  font-size: clamp(11px, 0.72vw, 14px);
+  font-weight: 600;
+  line-height: 1.35;
+  text-align: center;
+  text-shadow: 0 1px 5px rgb(0 0 0 / 55%);
+  text-wrap: balance;
+}
+
+.galleryCard:hover .galleryImage {
+  transform: scale(1.025);
+}
+
+.galleryControl {
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  display: grid;
+  width: 46px;
+  height: 58px;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  color: #38454e;
+  cursor: pointer;
+  transform: translateY(-50%);
+  transition:
+    background-color 180ms ease,
+    color 180ms ease,
+    opacity 180ms ease;
+}
+
+.galleryControl:hover:not(:disabled),
+.galleryControl:focus-visible {
+  background: transparent;
+  color: #1684c3;
+}
+
+.galleryControl:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 3px;
+}
+
+.galleryControl:disabled {
+  cursor: default;
+  opacity: 0.35;
+}
+
+.galleryControl svg {
+  width: 28px;
+  height: 28px;
+  stroke-width: 1.5;
+}
+
+.galleryControlPrevious {
+  left: -58px;
+}
+
+.galleryControlNext {
+  right: -58px;
+}
+
+@media (width <= 1199px) {
+  .introOverlay {
+    display: none;
+  }
+
+  .introCopy {
+    display: grid;
+  }
+
+  .galleryControlPrevious {
+    left: -22px;
+  }
+
+  .galleryControlNext {
+    right: -22px;
+  }
+}
+
+@include mobile {
+  .overviewSection {
+    padding-block: 28px 42px;
+  }
+
+  .overviewMedia {
+    margin-inline: 0;
+    box-shadow: 0 4px 14px rgb(28 52 73 / 10%);
+  }
+
+  .introCopy {
+    gap: 10px;
+    margin-top: 24px;
+  }
+
+  .introCopy .introLabel {
+    display: none;
+  }
+
+  .introCopy h2 {
+    font-size: 18px;
+  }
+
+  .introCopy p {
+    font-size: 13px;
+    line-height: 1.68;
+    text-align: left;
+  }
+
+  .productSection {
+    padding-block: 36px 45px;
+  }
+
+  .productSectionInner > h2 {
+    margin-bottom: 16px;
+    font-size: 18px;
+  }
+
+  .productCopy {
+    gap: 7px;
+    font-size: 13px;
+    line-height: 1.65;
+  }
+
+  .gallery {
+    margin-top: 24px;
+  }
+
+  .galleryCard figcaption {
+    max-width: none;
+    padding: 6px 10px;
+    font-size: 11px;
+  }
+
+  .galleryControl {
+    width: 36px;
+    height: 48px;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .galleryControl svg {
+    width: 23px;
+    height: 23px;
+  }
+
+  .galleryControlPrevious {
+    left: -10px;
+  }
+
+  .galleryControlNext {
+    right: -10px;
+  }
+}
