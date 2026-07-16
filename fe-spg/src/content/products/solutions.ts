@@ -125,6 +125,12 @@ const chineseRoutes: Record<ProductSolutionId, string> = {
   otherServices: "http://www.spe.cn/html/other_products_and_services/",
 };
 
+const internalRoutes: Partial<Record<ProductSolutionId, string>> = {
+  containerHandling: "/products/container-handling-systems",
+  dryBulk: "/products/dry-bulk-handling-systems",
+  breakbulk: "/products/breakbulk-handling-systems",
+};
+
 function createItems(
   titles: Record<ProductSolutionId, string>,
   routes: Record<ProductSolutionId, string>,
@@ -133,13 +139,8 @@ function createItems(
     id,
     title: titles[id],
     image: solutionImages[id],
-    href:
-      id === "containerHandling"
-        ? "/products/container-handling-systems"
-        : id === "dryBulk"
-          ? "/products/dry-bulk-handling-systems"
-          : routes[id],
-    external: id !== "containerHandling" && id !== "dryBulk",
+    href: internalRoutes[id] ?? routes[id],
+    external: internalRoutes[id] === undefined,
   }));
 }
 
