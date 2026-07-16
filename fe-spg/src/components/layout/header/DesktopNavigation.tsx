@@ -43,15 +43,9 @@ export function DesktopNavigation({
   }
 
   function handleKeyDown(
-    event: KeyboardEvent<HTMLButtonElement>,
+    event: KeyboardEvent<HTMLAnchorElement>,
     index: number,
   ) {
-    if (event.key === "Enter" || event.key === " ") {
-      event.preventDefault();
-      setActiveDropdown(activeDropdown === index ? null : index);
-      return;
-    }
-
     if (event.key === "ArrowDown") {
       event.preventDefault();
       setActiveDropdown(index);
@@ -90,17 +84,18 @@ export function DesktopNavigation({
               key={item.href}
               onMouseEnter={() => setActiveDropdown(index)}
             >
-              <button
+              <LocalizedLink
                 aria-controls={panelId}
                 aria-expanded={isOpen}
                 aria-haspopup="true"
                 className={`${styles.desktopTrigger} ${isActive ? styles.activeTrigger : ""}`}
-                onClick={() => setActiveDropdown(isOpen ? null : index)}
+                href={item.href}
+                onClick={() => setActiveDropdown(null)}
+                onFocus={() => setActiveDropdown(index)}
                 onKeyDown={(event) => handleKeyDown(event, index)}
-                type="button"
               >
                 {item.label}
-              </button>
+              </LocalizedLink>
             </li>
           );
         })}

@@ -115,22 +115,32 @@ export function MobileNavigation({
 
               return (
                 <li className={styles.mobileItem} key={item.href}>
-                  <button
-                    aria-controls={panelId}
-                    aria-expanded={isExpanded}
-                    className={`${styles.mobileAccordionButton} ${isActive ? styles.mobileActive : ""}`}
-                    onClick={() =>
-                      setOpenAccordion(isExpanded ? null : index)
-                    }
-                    tabIndex={isOpen ? 0 : -1}
-                    type="button"
-                  >
-                    <span>{item.label}</span>
-                    <span
-                      aria-hidden="true"
-                      className={`${styles.mobileArrow} ${isExpanded ? styles.mobileArrowOpen : ""}`}
-                    />
-                  </button>
+                  <div className={styles.mobileAccordionRow}>
+                    <LocalizedLink
+                      className={`${styles.mobileParentLink} ${isActive ? styles.mobileActive : ""}`}
+                      href={item.href}
+                      onClick={onClose}
+                      tabIndex={isOpen ? 0 : -1}
+                    >
+                      {item.label}
+                    </LocalizedLink>
+                    <button
+                      aria-controls={panelId}
+                      aria-expanded={isExpanded}
+                      aria-label={item.label}
+                      className={`${styles.mobileAccordionButton} ${isActive ? styles.mobileActive : ""}`}
+                      onClick={() =>
+                        setOpenAccordion(isExpanded ? null : index)
+                      }
+                      tabIndex={isOpen ? 0 : -1}
+                      type="button"
+                    >
+                      <span
+                        aria-hidden="true"
+                        className={`${styles.mobileArrow} ${isExpanded ? styles.mobileArrowOpen : ""}`}
+                      />
+                    </button>
+                  </div>
                   <div
                     className={`${styles.mobileSubmenu} ${isExpanded ? styles.mobileSubmenuOpen : ""}`}
                     id={panelId}

@@ -551,23 +551,32 @@
     border-bottom: 1px solid #e2e2e2;
   }
 
-  .mobileAccordionButton {
+  .mobileAccordionRow {
     display: grid;
-    width: 100%;
     min-height: 52px;
-    border: 0;
-    grid-template-columns: 1fr 51px;
+    grid-template-columns: minmax(0, 1fr) 51px;
+    align-items: stretch;
+  }
+
+  .mobileParentLink {
+    display: flex;
+    min-width: 0;
     align-items: center;
-    padding: 0;
-    background: transparent;
+    padding-inline: 15px;
     color: #333;
     font-size: 16px;
     line-height: 1.35;
     text-align: left;
   }
 
-  .mobileAccordionButton > span:first-child {
-    padding-inline: 15px;
+  .mobileAccordionButton {
+    display: block;
+    width: 100%;
+    min-height: 52px;
+    border: 0;
+    padding: 0;
+    background: transparent;
+    color: #333;
   }
 
   .mobileActive {

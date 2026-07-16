@@ -11,7 +11,7 @@ type PageHeroProps = {
   breadcrumbLabel: string;
   breadcrumbSeparator?: string;
   children?: ReactNode;
-  variant?: "default" | "about" | "news";
+  variant?: "default" | "about" | "news" | "products";
 };
 
 export function PageHero({
@@ -27,6 +27,8 @@ export function PageHero({
       ? styles.pageHeroAbout
       : variant === "news"
         ? styles.pageHeroNews
+        : variant === "products"
+          ? styles.pageHeroProducts
         : "";
 
   return (

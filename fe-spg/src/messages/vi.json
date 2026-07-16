@@ -107,6 +107,7 @@
       "backToTop": "Về đầu trang",
       "loading": "Đang tải tin tức trang chủ",
       "categories": {
+        "currentAffairs": "Thời sự",
         "groupNews": "Tin tức tập đoàn",
         "productDelivery": "Tiến độ bàn giao sản phẩm",
         "notices": "Thông báo"

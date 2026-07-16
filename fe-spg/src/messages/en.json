@@ -107,6 +107,7 @@
       "backToTop": "Back to top",
       "loading": "Loading homepage news",
       "categories": {
+        "currentAffairs": "Current affairs",
         "groupNews": "Group news",
         "productDelivery": "Product delivery dynamics",
         "notices": "Notices"

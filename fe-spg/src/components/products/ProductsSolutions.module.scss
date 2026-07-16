@@ -1,0 +1,381 @@
+.heroNavigation {
+  display: flex;
+  height: clamp(62px, 3.85vw, 74px);
+  align-items: stretch;
+  justify-content: center;
+  border-top: 1px solid rgb(255 255 255 / 55%);
+}
+
+.heroNavigation a {
+  position: relative;
+  display: grid;
+  min-width: clamp(220px, 18vw, 345px);
+  place-items: center;
+  padding-inline: 30px;
+  font-size: clamp(14px, 0.84vw, 16px);
+  font-weight: 600;
+  transition: background-color 180ms ease;
+}
+
+.heroNavigation a::after {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  background: #fff;
+  content: "";
+}
+
+.heroNavigation a:hover,
+.heroNavigation a:focus-visible {
+  background: rgb(255 255 255 / 10%);
+}
+
+.section {
+  padding-block: clamp(70px, 4.7vw, 90px) clamp(86px, 5.75vw, 110px);
+}
+
+.map {
+  position: relative;
+  margin: 0;
+  overflow: hidden;
+}
+
+.mapImage {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.map figcaption {
+  position: absolute;
+  top: clamp(18px, 1.5vw, 29px);
+  left: clamp(18px, 1.5vw, 29px);
+  max-width: min(80%, 760px);
+  color: #fff;
+  font-size: clamp(18px, 1.35vw, 26px);
+  font-weight: 700;
+  line-height: 1.25;
+  text-wrap: balance;
+}
+
+.hotspots {
+  position: absolute;
+  inset: 0;
+  list-style: none;
+  pointer-events: none;
+}
+
+.hotspots li {
+  position: absolute;
+  top: var(--hotspot-y);
+  left: var(--hotspot-x);
+  width: 1px;
+  height: 1px;
+  pointer-events: auto;
+}
+
+.hotspots button {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 38px;
+  height: 50px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  transform: translateX(-50%);
+}
+
+.pin {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: clamp(22px, 1.7vw, 32px);
+  height: clamp(28px, 2.1vw, 40px);
+  border: clamp(6px, 0.42vw, 8px) solid #078cff;
+  border-radius: 50% 50% 50% 0;
+  background: #fff;
+  box-shadow: 0 0 10px rgb(255 255 255 / 72%);
+  transform: translateX(-50%) rotate(-45deg);
+  transition:
+    border-color 220ms ease,
+    transform 220ms ease;
+}
+
+.pin::before,
+.pin::after {
+  position: absolute;
+  inset: -8px;
+  border: 2px solid #4da8fa;
+  border-radius: 50%;
+  animation: hotspotPulse 3.2s ease-out infinite;
+  content: "";
+  opacity: 0;
+}
+
+.pin::after {
+  animation-delay: 1.6s;
+}
+
+.tooltip {
+  position: absolute;
+  bottom: 48px;
+  left: 50%;
+  display: grid;
+  width: min(410px, 31vw);
+  gap: 14px;
+  padding: 20px;
+  border-radius: 10px;
+  background: rgb(18 27 36 / 66%);
+  box-shadow: 0 14px 32px rgb(0 21 36 / 18%);
+  color: rgb(255 255 255 / 80%);
+  font-size: clamp(13px, 0.9vw, 17px);
+  line-height: 1.35;
+  opacity: 0;
+  pointer-events: none;
+  text-align: left;
+  transform: translate(-20%, 8px);
+  transition:
+    opacity 220ms ease,
+    transform 220ms ease,
+    visibility 220ms ease;
+  visibility: hidden;
+}
+
+.tooltip::after {
+  position: absolute;
+  top: 100%;
+  left: 20%;
+  border: 10px solid transparent;
+  border-top-color: rgb(18 27 36 / 66%);
+  content: "";
+  transform: translateX(-50%);
+}
+
+.tooltipSection {
+  display: grid;
+  gap: 6px;
+}
+
+.tooltipSection strong {
+  color: #fff;
+  font-size: 1.08em;
+}
+
+.hotspotEnd .tooltip {
+  right: 50%;
+  left: auto;
+  transform: translate(20%, 8px);
+}
+
+.hotspotEnd .tooltip::after {
+  right: 20%;
+  left: auto;
+  transform: translateX(50%);
+}
+
+.hotspots button:hover .pin,
+.hotspots button:focus-visible .pin {
+  border-color: #61b4ff;
+  transform: translateX(-50%) rotate(-45deg) scale(1.08);
+}
+
+.hotspots button:hover .tooltip,
+.hotspots button:focus-visible .tooltip {
+  opacity: 1;
+  transform: translate(-20%, 0);
+  visibility: visible;
+}
+
+.hotspotEnd button:hover .tooltip,
+.hotspotEnd button:focus-visible .tooltip {
+  transform: translate(20%, 0);
+}
+
+.hotspots button:focus-visible {
+  border-radius: 4px;
+  outline: 2px solid #fff;
+  outline-offset: 4px;
+}
+
+.heading {
+  margin: clamp(58px, 4.2vw, 80px) 0 clamp(34px, 2.4vw, 46px);
+  font-family: var(--font-heading);
+  font-size: clamp(27px, 1.82vw, 35px);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: clamp(34px, 3.2vw, 62px);
+  row-gap: clamp(34px, 2.6vw, 50px);
+  list-style: none;
+}
+
+.card {
+  display: grid;
+  gap: clamp(15px, 1vw, 20px);
+}
+
+.cardImage {
+  position: relative;
+  display: block;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: #edf1f3;
+  box-shadow: 0 0 20px rgb(19 54 79 / 10%);
+  transition: box-shadow 260ms ease;
+}
+
+.cardImage img {
+  object-fit: cover;
+  transition: transform 320ms ease;
+}
+
+.learnMore {
+  position: absolute;
+  right: 18px;
+  bottom: 18px;
+  display: flex;
+  min-width: 205px;
+  height: 58px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding-inline: 28px;
+  background: #bd8e27;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  opacity: 0;
+  text-transform: uppercase;
+  transform: translateY(10px);
+  transition:
+    background-color 220ms ease,
+    opacity 220ms ease,
+    transform 220ms ease;
+}
+
+.card > strong {
+  font-size: clamp(16px, 1.05vw, 20px);
+  font-weight: 500;
+  line-height: 1.3;
+  text-wrap: pretty;
+}
+
+.card:hover .cardImage,
+.card:focus-visible .cardImage {
+  box-shadow: 0 12px 32px rgb(19 54 79 / 16%);
+}
+
+.card:hover .cardImage img,
+.card:focus-visible .cardImage img {
+  transform: scale(1.025);
+}
+
+.card:hover .learnMore,
+.card:focus-visible .learnMore {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.learnMore:hover {
+  background: #aa7d20;
+}
+
+.card:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 5px;
+}
+
+@keyframes hotspotPulse {
+  0% {
+    opacity: 0.9;
+    transform: scale(0.25);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(2.2);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pin::before,
+  .pin::after {
+    animation: none;
+  }
+
+  .cardImage img,
+  .learnMore,
+  .tooltip {
+    transition: none;
+  }
+}
+
+@media (width <= 767px) {
+  .heroNavigation {
+    height: 60px;
+    margin-inline: calc(-1 * var(--container-gutter));
+  }
+
+  .heroNavigation a {
+    min-width: 230px;
+    padding-inline: 24px;
+    font-size: 13px;
+  }
+
+  .section {
+    padding-block: 40px 76px;
+  }
+
+  .map figcaption {
+    top: 12px;
+    left: 12px;
+    max-width: 88%;
+    font-size: clamp(13px, 4vw, 17px);
+  }
+
+  .pin {
+    width: 15px;
+    height: 19px;
+    border-width: 4px;
+  }
+
+  .hotspots button {
+    width: 26px;
+    height: 32px;
+  }
+
+  .tooltip {
+    display: none;
+  }
+
+  .heading {
+    margin-block: 44px 28px;
+    font-size: 25px;
+    text-align: center;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .card {
+    gap: 12px;
+  }
+
+  .card > strong {
+    font-size: 15px;
+  }
+
+  .learnMore {
+    display: none;
+  }
+}

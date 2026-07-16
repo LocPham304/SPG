@@ -98,6 +98,7 @@
       "backToTop": "返回顶部",
       "loading": "正在加载首页新闻",
       "categories": {
+        "currentAffairs": "时事新闻",
         "groupNews": "集团新闻",
         "productDelivery": "产品交付动态",
         "notices": "公示公告"
