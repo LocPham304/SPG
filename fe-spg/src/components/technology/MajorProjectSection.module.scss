@@ -1,0 +1,270 @@
+@use "../../styles/mixins" as *;
+
+.layout {
+  overflow: hidden;
+  background: #fff;
+  color: #2d3034;
+}
+
+.heading {
+  padding-block: clamp(54px, 4.17vw, 80px) clamp(42px, 3.13vw, 60px);
+}
+
+.heading h2 {
+  color: #1684c7;
+  font-size: clamp(26px, 1.88vw, 36px);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.projects {
+  display: grid;
+}
+
+.project {
+  position: relative;
+  isolation: isolate;
+  min-height: clamp(440px, 32.5vw, 624px);
+  padding-block: clamp(50px, 4.17vw, 80px);
+  background: #fff;
+
+  @media screen and (width > 740px) {
+    margin: 40px 0;
+  }
+}
+
+.backgroundPanel {
+  position: absolute;
+  z-index: 0;
+  inset-block: 0;
+  width: 72%;
+  overflow: hidden;
+}
+
+.decorativeBackground {
+  object-fit: cover;
+}
+
+.project[data-image-side="right"] .backgroundPanel {
+  left: 0;
+}
+
+.project[data-image-side="left"] .backgroundPanel {
+  right: 0;
+}
+
+.projectInner {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(44px, 5.2vw, 100px);
+  min-height: inherit;
+}
+
+.visual {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  filter: drop-shadow(0 12px 24px rgb(25 70 103 / 8%));
+}
+
+.projectImage {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+.copy {
+  position: relative;
+  z-index: 1;
+  max-width: 680px;
+}
+
+.copy h3 {
+  max-width: 640px;
+  font-size: clamp(20px, 1.35vw, 26px);
+  font-weight: 700;
+  line-height: 1.25;
+  text-wrap: balance;
+}
+
+.subtitle {
+  margin-top: 8px;
+  color: #1684c7;
+  font-size: clamp(12px, 0.73vw, 14px);
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.description {
+  display: grid;
+  gap: 12px;
+  margin-top: clamp(14px, 1.04vw, 20px);
+  color: #454b50;
+  font-size: clamp(13px, 0.78vw, 15px);
+  line-height: 1.72;
+  text-wrap: pretty;
+}
+
+.project[data-image-side="right"] .visual {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.project[data-image-side="right"] .copy {
+  grid-column: 1;
+  grid-row: 1;
+  justify-self: start;
+}
+
+.project[data-image-side="left"] .visual {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.project[data-image-side="left"] .copy {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+@media (width <= 1199px) {
+  .project {
+    min-height: 0;
+    padding-block: 52px 58px;
+  }
+
+  .projectInner {
+    gap: clamp(32px, 4.17vw, 50px);
+  }
+
+  .copy h3 {
+    font-size: 20px;
+  }
+
+  .description {
+    font-size: 13px;
+    line-height: 1.62;
+  }
+}
+
+@media (width <= 900px) {
+  .heading {
+    padding-block: 40px 20px;
+  }
+
+  .project,
+  .project:nth-child(even) {
+    min-height: 0;
+    padding-block: 0 44px;
+    background: #fff;
+  }
+
+  .project + .project {
+    border-top: 4px solid #fff;
+  }
+
+  .backgroundPanel,
+  .project[data-image-side="right"] .backgroundPanel,
+  .project[data-image-side="left"] .backgroundPanel {
+    inset-block: 0 44px;
+    inset-inline: 40px;
+    width: auto;
+  }
+
+  .decorativeBackground {
+    opacity: 0.34;
+  }
+
+  .projectInner,
+  .project[data-image-side="right"] .projectInner {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    width: calc(100% - 80px);
+    margin-inline: auto;
+    padding-inline: 0;
+  }
+
+  .visual {
+    width: 100%;
+    filter: none;
+  }
+
+  .projectImage {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 707 / 410;
+    object-fit: cover;
+  }
+
+  .copy {
+    width: 100%;
+    max-width: none;
+    padding: 22px 24px 32px;
+  }
+
+  .copy h3 {
+    font-size: 20px;
+  }
+
+  .description {
+    font-size: 13px;
+    line-height: 1.65;
+  }
+}
+
+@include mobile {
+  .heading {
+    padding-block: 40px 32px;
+    text-align: center;
+  }
+
+  .heading h2 {
+    font-size: 22px;
+  }
+
+  .project {
+    padding-block: 0 34px;
+  }
+
+  .project + .project {
+    border-top: 8px solid #fff;
+  }
+
+  .backgroundPanel,
+  .project[data-image-side="right"] .backgroundPanel,
+  .project[data-image-side="left"] .backgroundPanel {
+    inset-block: 0 34px;
+    inset-inline: 16px;
+  }
+
+  .projectInner,
+  .project[data-image-side="right"] .projectInner {
+    width: calc(100% - 32px);
+  }
+
+  .copy {
+    padding: 24px 22px 28px;
+  }
+
+  .copy h3 {
+    font-size: 17px;
+    line-height: 1.32;
+  }
+
+  .subtitle {
+    margin-top: 6px;
+    font-size: 11px;
+  }
+
+  .description {
+    gap: 10px;
+    margin-top: 13px;
+    color: #444b51;
+    font-size: 13px;
+    line-height: 1.62;
+  }
+}
