@@ -10,8 +10,9 @@
 .container {
   position: relative;
   z-index: 2;
-  width: calc(100% - clamp(120px, 9.8vw, 200px));
-  margin-inline: auto;
+  width: 100%;
+  margin-inline: 0;
+  padding-inline: var(--container-gutter);
 }
 
 .header {
@@ -360,10 +361,6 @@
     padding-block: 36px 86px;
   }
 
-  .container {
-    width: min(calc(100% - 10.42vw), 1120px);
-  }
-
   .header {
     display: block;
     margin-bottom: 50px;
@@ -456,10 +453,6 @@
   .section {
     min-height: 920px;
     padding-block: 60px 78px;
-  }
-
-  .container {
-    width: calc(100% - 32px);
   }
 
   .eyebrow {

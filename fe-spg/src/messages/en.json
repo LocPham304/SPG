@@ -247,7 +247,10 @@
       "title": "Company Profile",
       "groupProfile": "Group profile"
     },
-    "organization": { "title": "Organization Chart" },
+    "organization": {
+      "title": "Organization Chart",
+      "closeChart": "Close organization chart"
+    },
     "qualifications": { "title": "Company Qualifications" },
     "corporateCulture": { "title": "Corporate Culture" }
   },

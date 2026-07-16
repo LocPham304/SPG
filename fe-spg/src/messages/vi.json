@@ -247,7 +247,10 @@
       "title": "Hồ sơ công ty",
       "groupProfile": "Hồ sơ tập đoàn"
     },
-    "organization": { "title": "Sơ đồ tổ chức" },
+    "organization": {
+      "title": "Sơ đồ tổ chức",
+      "closeChart": "Đóng sơ đồ tổ chức"
+    },
     "qualifications": { "title": "Năng lực công ty" },
     "corporateCulture": { "title": "Văn hóa doanh nghiệp" }
   },

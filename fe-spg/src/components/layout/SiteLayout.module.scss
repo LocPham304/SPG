@@ -21,9 +21,10 @@
 .footerInner {
   position: relative;
   z-index: 1;
-  width: min(calc(100% - 9.6vw), 1848px);
+  width: 100%;
   min-height: 588px;
-  margin-inline: auto;
+  margin-inline: 0;
+  padding-inline: var(--container-gutter);
   padding-top: clamp(52px, 3.96vw, 76px);
   font-size: 16px;
   line-height: 1.42;
@@ -279,10 +280,6 @@
 }
 
 @media (width <= 1199px) {
-  .footerInner {
-    width: min(calc(100% - 9.6vw), 1080px);
-  }
-
   .footerDetails {
     gap: 24px;
   }
@@ -299,7 +296,6 @@
   }
 
   .footerInner {
-    width: calc(100% - 24px);
     min-height: 0;
     padding-top: 20px;
   }
@@ -450,7 +446,6 @@
 
 @media (768px <= width <= 1199px) {
   .footerInner {
-    width: min(calc(100% - 64px), 920px);
     padding-top: 32px;
   }
 

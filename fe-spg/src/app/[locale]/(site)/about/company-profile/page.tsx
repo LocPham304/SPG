@@ -3,9 +3,11 @@ import { getTranslations } from "next-intl/server";
 
 import { AboutSubNavigation } from "@/components/about/AboutSubNavigation";
 import { AboutBasesSection } from "@/components/about/CompanyProfile/AboutBasesSection";
+import { CompanyHistorySection } from "@/components/about/CompanyProfile/CompanyHistorySection";
 import { CompanyProfileSection } from "@/components/about/CompanyProfile/CompanyProfileSection";
 import { PageHero } from "@/components/common/PageHero";
 import { getCompanyProfileContent } from "@/content/about/company-profile";
+import { getCompanyHistoryContent } from "@/content/about/company-profile/history";
 import { defaultLocale, isAppLocale } from "@/i18n/routing";
 import { getStaticPageMetadata } from "@/lib/seo";
 
@@ -21,6 +23,7 @@ export default async function CompanyProfilePage({ params }: PageProps) {
   const activeLocale = isAppLocale(locale) ? locale : defaultLocale;
   const t = await getTranslations({ locale: activeLocale });
   const content = getCompanyProfileContent(activeLocale);
+  const historyContent = getCompanyHistoryContent(activeLocale);
   const currentHref = "/about/company-profile";
   const aboutNavigation = [
     { href: currentHref, label: t("about.companyProfile.groupProfile") },
@@ -53,6 +56,7 @@ export default async function CompanyProfilePage({ params }: PageProps) {
       </PageHero>
       <CompanyProfileSection content={content} />
       <AboutBasesSection locale={activeLocale} />
+      <CompanyHistorySection content={historyContent} />
     </>
   );
 }

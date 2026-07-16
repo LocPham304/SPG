@@ -37,7 +37,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 7.2% 2.3vw 9% 6.78vw;
+  padding: 7.2% 2.3vw 9% var(--container-gutter);
 }
 
 .introduction::after {
@@ -163,7 +163,7 @@
   }
 
   .introduction {
-    padding: 54px 14px 48px 5.2vw;
+    padding: 54px 14px 48px var(--container-gutter);
   }
 
   .baseItem {

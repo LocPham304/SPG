@@ -83,7 +83,7 @@
   top: 50%;
   right: 0;
   left: 0;
-  padding: var(--header-height) 6.77vw 0;
+  padding: var(--header-height) var(--container-gutter) 0;
   transform: translateY(-50%);
 }
 
@@ -109,7 +109,6 @@
 @media (width <= 1199px) {
   .content {
     top: 40%;
-    padding-inline: 5.2083vw;
   }
 
   .title {
@@ -126,10 +125,6 @@
 @media (width <= 767px) {
   .hero {
     min-height: 500px;
-  }
-
-  .content {
-    padding-inline: 4vw;
   }
 
   .title {

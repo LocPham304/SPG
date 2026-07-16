@@ -238,7 +238,10 @@
       "title": "公司简介",
       "groupProfile": "集团概况"
     },
-    "organization": { "title": "组织架构" },
+    "organization": {
+      "title": "组织架构",
+      "closeChart": "关闭组织架构"
+    },
     "qualifications": { "title": "企业资质" },
     "corporateCulture": { "title": "企业文化" }
   },

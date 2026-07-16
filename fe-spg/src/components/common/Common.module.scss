@@ -92,7 +92,6 @@
 .pageHeroAbout .pageHeroInner {
   position: relative;
   z-index: 1;
-  width: min(calc(100% - 20.8vw), 1520px);
   min-height: calc(clamp(340px, 23.44vw, 450px) - var(--header-height));
   grid-template-rows: 1fr auto;
 }
@@ -151,7 +150,6 @@
   }
 
   .pageHeroAbout .pageHeroInner {
-    width: calc(100% - 32px);
     min-height: calc(320px - var(--header-height));
   }
 

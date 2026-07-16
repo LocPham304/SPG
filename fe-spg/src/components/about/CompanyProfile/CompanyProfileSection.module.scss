@@ -29,10 +29,6 @@
   transform: rotate(180deg);
 }
 
-.container {
-  width: min(calc(100% - 9.6vw), 1520px);
-}
-
 .introduction {
   display: grid;
   gap: clamp(34px, 2.7vw, 52px);
@@ -111,10 +107,6 @@
 }
 
 @media (width <= 1023px) {
-  .container {
-    width: calc(100% - 56px);
-  }
-
   .block {
     gap: 26px;
     padding: 24px;
@@ -142,10 +134,6 @@
     bottom: 0;
     left: -60%;
     width: 155%;
-  }
-
-  .container {
-    width: calc(100% - 40px);
   }
 
   .introduction {

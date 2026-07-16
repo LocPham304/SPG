@@ -21,7 +21,7 @@
 .inner {
   position: relative;
   z-index: 1;
-  padding: 103px 6.3vw 226px;
+  padding: 103px var(--container-gutter) 226px;
 }
 
 .heading {
@@ -159,7 +159,7 @@
   z-index: 2;
   top: 600px;
   bottom: auto;
-  left: 6.3vw;
+  left: var(--container-gutter);
   display: grid;
   width: 62.5vw;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -235,7 +235,7 @@
 
 @media (width <= 1100px) {
   .inner {
-    padding: 68px 5.2vw 205px;
+    padding: 68px var(--container-gutter) 205px;
   }
 
   .activeContent {
@@ -362,9 +362,9 @@
     position: absolute;
     top: auto;
     bottom: 32px;
-    left: 16px;
+    left: var(--container-gutter);
     display: grid;
-    width: calc(100% - 32px);
+    width: calc(100% - (2 * var(--container-gutter)));
     padding-bottom: 0;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     overflow: visible;

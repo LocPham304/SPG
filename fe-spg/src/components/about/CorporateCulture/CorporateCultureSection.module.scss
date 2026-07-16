@@ -1,0 +1,219 @@
+.section {
+  min-height: 1100px;
+  padding-block: clamp(68px, 5vw, 96px) clamp(100px, 7vw, 134px);
+  background: #f3faff
+    url("/images/public/files/image/about_culture_img1.jpg") bottom center / 100%
+    auto no-repeat;
+}
+
+.heading {
+  margin: 0 0 clamp(44px, 3.2vw, 62px);
+  color: #147bc1;
+  font-size: clamp(28px, 1.8vw, 35px);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.tabs {
+  display: flex;
+  width: min(100%, 920px);
+  margin: 0 auto clamp(58px, 4.2vw, 82px);
+}
+
+.tab {
+  display: grid;
+  width: 50%;
+  min-height: clamp(58px, 4.4vw, 84px);
+  padding: 12px 22px;
+  border: 1px solid #c0c1c5;
+  place-items: center;
+  background: rgb(255 255 255 / 16%);
+  color: #333;
+  cursor: pointer;
+  font: inherit;
+  font-size: clamp(16px, 1.15vw, 22px);
+  line-height: 1.15;
+  text-align: center;
+  transition:
+    border-color 220ms ease,
+    background-color 220ms ease,
+    color 220ms ease;
+}
+
+@media (width >= 992px) {
+  .tab {
+    white-space: nowrap;
+  }
+}
+
+.tab + .tab {
+  border-left: 0;
+}
+
+.tab:hover:not([aria-selected="true"]) {
+  border-color: #147bc1;
+  color: #147bc1;
+}
+
+.tab[aria-selected="true"] {
+  border-color: #147bc1;
+  background: #147bc1;
+  color: #fff;
+  font-weight: 700;
+}
+
+.tab:focus-visible,
+.panel:focus-visible {
+  outline: 3px solid rgb(20 123 193 / 30%);
+  outline-offset: 4px;
+}
+
+.panel {
+  animation: panel-enter 260ms ease both;
+}
+
+.cultureBlock {
+  display: grid;
+  grid-template-columns: 31.57% 1fr;
+}
+
+.cultureBlock:not(:last-child) {
+  margin-bottom: clamp(64px, 5.2vw, 100px);
+  padding-bottom: clamp(48px, 3.6vw, 70px);
+  border-bottom: 1px solid #147bc1;
+}
+
+.blockTitle {
+  margin: 0;
+  padding-left: clamp(34px, 4.4vw, 84px);
+  color: #147bc1;
+  font-size: clamp(22px, 1.65vw, 32px);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.details {
+  display: grid;
+  margin: 0;
+  gap: clamp(25px, 2.2vw, 42px);
+}
+
+.detailRow {
+  display: grid;
+  grid-template-columns: clamp(180px, 15vw, 290px) minmax(0, 1fr);
+  align-items: start;
+}
+
+.detailLabel {
+  padding-right: 24px;
+  color: #333;
+  font-size: clamp(15px, 1.05vw, 20px);
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.detailDescription {
+  margin: 0;
+  padding-right: clamp(0px, 4vw, 76px);
+  color: #666;
+  font-size: clamp(14px, 0.9vw, 17px);
+  font-weight: 500;
+  line-height: 1.55;
+}
+
+.detailDescription p {
+  margin: 0;
+}
+
+.detailRow[data-unlabelled="true"] .detailDescription {
+  grid-column: 2;
+}
+
+@keyframes panel-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (width <= 991px) {
+  .cultureBlock {
+    display: block;
+  }
+
+  .blockTitle {
+    margin-bottom: 48px;
+    padding-left: 0;
+    text-align: center;
+  }
+}
+
+@media (width <= 767px) {
+  .section {
+    min-height: 0;
+    padding-block: 52px 88px;
+    background-size: auto min(760px, 48%);
+  }
+
+  .heading {
+    margin-bottom: 34px;
+    font-size: 26px;
+    text-align: center;
+  }
+
+  .tabs {
+    width: 100%;
+    margin-bottom: 42px;
+  }
+
+  .tab {
+    min-height: 54px;
+    padding: 8px 6px;
+    font-size: 14px;
+  }
+
+  .cultureBlock:not(:last-child) {
+    margin-bottom: 38px;
+    padding-bottom: 32px;
+  }
+
+  .blockTitle {
+    margin-bottom: 34px;
+    font-size: 21px;
+  }
+
+  .details {
+    gap: 27px;
+  }
+
+  .detailRow {
+    display: block;
+  }
+
+  .detailLabel {
+    margin-bottom: 10px;
+    padding-right: 0;
+    font-size: 15px;
+  }
+
+  .detailDescription {
+    padding-right: 0;
+    font-size: 14px;
+    line-height: 1.55;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel {
+    animation: none;
+  }
+
+  .tab {
+    transition: none;
+  }
+}

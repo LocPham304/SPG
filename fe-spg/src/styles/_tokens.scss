@@ -13,8 +13,8 @@
   --color-news-accent: #147bc1;
   --color-news-surface: #f3faff;
 
-  --container-width: 1200px;
-  --container-gutter: clamp(20px, 4vw, 64px);
+  --container-width: none;
+  --container-gutter: 6.77vw;
   --header-height: clamp(80px, 6.25vw, 120px);
   --header-height-scrolled: 80px;
   --section-space-desktop: clamp(72px, 8vw, 128px);
@@ -33,6 +33,7 @@
 
 @media (width <= 1199px) {
   :root {
+    --container-gutter: 5.2083vw;
     --header-height: clamp(64px, 7.4vw, 80px);
     --header-height-scrolled: 64px;
   }
@@ -40,6 +41,7 @@
 
 @media (width <= 767px) {
   :root {
+    --container-gutter: 4vw;
     --header-height: 56px;
     --header-height-scrolled: 56px;
   }

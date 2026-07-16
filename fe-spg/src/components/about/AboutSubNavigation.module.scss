@@ -9,11 +9,12 @@
 }
 
 .navigation ul {
-  display: grid;
-  min-width: 720px;
-  height: clamp(62px, 4.27vw, 82px);
-  grid-template-columns: repeat(4, 1fr);
+  display: flex;
+  width: max-content;
+  height: clamp(62px, 3.85vw, 74px);
   align-items: stretch;
+  justify-content: center;
+  margin-inline: auto;
   list-style: none;
 }
 
@@ -23,7 +24,8 @@
   min-width: 0;
   align-items: center;
   justify-content: center;
-  font-size: clamp(14px, 0.94vw, 18px);
+  flex: 0 0 auto;
+  font-size: clamp(14px, 0.84vw, 16px);
   font-weight: 600;
   text-align: center;
 }
@@ -41,9 +43,9 @@
 
 .navigation li::before {
   position: absolute;
-  right: 14%;
+  right: 0;
   bottom: 0;
-  left: 14%;
+  left: 0;
   height: 3px;
   background: transparent;
   content: "";
@@ -55,10 +57,10 @@
 
 .navigation a {
   display: grid;
-  width: 100%;
   height: 100%;
   place-items: center;
-  padding-inline: 18px;
+  padding-inline: clamp(26px, 1.67vw, 32px);
+  white-space: nowrap;
   transition: background-color 180ms ease;
 }
 
@@ -69,12 +71,13 @@
 
 @media (width <= 767px) {
   .navigation {
-    margin-inline: -16px;
+    margin-inline: calc(-1 * var(--container-gutter));
+    padding-inline: var(--container-gutter);
   }
 
   .navigation ul {
-    min-width: 660px;
     height: 60px;
+    margin-inline: 0;
   }
 
   .navigation li {
@@ -82,6 +85,6 @@
   }
 
   .navigation a {
-    padding-inline: 12px;
+    padding-inline: 22px;
   }
 }

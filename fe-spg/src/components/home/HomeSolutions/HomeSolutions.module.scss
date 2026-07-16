@@ -19,12 +19,12 @@
 .inner {
   position: relative;
   z-index: 1;
-  padding: 80px 0 58px 6.95vw;
+  padding: 80px 0 58px var(--container-gutter);
 }
 
 .header {
   display: flex;
-  width: calc(100% - 6.95vw);
+  width: calc(100% - var(--container-gutter));
   align-items: flex-start;
   justify-content: space-between;
 }
@@ -142,7 +142,7 @@
 
 .sliderFooter {
   position: relative;
-  width: calc(100% - 6.95vw);
+  width: calc(100% - var(--container-gutter));
   min-height: 52px;
 }
 
@@ -232,11 +232,11 @@
 
   .inner {
     padding-block: 54px 45px;
-    padding-inline-start: 5.2vw;
+    padding-inline-start: var(--container-gutter);
   }
 
   .header {
-    width: calc(100% - 5.2vw);
+    width: calc(100% - var(--container-gutter));
   }
 
   .sliderShell {
@@ -254,7 +254,7 @@
   }
 
   .sliderFooter {
-    width: calc(100% - 5.2vw);
+    width: calc(100% - var(--container-gutter));
   }
 }
 
@@ -264,12 +264,12 @@
   }
 
   .inner {
-    padding: 38px 0 42px 4vw;
+    padding: 38px 0 42px var(--container-gutter);
   }
 
   .header {
     display: block;
-    width: calc(100% - 8vw);
+    width: calc(100% - (2 * var(--container-gutter)));
     text-align: center;
   }
 
@@ -285,7 +285,7 @@
 
   .learnMore {
     position: absolute;
-    right: 4vw;
+    right: var(--container-gutter);
     bottom: 48px;
     width: 151px;
     min-height: 43px;
@@ -308,7 +308,7 @@
   }
 
   .sliderFooter {
-    width: calc(100% - 8vw);
+    width: calc(100% - (2 * var(--container-gutter)));
     min-height: 59px;
   }
 
