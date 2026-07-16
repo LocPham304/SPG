@@ -77,7 +77,7 @@ export const mainNavigation: readonly NavigationItem[] = [
     ],
   },
   {
-    href: "/technology",
+    href: "/technology/r-and-d-layout",
     label: "technology",
     children: [
       { href: "/technology/r-and-d-layout", label: "rdLayout" },

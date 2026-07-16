@@ -81,7 +81,8 @@
 .pageHeroAbout,
 .pageHeroNews,
 .pageHeroProducts,
-.pageHeroProductDetail {
+.pageHeroProductDetail,
+.pageHeroTechnology {
   position: relative;
   min-height: clamp(340px, 23.44vw, 450px);
   align-items: stretch;
@@ -114,14 +115,26 @@
     url("/images/Container handling systems/article_solution_banner.jpg") center / cover no-repeat;
 }
 
+.pageHeroTechnology {
+  min-height: clamp(300px, 20.31vw, 390px);
+  background:
+    linear-gradient(rgb(0 25 39 / 20%), rgb(0 25 39 / 20%)),
+    url("/images/public/files/image/banner_technology.jpg") center 46% / cover no-repeat;
+}
+
 .pageHeroAbout .pageHeroInner,
 .pageHeroNews .pageHeroInner,
 .pageHeroProducts .pageHeroInner,
-.pageHeroProductDetail .pageHeroInner {
+.pageHeroProductDetail .pageHeroInner,
+.pageHeroTechnology .pageHeroInner {
   position: relative;
   z-index: 1;
   min-height: calc(clamp(340px, 23.44vw, 450px) - var(--header-height));
   grid-template-rows: 1fr auto;
+}
+
+.pageHeroTechnology .pageHeroInner {
+  min-height: calc(clamp(300px, 20.31vw, 390px) - var(--header-height));
 }
 
 .pageHeroProductDetail .pageHeroInner {
@@ -132,7 +145,8 @@
 .pageHeroAbout .pageHeroContent,
 .pageHeroNews .pageHeroContent,
 .pageHeroProducts .pageHeroContent,
-.pageHeroProductDetail .pageHeroContent {
+.pageHeroProductDetail .pageHeroContent,
+.pageHeroTechnology .pageHeroContent {
   align-self: center;
   justify-items: center;
   gap: 12px;
@@ -143,7 +157,8 @@
 .pageHeroAbout .pageTitle,
 .pageHeroNews .pageTitle,
 .pageHeroProducts .pageTitle,
-.pageHeroProductDetail .pageTitle {
+.pageHeroProductDetail .pageTitle,
+.pageHeroTechnology .pageTitle {
   font-size: clamp(32px, 2.35vw, 45px);
   font-weight: 700;
   letter-spacing: -0.02em;
@@ -156,7 +171,8 @@
 .pageHeroAbout .breadcrumbs,
 .pageHeroNews .breadcrumbs,
 .pageHeroProducts .breadcrumbs,
-.pageHeroProductDetail .breadcrumbs {
+.pageHeroProductDetail .breadcrumbs,
+.pageHeroTechnology .breadcrumbs {
   justify-content: center;
   gap: 4px;
   color: #fff;
@@ -167,14 +183,16 @@
 .pageHeroAbout .separator,
 .pageHeroNews .separator,
 .pageHeroProducts .separator,
-.pageHeroProductDetail .separator {
+.pageHeroProductDetail .separator,
+.pageHeroTechnology .separator {
   color: rgb(255 255 255 / 82%);
 }
 
 .pageHeroAbout .breadcrumbLink:hover,
 .pageHeroNews .breadcrumbLink:hover,
 .pageHeroProducts .breadcrumbLink:hover,
-.pageHeroProductDetail .breadcrumbLink:hover {
+.pageHeroProductDetail .breadcrumbLink:hover,
+.pageHeroTechnology .breadcrumbLink:hover {
   color: #fff;
   text-decoration: underline;
   text-underline-offset: 4px;
@@ -198,7 +216,8 @@
   .pageHeroAbout,
   .pageHeroNews,
   .pageHeroProducts,
-  .pageHeroProductDetail {
+  .pageHeroProductDetail,
+  .pageHeroTechnology {
     min-height: 320px;
     padding-block: var(--header-height) 0;
     background-position: 58% center;
@@ -217,11 +236,21 @@
     background-position: 54% center;
   }
 
+  .pageHeroTechnology {
+    min-height: 210px;
+    background-position: center center;
+  }
+
   .pageHeroAbout .pageHeroInner,
   .pageHeroNews .pageHeroInner,
   .pageHeroProducts .pageHeroInner,
-  .pageHeroProductDetail .pageHeroInner {
+  .pageHeroProductDetail .pageHeroInner,
+  .pageHeroTechnology .pageHeroInner {
     min-height: calc(320px - var(--header-height));
+  }
+
+  .pageHeroTechnology .pageHeroInner {
+    min-height: calc(210px - var(--header-height));
   }
 
   .pageHeroProductDetail .breadcrumbs {
@@ -244,7 +273,8 @@
   .pageHeroAbout .pageHeroContent,
   .pageHeroNews .pageHeroContent,
   .pageHeroProducts .pageHeroContent,
-  .pageHeroProductDetail .pageHeroContent {
+  .pageHeroProductDetail .pageHeroContent,
+  .pageHeroTechnology .pageHeroContent {
     gap: 10px;
     padding-top: 8px;
   }
@@ -252,7 +282,8 @@
   .pageHeroAbout .pageTitle,
   .pageHeroNews .pageTitle,
   .pageHeroProducts .pageTitle,
-  .pageHeroProductDetail .pageTitle {
+  .pageHeroProductDetail .pageTitle,
+  .pageHeroTechnology .pageTitle {
     font-size: 30px;
   }
 
@@ -265,7 +296,8 @@
   .pageHeroAbout .breadcrumbs,
   .pageHeroNews .breadcrumbs,
   .pageHeroProducts .breadcrumbs,
-  .pageHeroProductDetail .breadcrumbs {
+  .pageHeroProductDetail .breadcrumbs,
+  .pageHeroTechnology .breadcrumbs {
     font-size: 12px;
   }
 

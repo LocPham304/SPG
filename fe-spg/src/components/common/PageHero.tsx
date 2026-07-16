@@ -11,7 +11,13 @@ type PageHeroProps = {
   breadcrumbLabel: string;
   breadcrumbSeparator?: string;
   children?: ReactNode;
-  variant?: "default" | "about" | "news" | "products" | "productDetail";
+  variant?:
+    | "default"
+    | "about"
+    | "news"
+    | "products"
+    | "productDetail"
+    | "technology";
 };
 
 export function PageHero({
@@ -31,7 +37,9 @@ export function PageHero({
           ? styles.pageHeroProducts
           : variant === "productDetail"
             ? styles.pageHeroProductDetail
-            : "";
+            : variant === "technology"
+              ? styles.pageHeroTechnology
+              : "";
 
   return (
     <header className={`${styles.pageHero} ${variantClass}`}>
