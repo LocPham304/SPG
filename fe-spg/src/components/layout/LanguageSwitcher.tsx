@@ -1,7 +1,6 @@
 "use client";
 
 import { useLocale, useTranslations } from "next-intl";
-import { useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState, useTransition } from "react";
 
 import { usePathname, useRouter } from "@/i18n/navigation";
@@ -27,7 +26,6 @@ export function LanguageSwitcher({
   const t = useTranslations("navigation");
   const pathname = usePathname();
   const router = useRouter();
-  const searchParams = useSearchParams();
   const rootRef = useRef<HTMLDivElement>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
@@ -65,7 +63,10 @@ export function LanguageSwitcher({
     const nextPathname = isNewsDetail
       ? (translatedNewsPath ?? "/news")
       : pathname;
-    const query = isNewsDetail && !translatedNewsPath ? "" : searchParams.toString();
+    const query =
+      isNewsDetail && !translatedNewsPath
+        ? ""
+        : window.location.search.slice(1);
     const hash = window.location.hash;
     const nextPath = `${nextPathname}${query ? `?${query}` : ""}${hash}`;
 
