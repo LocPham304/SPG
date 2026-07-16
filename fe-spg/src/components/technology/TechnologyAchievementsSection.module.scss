@@ -1,0 +1,173 @@
+.layout {
+  background: #fff;
+  color: #333538;
+}
+
+.intro {
+  padding-block: clamp(58px, 4.17vw, 80px);
+}
+
+.pageTitle {
+  color: #1684c7;
+  font-size: clamp(28px, 1.88vw, 36px);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.group,
+.groupMuted {
+  overflow: hidden;
+  padding-block: clamp(58px, 4.17vw, 80px) clamp(68px, 5.21vw, 100px);
+}
+
+.groupMuted {
+  background: #f1f8fe;
+}
+
+.groupInner {
+  display: grid;
+  gap: clamp(38px, 2.6vw, 50px);
+}
+
+.groupTitle {
+  font-size: clamp(20px, 1.25vw, 24px);
+  font-weight: 700;
+  line-height: 1.45;
+  text-wrap: balance;
+}
+
+.slider {
+  width: 100%;
+  padding-bottom: 54px !important;
+}
+
+.slide {
+  height: auto;
+}
+
+.card {
+  display: grid;
+  height: 100%;
+  grid-template-rows: auto auto 1fr;
+  align-content: start;
+  gap: 14px;
+  text-align: center;
+}
+
+.imageFrame {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 1.58;
+  background: #efefed;
+}
+
+.image {
+  object-fit: contain;
+}
+
+.cardTitle {
+  max-width: 94%;
+  margin-inline: auto;
+  font-size: clamp(14px, 0.94vw, 18px);
+  font-weight: 500;
+  line-height: 1.35;
+  text-wrap: balance;
+}
+
+.cardDescription {
+  max-width: 88%;
+  margin-inline: auto;
+  color: #696d72;
+  font-size: clamp(13px, 0.83vw, 16px);
+  font-weight: 500;
+  line-height: 1.35;
+  text-wrap: balance;
+}
+
+.slider :global(.swiper-pagination) {
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.slider :global(.swiper-pagination-bullet) {
+  width: 42px;
+  height: 4px;
+  margin: 0 !important;
+  border-radius: 0;
+  background: #d5d9dc;
+  opacity: 1;
+  transition: background-color 220ms ease;
+}
+
+.slider :global(.swiper-pagination-bullet-active) {
+  background: #1684c7;
+}
+
+.slider :global(.swiper-pagination-lock) {
+  display: none;
+}
+
+@media (width <= 767px) {
+  .intro {
+    padding-block: 34px;
+  }
+
+  .pageTitle {
+    font-size: 22px;
+    text-align: center;
+  }
+
+  .group,
+  .groupMuted {
+    padding-block: 36px 48px;
+  }
+
+  .groupInner {
+    gap: 26px;
+  }
+
+  .groupTitle {
+    max-width: 340px;
+    margin-inline: auto;
+    font-size: 18px;
+    text-align: center;
+  }
+
+  .slider {
+    padding-bottom: 46px !important;
+  }
+
+  .card {
+    gap: 12px;
+  }
+
+  .imageFrame {
+    aspect-ratio: 1.66;
+  }
+
+  .cardTitle {
+    font-size: 14px;
+  }
+
+  .cardDescription {
+    max-width: 90%;
+    font-size: 13px;
+  }
+
+  .slider :global(.swiper-pagination) {
+    gap: 6px;
+  }
+
+  .slider :global(.swiper-pagination-bullet) {
+    width: 18px;
+    height: 3px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slider :global(.swiper-pagination-bullet) {
+    transition: none;
+  }
+}

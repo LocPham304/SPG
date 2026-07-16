@@ -49,9 +49,9 @@
 }
 
 .imageFrame {
-  display: grid;
+  position: relative;
+  overflow: hidden;
   aspect-ratio: 350 / 218;
-  place-items: center;
 }
 
 .image {

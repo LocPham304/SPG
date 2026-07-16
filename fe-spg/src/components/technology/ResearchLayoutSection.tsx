@@ -36,10 +36,9 @@ export function ResearchLayoutSection({
                     <Image
                       alt={card.image.alt}
                       className={styles.image}
-                      height={card.image.height}
+                      fill
                       sizes="(max-width: 767px) 44vw, (max-width: 1199px) 22vw, 20vw"
                       src={card.image.src}
-                      width={card.image.width}
                     />
                   </div>
                   <figcaption className={styles.caption}>
