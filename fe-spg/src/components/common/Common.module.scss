@@ -78,25 +78,37 @@
   letter-spacing: -0.035em;
 }
 
-.pageHeroAbout {
+.pageHeroAbout,
+.pageHeroNews {
   position: relative;
   min-height: clamp(340px, 23.44vw, 450px);
   align-items: stretch;
   padding-block: var(--header-height) 0;
-  background:
-    linear-gradient(rgb(5 45 66 / 22%), rgb(5 45 66 / 22%)),
-    url("/images/public/files/image/banner_about.jpg") center 52% / cover no-repeat;
   color: #fff;
 }
 
-.pageHeroAbout .pageHeroInner {
+.pageHeroAbout {
+  background:
+    linear-gradient(rgb(5 45 66 / 22%), rgb(5 45 66 / 22%)),
+    url("/images/public/files/image/banner_about.jpg") center 52% / cover no-repeat;
+}
+
+.pageHeroNews {
+  background:
+    linear-gradient(rgb(0 25 39 / 28%), rgb(0 25 39 / 28%)),
+    url("/images/public/files/image/banner_news.jpg") center center / cover no-repeat;
+}
+
+.pageHeroAbout .pageHeroInner,
+.pageHeroNews .pageHeroInner {
   position: relative;
   z-index: 1;
   min-height: calc(clamp(340px, 23.44vw, 450px) - var(--header-height));
   grid-template-rows: 1fr auto;
 }
 
-.pageHeroAbout .pageHeroContent {
+.pageHeroAbout .pageHeroContent,
+.pageHeroNews .pageHeroContent {
   align-self: center;
   justify-items: center;
   gap: 12px;
@@ -104,13 +116,15 @@
   text-align: center;
 }
 
-.pageHeroAbout .pageTitle {
+.pageHeroAbout .pageTitle,
+.pageHeroNews .pageTitle {
   font-size: clamp(32px, 2.35vw, 45px);
   font-weight: 700;
   letter-spacing: -0.02em;
 }
 
-.pageHeroAbout .breadcrumbs {
+.pageHeroAbout .breadcrumbs,
+.pageHeroNews .breadcrumbs {
   justify-content: center;
   gap: 4px;
   color: #fff;
@@ -118,11 +132,13 @@
   font-weight: 600;
 }
 
-.pageHeroAbout .separator {
+.pageHeroAbout .separator,
+.pageHeroNews .separator {
   color: rgb(255 255 255 / 82%);
 }
 
-.pageHeroAbout .breadcrumbLink:hover {
+.pageHeroAbout .breadcrumbLink:hover,
+.pageHeroNews .breadcrumbLink:hover {
   color: #fff;
   text-decoration: underline;
   text-underline-offset: 4px;
@@ -143,26 +159,35 @@
     padding-block: calc(var(--header-height) + 40px) 36px;
   }
 
-  .pageHeroAbout {
+  .pageHeroAbout,
+  .pageHeroNews {
     min-height: 320px;
     padding-block: var(--header-height) 0;
     background-position: 58% center;
   }
 
-  .pageHeroAbout .pageHeroInner {
+  .pageHeroNews {
+    background-position: center center;
+  }
+
+  .pageHeroAbout .pageHeroInner,
+  .pageHeroNews .pageHeroInner {
     min-height: calc(320px - var(--header-height));
   }
 
-  .pageHeroAbout .pageHeroContent {
+  .pageHeroAbout .pageHeroContent,
+  .pageHeroNews .pageHeroContent {
     gap: 10px;
     padding-top: 8px;
   }
 
-  .pageHeroAbout .pageTitle {
+  .pageHeroAbout .pageTitle,
+  .pageHeroNews .pageTitle {
     font-size: 30px;
   }
 
-  .pageHeroAbout .breadcrumbs {
+  .pageHeroAbout .breadcrumbs,
+  .pageHeroNews .breadcrumbs {
     font-size: 12px;
   }
 

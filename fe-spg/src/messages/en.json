@@ -256,7 +256,29 @@
   },
   "products": { "title": "Products & Solutions" },
   "technology": { "title": "Technical Innovation" },
-  "news": { "title": "News" },
+  "news": {
+    "title": "News",
+    "subNavigationLabel": "News navigation",
+    "currentAffairs": {
+      "title": "Current affairs",
+      "readMore": "Read more"
+    },
+    "groupNews": {
+      "title": "Group news",
+      "readMore": "Read more"
+    },
+    "productDelivery": {
+      "title": "Product delivery dynamics",
+      "readMore": "Read more",
+      "pagination": "Product delivery pages",
+      "previousPage": "Previous page",
+      "nextPage": "Next page"
+    },
+    "notices": {
+      "title": "Notices",
+      "readMore": "Read more"
+    }
+  },
   "contact": { "title": "Contact" },
   "footer": {
     "address": "Address",

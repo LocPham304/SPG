@@ -31,8 +31,9 @@ export const companyProfileVi = {
       },
       paragraphs: [
         "Công ty có khả năng cung cấp một cách chuyên nghiệp cho các khách hàng trong ngành vận tải biển những dịch vụ sản xuất sản phẩm hạng nhất như tàu container, tàu chở hàng rời, tàu lai dắt, tàu đa dụng, sà lan, tàu chở dầu, tàu kỹ thuật, tàu chuyên dụng và các dịch vụ sản xuất sản phẩm khác.",
-        "Nội dung được duyệt sẽ làm rõ cách các nhóm kỹ thuật tham gia từ thiết kế, chế tạo đến lắp đặt và hỗ trợ vận hành, nếu các thông tin này được doanh nghiệp xác nhận.",
-        "Các ngành ứng dụng và phạm vi khách hàng sẽ chỉ được công bố sau khi có nguồn dữ liệu chính thức.",
+        "Công ty có khả năng cung cấp một cách chuyên nghiệp cho các khách hàng xưởng đóng tàu dịch vụ chế tạo cần cẩu giàn, cần cẩu giàn đóng tàu, cần cẩu Kling cùng các sản phẩm khác, đồng thời cung cấp các dịch vụ sản xuất và lắp đặt như kết cấu thép xây dựng và hệ thống chiếu sáng thông minh trong khu vực nhà máy.",
+        "Công ty có khả năng cung cấp cho các khách hàng trong lĩnh vực nạo vét thủy lực các dịch vụ sản xuất sản phẩm chất lượng cao như tàu nạo vét gầu nghịch, tàu nạo vét san lấp, ụ nổi, gầu ngoạm trục vớt và các dịch vụ sản xuất sản phẩm khác.",
+        "Công ty có khả năng cung cấp cho các khách hàng trong lĩnh vực nuôi trồng thủy sản các dịch vụ sản xuất sản phẩm tiên tiến như nền tảng trang trại biển thông minh, nền tảng tham quan và giải trí trên biển, ụ nổi, lồng nuôi thủy sản vùng biển sâu, tàu nuôi trồng thủy sản, tàu quản lý và thực thi pháp luật nghề cá, cùng các dịch vụ sản xuất sản phẩm khác.",
       ],
     },
     {

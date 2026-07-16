@@ -247,7 +247,29 @@
   },
   "products": { "title": "产品与解决方案" },
   "technology": { "title": "技术创新" },
-  "news": { "title": "新闻资讯" },
+  "news": {
+    "title": "新闻资讯",
+    "subNavigationLabel": "新闻资讯导航",
+    "currentAffairs": {
+      "title": "时政要闻",
+      "readMore": "阅读全文"
+    },
+    "groupNews": {
+      "title": "集团新闻",
+      "readMore": "阅读全文"
+    },
+    "productDelivery": {
+      "title": "产品交付动态",
+      "readMore": "阅读全文",
+      "pagination": "产品交付动态分页",
+      "previousPage": "上一页",
+      "nextPage": "下一页"
+    },
+    "notices": {
+      "title": "公示公告",
+      "readMore": "阅读全文"
+    }
+  },
   "contact": { "title": "联系我们" },
   "footer": {
     "address": "地址",

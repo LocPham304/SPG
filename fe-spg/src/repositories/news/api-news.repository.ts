@@ -11,6 +11,7 @@ import type {
 import type { NewsRepository } from "./news.repository";
 
 const categoryKeys: readonly NewsCategoryKey[] = [
+  "currentAffairs",
   "groupNews",
   "productDelivery",
   "notices",

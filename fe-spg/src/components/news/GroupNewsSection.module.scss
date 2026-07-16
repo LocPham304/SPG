@@ -1,0 +1,377 @@
+.section {
+  padding-block: clamp(76px, 5.2vw, 100px) clamp(125px, 8.33vw, 160px);
+  background: #fff;
+}
+
+.heading {
+  margin-bottom: clamp(48px, 3.13vw, 60px);
+  color: #147bc1;
+  font-family: var(--font-heading);
+  font-size: clamp(28px, 1.88vw, 36px);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.featuredArea {
+  display: grid;
+  grid-template-columns: minmax(0, 56.57fr) minmax(0, 37.5fr);
+  gap: 5.93%;
+  align-items: center;
+  margin-bottom: clamp(72px, 5.2vw, 100px);
+}
+
+.featuredCard {
+  position: relative;
+  display: block;
+  height: min(27vw, 520px);
+  min-height: 350px;
+  overflow: hidden;
+  background: #0d2735;
+  color: #fff;
+}
+
+.featuredImage,
+.cardImage {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.featuredImage img,
+.cardImage img {
+  object-fit: cover;
+  transition: transform 300ms ease;
+}
+
+.featuredCard:hover .featuredImage img,
+.featuredCard:focus-visible .featuredImage img {
+  transform: scale(1.035);
+}
+
+.featuredDate {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 1;
+  display: grid;
+  min-width: 62px;
+  padding: 7px 10px;
+  background: linear-gradient(90deg, #d9af5b, #98701d);
+  color: #fff;
+  font-size: 16px;
+  line-height: 1.35;
+  text-align: center;
+}
+
+.featuredDate span {
+  border-top: 1px solid #fff;
+  font-size: 18px;
+}
+
+.featuredOverlay {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1;
+  display: grid;
+  gap: 12px;
+  padding: clamp(80px, 6vw, 116px) 40px 25px;
+  background: linear-gradient(0deg, rgb(0 0 0 / 78%), transparent);
+}
+
+.featuredOverlay strong {
+  display: -webkit-box;
+  overflow: hidden;
+  font-size: clamp(20px, 1.25vw, 24px);
+  line-height: 1.2;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.featuredDescription {
+  display: -webkit-box;
+  overflow: hidden;
+  line-height: 1.35;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.readMore {
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+  color: #147bc1;
+  font-size: 15px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.featuredOverlay .readMore {
+  color: #fff;
+}
+
+.readMore span {
+  font-size: 1.35em;
+  line-height: 1;
+}
+
+.featuredTabs {
+  list-style: none;
+}
+
+.featuredTabs li {
+  border-bottom: 1px solid #dadada;
+  transition: background-color 220ms ease;
+}
+
+.featuredTabs li[data-active="true"] {
+  background: #f4faff;
+}
+
+.featuredTabs a {
+  display: grid;
+  gap: 10px;
+  padding-block: clamp(24px, 1.56vw, 30px);
+}
+
+.featuredTabs time {
+  color: #147bc1;
+  font-variant-numeric: tabular-nums;
+}
+
+.featuredTabs span {
+  display: -webkit-box;
+  height: 3em;
+  overflow: hidden;
+  font-size: clamp(17px, 1.15vw, 22px);
+  line-height: 1.45;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.featuredTabs li[data-active="true"] span {
+  font-weight: 700;
+}
+
+.newsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  list-style: none;
+}
+
+.newsGrid > li {
+  min-width: 0;
+  border-right: 1px solid #dadada;
+  margin-bottom: 50px;
+}
+
+.newsGrid > li:nth-child(3n) {
+  border-right-color: transparent;
+}
+
+.newsCard {
+  position: relative;
+  min-height: clamp(440px, 31.25vw, 600px);
+  padding: clamp(40px, 3.13vw, 60px) clamp(26px, 2.08vw, 40px)
+    clamp(100px, 7.03vw, 135px);
+  overflow: hidden;
+  transition: background-color 280ms ease;
+}
+
+.newsCard::before {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(145deg, #f2f9ff, #fff 64%);
+  content: "";
+  opacity: 0;
+  transition: opacity 280ms ease;
+}
+
+.newsCard > * {
+  position: relative;
+  z-index: 1;
+}
+
+.cardImage {
+  height: min(12.5vw, 240px);
+  margin-bottom: 20px;
+  transition:
+    height 280ms ease,
+    margin 280ms ease,
+    opacity 180ms ease;
+}
+
+.cardDate {
+  display: block;
+  margin-bottom: 7px;
+  color: #147bc1;
+  font-variant-numeric: tabular-nums;
+}
+
+.cardTitle {
+  margin-bottom: 35px;
+  font-size: clamp(17px, 1.15vw, 22px);
+  font-weight: 400;
+  line-height: 1.45;
+}
+
+.cardTitle a {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.cardDescription {
+  display: -webkit-box;
+  max-height: 0;
+  overflow: hidden;
+  color: #53616a;
+  line-height: 1.55;
+  opacity: 0;
+  transition:
+    max-height 280ms ease,
+    opacity 220ms ease;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+}
+
+.cardLink {
+  position: absolute;
+  bottom: 50px;
+  left: clamp(26px, 2.08vw, 40px);
+}
+
+@media (hover: hover) and (width > 1024px) {
+  .newsCard:hover::before,
+  .newsCard:focus-within::before {
+    opacity: 1;
+  }
+
+  .newsCard:hover .cardImage,
+  .newsCard:focus-within .cardImage {
+    height: 0;
+    margin-bottom: 0;
+    opacity: 0;
+  }
+
+  .newsCard:hover .cardDescription,
+  .newsCard:focus-within .cardDescription {
+    max-height: 126px;
+    opacity: 1;
+  }
+}
+
+@media (width <= 1024px) {
+  .featuredCard {
+    height: 50vw;
+    min-height: 0;
+  }
+
+  .featuredArea {
+    display: block;
+  }
+
+  .featuredTabs {
+    display: none;
+  }
+
+  .cardImage {
+    height: 15.5vw;
+  }
+
+  .newsCard {
+    min-height: 430px;
+  }
+}
+
+@media (width <= 767px) {
+  .section {
+    padding-block: 50px 70px;
+  }
+
+  .heading {
+    margin-bottom: 34px;
+    font-size: 28px;
+    text-align: center;
+  }
+
+  .featuredArea {
+    margin-bottom: 44px;
+  }
+
+  .featuredCard {
+    height: 64vw;
+  }
+
+  .featuredDate {
+    top: 10px;
+    left: 10px;
+    min-width: 52px;
+    padding: 5px 7px;
+    font-size: 13px;
+  }
+
+  .featuredDate span {
+    font-size: 15px;
+  }
+
+  .featuredOverlay {
+    gap: 7px;
+    padding: 60px 16px 14px;
+  }
+
+  .featuredOverlay strong {
+    font-size: 16px;
+  }
+
+  .featuredDescription {
+    font-size: 13px;
+    line-height: 1.25;
+  }
+
+  .readMore {
+    font-size: 12px;
+  }
+
+  .newsGrid {
+    display: block;
+  }
+
+  .newsGrid > li {
+    margin-bottom: 0;
+    border-right: 0;
+    border-bottom: 1px solid #dadada;
+  }
+
+  .newsCard {
+    min-height: 0;
+    padding: 20px 0;
+  }
+
+  .newsCard::before,
+  .cardImage,
+  .cardDescription {
+    display: none;
+  }
+
+  .cardDate {
+    margin-bottom: 9px;
+    font-size: 13px;
+  }
+
+  .cardTitle {
+    margin-bottom: 14px;
+    font-size: 16px;
+  }
+
+  .cardLink {
+    position: static;
+    display: flex;
+    justify-content: flex-end;
+  }
+}

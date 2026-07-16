@@ -1,6 +1,10 @@
 import type { AppLocale } from "@/i18n/routing";
 
-export type NewsCategoryKey = "groupNews" | "productDelivery" | "notices";
+export type NewsCategoryKey =
+  | "currentAffairs"
+  | "groupNews"
+  | "productDelivery"
+  | "notices";
 export type NewsPublicationStatus = "draft" | "published" | "archived";
 
 export type NewsCategory = {
@@ -37,4 +41,12 @@ export type NewsQuery = {
 export type NewsResult = {
   items: PublicNewsArticle[];
   total: number;
+};
+
+export type NewsDateListItem = {
+  id: string;
+  publishedAt: string;
+  title: string;
+  summary: string;
+  href: string;
 };

@@ -256,7 +256,29 @@
   },
   "products": { "title": "Sản phẩm & Giải pháp" },
   "technology": { "title": "Đổi mới công nghệ" },
-  "news": { "title": "Tin tức" },
+  "news": {
+    "title": "Tin tức",
+    "subNavigationLabel": "Điều hướng tin tức",
+    "currentAffairs": {
+      "title": "Thời sự",
+      "readMore": "Đọc thêm"
+    },
+    "groupNews": {
+      "title": "Tin tức tập đoàn",
+      "readMore": "Đọc thêm"
+    },
+    "productDelivery": {
+      "title": "Tiến độ bàn giao sản phẩm",
+      "readMore": "Đọc thêm",
+      "pagination": "Các trang tiến độ bàn giao sản phẩm",
+      "previousPage": "Trang trước",
+      "nextPage": "Trang tiếp theo"
+    },
+    "notices": {
+      "title": "Thông báo",
+      "readMore": "Đọc thêm"
+    }
+  },
   "contact": { "title": "Liên hệ" },
   "footer": {
     "address": "Địa chỉ văn phòng tại Việt Nam",
