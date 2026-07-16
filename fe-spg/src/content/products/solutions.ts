@@ -130,6 +130,7 @@ const internalRoutes: Partial<Record<ProductSolutionId, string>> = {
   dryBulk: "/products/dry-bulk-handling-systems",
   breakbulk: "/products/breakbulk-handling-systems",
   liquefiedOil: "/products/liquefied-oil-handling-systems",
+  grainSilo: "/products/grain-silo-system",
 };
 
 function createItems(
