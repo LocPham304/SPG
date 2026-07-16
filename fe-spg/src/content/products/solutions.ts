@@ -129,6 +129,7 @@ const internalRoutes: Partial<Record<ProductSolutionId, string>> = {
   containerHandling: "/products/container-handling-systems",
   dryBulk: "/products/dry-bulk-handling-systems",
   breakbulk: "/products/breakbulk-handling-systems",
+  liquefiedOil: "/products/liquefied-oil-handling-systems",
 };
 
 function createItems(
