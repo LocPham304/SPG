@@ -136,8 +136,10 @@ function createItems(
     href:
       id === "containerHandling"
         ? "/products/container-handling-systems"
-        : routes[id],
-    external: id !== "containerHandling",
+        : id === "dryBulk"
+          ? "/products/dry-bulk-handling-systems"
+          : routes[id],
+    external: id !== "containerHandling" && id !== "dryBulk",
   }));
 }
 

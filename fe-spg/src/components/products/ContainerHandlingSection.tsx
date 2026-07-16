@@ -19,6 +19,20 @@ type ContainerHandlingSectionProps = Pick<
   | "title"
 >;
 
+export type ProductSystemDetailSectionProps = Omit<
+  ContainerHandlingSectionProps,
+  "sections"
+> & {
+  overviewImage: string;
+  overviewAlt: string;
+  sections: readonly {
+    id: string;
+    title: string;
+    paragraphs: readonly string[];
+    images: ContainerHandlingContent["sections"][number]["images"];
+  }[];
+};
+
 function Introduction({
   intro,
   title,
@@ -37,25 +51,38 @@ function Introduction({
 }
 
 export function ContainerHandlingSection({
+  ...props
+}: ContainerHandlingSectionProps) {
+  return (
+    <ProductSystemDetailSection
+      {...props}
+      overviewAlt={props.title}
+      overviewImage={containerHandlingOverviewImage}
+    />
+  );
+}
+
+export function ProductSystemDetailSection({
   galleryLabel,
   intro,
   nextLabel,
+  overviewAlt,
+  overviewImage,
   previousLabel,
   sections,
   title,
-}: ContainerHandlingSectionProps) {
+}: ProductSystemDetailSectionProps) {
   return (
     <main className={styles.main}>
       <Container as="section" className={styles.overviewSection}>
         <div className={styles.overviewMedia}>
           <Image
-            alt=""
-            aria-hidden="true"
+            alt={overviewAlt}
             className={styles.overviewImage}
             height={570}
             priority
             sizes="(max-width: 767px) calc(100vw - 32px), 85vw"
-            src={containerHandlingOverviewImage}
+            src={overviewImage}
             width={1520}
           />
           <Introduction
