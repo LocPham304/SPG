@@ -133,6 +133,7 @@ const internalRoutes: Partial<Record<ProductSolutionId, string>> = {
   grainSilo: "/products/grain-silo-system",
   smartLogistics: "/products/smart-logistics-park",
   shipbuildingRepair: "/products/shipbuilding-repair",
+  otherServices: "/products/other-services",
 };
 
 function createItems(
