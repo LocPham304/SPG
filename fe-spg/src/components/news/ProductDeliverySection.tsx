@@ -1,8 +1,10 @@
 import { Container } from "@/components/common/Container";
 import { ImageWithSkeleton } from "@/components/news/ImageWithSkeleton";
+import { LocalizedLink } from "@/components/common/LocalizedLink";
 import { ScrollReveal } from "@/components/news/ScrollReveal";
 import { getStaggerDelay } from "@/components/news/animation";
 import type { ProductDeliveryContent } from "@/content/news/product-delivery";
+import { getNewsDetailPath } from "@/content/news/routes";
 
 import styles from "./ProductDeliverySection.module.scss";
 
@@ -37,15 +39,13 @@ export function ProductDeliverySection({
 
       <ul className={styles.newsGrid}>
         {articles.map((article, index) => (
-          <li key={article.href}>
+          <li key={article.id}>
             <ScrollReveal delay={getStaggerDelay(index)} threshold={0.15}>
             <article className={styles.newsCard}>
-              <a
+              <LocalizedLink
                 aria-label={article.title}
                 className={styles.cardImage}
-                href={article.href}
-                rel="noreferrer"
-                target="_blank"
+                href={getNewsDetailPath("product-delivery", article.id)}
               >
                 <ImageWithSkeleton
                   alt={article.title}
@@ -54,26 +54,26 @@ export function ProductDeliverySection({
                   sizes="(max-width: 767px) 1px, 28vw"
                   src={article.image}
                 />
-              </a>
+              </LocalizedLink>
               <time className={styles.cardDate} dateTime={article.date}>
                 {article.date}
               </time>
               <h3 className={styles.cardTitle}>
-                <a href={article.href} rel="noreferrer" target="_blank">
+                <LocalizedLink
+                  href={getNewsDetailPath("product-delivery", article.id)}
+                >
                   {article.title}
-                </a>
+                </LocalizedLink>
               </h3>
               {article.description ? (
                 <p className={styles.cardDescription}>{article.description}</p>
               ) : null}
-              <a
+              <LocalizedLink
                 className={styles.cardLink}
-                href={article.href}
-                rel="noreferrer"
-                target="_blank"
+                href={getNewsDetailPath("product-delivery", article.id)}
               >
                 {readMoreLabel} <span aria-hidden="true">⟶</span>
-              </a>
+              </LocalizedLink>
             </article>
             </ScrollReveal>
           </li>

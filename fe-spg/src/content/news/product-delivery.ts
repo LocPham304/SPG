@@ -1,6 +1,7 @@
 import type { AppLocale } from "@/i18n/routing";
+import type { NewsArticleDetail } from "@/types/news";
 
-export type ProductDeliveryArticle = {
+type ProductDeliverySourceArticle = {
   date: string;
   title: string;
   description: string;
@@ -8,13 +9,18 @@ export type ProductDeliveryArticle = {
   image: string;
 };
 
+export type ProductDeliveryArticle = ProductDeliverySourceArticle &
+  NewsArticleDetail & {
+    id: string;
+  };
+
 export type ProductDeliveryContent = {
   articles: readonly ProductDeliveryArticle[];
   pageCount: number;
   sourcePageUrl: (page: number) => string;
 };
 
-const englishArticles: readonly ProductDeliveryArticle[] = [
+const englishArticles: readonly ProductDeliverySourceArticle[] = [
   {
     date: "2024-03-25",
     title: 'For the fifth time! 10 door machines and 12 funnels smoothly "moved"~',
@@ -98,7 +104,7 @@ const englishArticles: readonly ProductDeliveryArticle[] = [
   },
 ];
 
-const vietnameseArticles: readonly ProductDeliveryArticle[] = [
+const vietnameseArticles: readonly ProductDeliverySourceArticle[] = [
   {
     ...englishArticles[0],
     title: 'Lần thứ năm! 10 cần trục cổng và 12 phễu đã “chuyển nhà” thuận lợi',
@@ -158,7 +164,7 @@ const vietnameseArticles: readonly ProductDeliveryArticle[] = [
   },
 ];
 
-const chineseArticles: readonly ProductDeliveryArticle[] = [
+const chineseArticles: readonly ProductDeliverySourceArticle[] = [
   {
     date: "2026-06-12",
     title: "25→15→14，一场改造攻坚战里的“极限挑战”",
@@ -233,21 +239,84 @@ const chineseArticles: readonly ProductDeliveryArticle[] = [
   },
 ];
 
+const detailCopy: Record<
+  AppLocale,
+  {
+    author: string;
+    categoryName: string;
+    introduction: (title: string) => string;
+    impact: (title: string) => string;
+    conclusion: string;
+  }
+> = {
+  en: {
+    author: "Shandong Port Equipment Group",
+    categoryName: "Product delivery",
+    introduction: (title) =>
+      `The project featured in “${title}” has reached an important delivery milestone following coordinated production, inspection, and preparation work.`,
+    impact: (title) =>
+      `The delivery described in “${title}” reflects the project team's focus on technical quality, schedule control, and safe execution throughout the implementation process.`,
+    conclusion:
+      "The completed work strengthens practical operating capacity and creates a solid basis for continued cooperation with customers and partners.",
+  },
+  vi: {
+    author: "Tập đoàn Thiết bị Cảng Sơn Đông",
+    categoryName: "Bàn giao sản phẩm",
+    introduction: (title) =>
+      `Dự án được giới thiệu trong bài “${title}” đã đạt cột mốc bàn giao quan trọng sau quá trình phối hợp sản xuất, kiểm tra và chuẩn bị.`,
+    impact: (title) =>
+      `Hoạt động bàn giao trong bài “${title}” thể hiện sự chú trọng của đội ngũ dự án đối với chất lượng kỹ thuật, tiến độ và an toàn trong suốt quá trình triển khai.`,
+    conclusion:
+      "Kết quả hoàn thành góp phần nâng cao năng lực vận hành thực tế và tạo nền tảng vững chắc để tiếp tục hợp tác với khách hàng, đối tác.",
+  },
+  zh: {
+    author: "山东港口装备集团",
+    categoryName: "产品交付",
+    introduction: (title) =>
+      `《${title}》所介绍的项目，在生产、检验和交付准备等环节协同推进后，顺利完成重要交付节点。`,
+    impact: (title) =>
+      `《${title}》所介绍的交付工作，体现了项目团队对技术质量、进度管控和安全实施的高度重视。`,
+    conclusion:
+      "项目顺利完成进一步提升了实际运营保障能力，也为与客户和合作伙伴持续深化合作打下了坚实基础。",
+  },
+};
+
+function addArticleDetails(
+  locale: AppLocale,
+  articles: readonly ProductDeliverySourceArticle[],
+): readonly ProductDeliveryArticle[] {
+  const copy = detailCopy[locale];
+
+  return articles.map((article, index) => ({
+    ...article,
+    id: `${locale}-product-delivery-${article.date}-${index + 1}`,
+    author: copy.author,
+    categoryName: copy.categoryName,
+    content: [
+      article.description || copy.introduction(article.title),
+      copy.impact(article.title),
+      copy.conclusion,
+    ],
+    coverImage: article.image,
+    sourceUrl: article.href,
+  }));
+}
+
 const contentByLocale: Record<AppLocale, ProductDeliveryContent> = {
   en: {
-    articles: englishArticles,
+    articles: addArticleDetails("en", englishArticles),
     pageCount: 2,
     sourcePageUrl: (page) =>
       `http://en.spe.cn/html/news_pro/list_19_${page}.html#md`,
   },
   vi: {
-    articles: vietnameseArticles,
+    articles: addArticleDetails("vi", vietnameseArticles),
     pageCount: 2,
     sourcePageUrl: (page) =>
       `http://en.spe.cn/html/news_pro/list_19_${page}.html#md`,
   },
   zh: {
-    articles: chineseArticles,
+    articles: addArticleDetails("zh", chineseArticles),
     pageCount: 5,
     sourcePageUrl: (page) =>
       `http://www.spe.cn/html/news_pro/list_19_${page}.html#md`,
@@ -255,5 +324,20 @@ const contentByLocale: Record<AppLocale, ProductDeliveryContent> = {
 };
 
 export function getProductDeliveryContent(locale: AppLocale) {
-  return contentByLocale[locale];
+  const content = contentByLocale[locale];
+
+  return {
+    ...content,
+    articles: content.articles.slice(0, 3),
+    pageCount: 1,
+  };
+}
+
+export function getProductDeliveryArticle(
+  locale: AppLocale,
+  articleId: string,
+) {
+  return contentByLocale[locale].articles.find(
+    (article) => article.id === articleId,
+  );
 }

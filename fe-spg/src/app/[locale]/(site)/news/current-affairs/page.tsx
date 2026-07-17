@@ -39,6 +39,7 @@ export default async function CurrentAffairsPage({ params }: PageProps) {
       />
       <NewsDateListSection
         articles={getCurrentAffairsArticles(activeLocale)}
+        categorySlug="current-affairs"
         readMoreLabel={t("news.currentAffairs.readMore")}
         title={title}
       />

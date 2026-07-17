@@ -4,9 +4,11 @@ import { useEffect, useState } from "react";
 
 import { Container } from "@/components/common/Container";
 import { ImageWithSkeleton } from "@/components/news/ImageWithSkeleton";
+import { LocalizedLink } from "@/components/common/LocalizedLink";
 import { ScrollReveal } from "@/components/news/ScrollReveal";
 import { getStaggerDelay } from "@/components/news/animation";
 import type { GroupNewsArticle } from "@/content/news/group-news";
+import { getNewsDetailPath } from "@/content/news/routes";
 
 import styles from "./GroupNewsSection.module.scss";
 
@@ -56,6 +58,7 @@ export function GroupNewsSection({
 
   const [, featuredMonth, featuredDay] = featuredArticle.date.split("-");
   const featuredYear = featuredArticle.date.slice(0, 4);
+  const featuredHref = getNewsDetailPath("group-news", featuredArticle.id);
 
   return (
     <Container as="section" className={styles.section}>
@@ -65,11 +68,9 @@ export function GroupNewsSection({
 
       <ScrollReveal animation="animate__fadeInUp" duration="0.7s" threshold={0.15}>
       <div className={styles.featuredArea}>
-        <a
+        <LocalizedLink
           className={styles.featuredCard}
-          href={featuredArticle.href}
-          rel="noreferrer"
-          target="_blank"
+          href={featuredHref}
         >
           <span className={styles.featuredImage}>
             <NewsImage
@@ -92,21 +93,19 @@ export function GroupNewsSection({
               {readMoreLabel} <span aria-hidden="true">⟶</span>
             </span>
           </span>
-        </a>
+        </LocalizedLink>
 
         <ol className={styles.featuredTabs}>
           {featuredArticles.map((article, index) => (
-            <li data-active={index === activeIndex} key={article.href}>
-              <a
-                href={article.href}
+            <li data-active={index === activeIndex} key={article.id}>
+              <LocalizedLink
+                href={getNewsDetailPath("group-news", article.id)}
                 onFocus={() => setActiveIndex(index)}
                 onMouseEnter={() => setActiveIndex(index)}
-                rel="noreferrer"
-                target="_blank"
               >
                 <time dateTime={article.date}>{article.date}</time>
                 <span>{article.title}</span>
-              </a>
+              </LocalizedLink>
             </li>
           ))}
         </ol>
@@ -115,40 +114,38 @@ export function GroupNewsSection({
 
       <ul className={styles.newsGrid}>
         {articles.map((article, index) => (
-          <li key={article.href}>
+          <li key={article.id}>
             <ScrollReveal delay={getStaggerDelay(index)} threshold={0.15}>
             <article className={styles.newsCard}>
-              <a
+              <LocalizedLink
                 aria-label={article.title}
                 className={styles.cardImage}
-                href={article.href}
-                rel="noreferrer"
-                target="_blank"
+                href={getNewsDetailPath("group-news", article.id)}
               >
                 <NewsImage
                   article={article}
                   sizes="(max-width: 767px) 1px, 28vw"
                 />
-              </a>
+              </LocalizedLink>
               <time className={styles.cardDate} dateTime={article.date}>
                 {article.date}
               </time>
               <h3 className={styles.cardTitle}>
-                <a href={article.href} rel="noreferrer" target="_blank">
+                <LocalizedLink
+                  href={getNewsDetailPath("group-news", article.id)}
+                >
                   {article.title}
-                </a>
+                </LocalizedLink>
               </h3>
               {article.description ? (
                 <p className={styles.cardDescription}>{article.description}</p>
               ) : null}
-              <a
+              <LocalizedLink
                 className={`${styles.readMore} ${styles.cardLink}`}
-                href={article.href}
-                rel="noreferrer"
-                target="_blank"
+                href={getNewsDetailPath("group-news", article.id)}
               >
                 {readMoreLabel} <span aria-hidden="true">⟶</span>
-              </a>
+              </LocalizedLink>
             </article>
             </ScrollReveal>
           </li>

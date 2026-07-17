@@ -39,6 +39,7 @@ export default async function NoticesPage({ params }: PageProps) {
       />
       <NewsDateListSection
         articles={getNotices(activeLocale)}
+        categorySlug="notices"
         readMoreLabel={t("news.notices.readMore")}
         title={title}
       />

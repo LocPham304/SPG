@@ -1,5 +1,8 @@
 import type { AppLocale } from "@/i18n/routing";
-import type { NewsDateListItem } from "@/types/news";
+import type {
+  DetailedNewsDateListItem,
+  NewsDateListItem,
+} from "@/types/news";
 
 const englishArticles: readonly NewsDateListItem[] = [
   {
@@ -110,12 +113,73 @@ const chineseArticles: readonly NewsDateListItem[] = [
   },
 ];
 
-const articlesByLocale: Record<AppLocale, readonly NewsDateListItem[]> = {
-  en: englishArticles,
-  vi: vietnameseArticles,
-  zh: chineseArticles,
+const detailCopy: Record<
+  AppLocale,
+  {
+    author: string;
+    categoryName: string;
+    context: (title: string) => string;
+    conclusion: string;
+  }
+> = {
+  en: {
+    author: "Editorial Board",
+    categoryName: "Current affairs",
+    context: (title) =>
+      `The article “${title}” highlights the principal developments, policy direction, and issues receiving public attention at the time of publication.`,
+    conclusion:
+      "The information provides readers with a concise basis for following the wider context and the next steps related to this topic.",
+  },
+  vi: {
+    author: "Ban biên tập",
+    categoryName: "Tin thời sự",
+    context: (title) =>
+      `Bài viết “${title}” làm rõ những diễn biến chính, định hướng và các vấn đề được quan tâm tại thời điểm công bố.`,
+    conclusion:
+      "Thông tin giúp bạn đọc có thêm cơ sở để theo dõi bối cảnh chung và những bước triển khai tiếp theo liên quan đến chủ đề này.",
+  },
+  zh: {
+    author: "编辑部",
+    categoryName: "时政要闻",
+    context: (title) =>
+      `文章《${title}》梳理了发布时的重要进展、工作方向和社会关注的重点内容。`,
+    conclusion:
+      "相关信息有助于读者进一步了解事件背景，并持续关注后续工作进展。",
+  },
+};
+
+function addArticleDetails(
+  locale: AppLocale,
+  articles: readonly NewsDateListItem[],
+): readonly DetailedNewsDateListItem[] {
+  const copy = detailCopy[locale];
+
+  return articles.map((article) => ({
+    ...article,
+    author: copy.author,
+    categoryName: copy.categoryName,
+    content: [
+      article.summary,
+      copy.context(article.title),
+      copy.conclusion,
+    ],
+    sourceUrl: article.href,
+  }));
+}
+
+const articlesByLocale: Record<
+  AppLocale,
+  readonly DetailedNewsDateListItem[]
+> = {
+  en: addArticleDetails("en", englishArticles),
+  vi: addArticleDetails("vi", vietnameseArticles),
+  zh: addArticleDetails("zh", chineseArticles),
 };
 
 export function getCurrentAffairsArticles(locale: AppLocale) {
-  return articlesByLocale[locale];
+  return articlesByLocale[locale].slice(0, 3);
+}
+
+export function getCurrentAffairsArticle(locale: AppLocale, articleId: string) {
+  return articlesByLocale[locale].find((article) => article.id === articleId);
 }

@@ -1,5 +1,8 @@
 import type { AppLocale } from "@/i18n/routing";
-import type { NewsDateListItem } from "@/types/news";
+import type {
+  DetailedNewsDateListItem,
+  NewsDateListItem,
+} from "@/types/news";
 
 const englishNotices: readonly NewsDateListItem[] = [
   {
@@ -71,12 +74,73 @@ const chineseNotices: readonly NewsDateListItem[] = [
   },
 ];
 
-const noticesByLocale: Record<AppLocale, readonly NewsDateListItem[]> = {
-  en: englishNotices,
-  vi: vietnameseNotices,
-  zh: chineseNotices,
+const detailCopy: Record<
+  AppLocale,
+  {
+    author: string;
+    categoryName: string;
+    instructions: string;
+    purpose: (title: string) => string;
+  }
+> = {
+  en: {
+    author: "Shandong Port Equipment Group",
+    categoryName: "Notices",
+    purpose: (title) =>
+      `This notice provides the official information concerning “${title}” so that relevant organizations and individuals can review it in a timely manner.`,
+    instructions:
+      "Readers are advised to check the published information carefully and follow the stated requirements or feedback process within the applicable period.",
+  },
+  vi: {
+    author: "Tập đoàn Thiết bị Cảng Sơn Đông",
+    categoryName: "Thông báo",
+    purpose: (title) =>
+      `Thông báo này cung cấp thông tin chính thức về “${title}” để các tổ chức, cá nhân liên quan kịp thời theo dõi và đối chiếu.`,
+    instructions:
+      "Bạn đọc vui lòng kiểm tra kỹ nội dung được công bố và thực hiện các yêu cầu hoặc quy trình phản hồi trong thời hạn áp dụng.",
+  },
+  zh: {
+    author: "山东港口装备集团",
+    categoryName: "通知公告",
+    purpose: (title) =>
+      `本公告就《${title}》发布正式信息，便于相关单位和人员及时查阅、核对。`,
+    instructions:
+      "请读者认真核实公示内容，并在规定时间内按照相关要求办理或反馈。",
+  },
+};
+
+function addNoticeDetails(
+  locale: AppLocale,
+  notices: readonly NewsDateListItem[],
+): readonly DetailedNewsDateListItem[] {
+  const copy = detailCopy[locale];
+
+  return notices.map((notice) => ({
+    ...notice,
+    author: copy.author,
+    categoryName: copy.categoryName,
+    content: [
+      notice.summary,
+      copy.purpose(notice.title),
+      copy.instructions,
+    ],
+    sourceUrl: notice.href,
+  }));
+}
+
+const noticesByLocale: Record<
+  AppLocale,
+  readonly DetailedNewsDateListItem[]
+> = {
+  en: addNoticeDetails("en", englishNotices),
+  vi: addNoticeDetails("vi", vietnameseNotices),
+  zh: addNoticeDetails("zh", chineseNotices),
 };
 
 export function getNotices(locale: AppLocale) {
-  return noticesByLocale[locale];
+  return noticesByLocale[locale].slice(0, 3);
+}
+
+export function getNotice(locale: AppLocale, articleId: string) {
+  return noticesByLocale[locale].find((notice) => notice.id === articleId);
 }

@@ -1,18 +1,25 @@
 import { Container } from "@/components/common/Container";
+import { LocalizedLink } from "@/components/common/LocalizedLink";
 import { ScrollReveal } from "@/components/news/ScrollReveal";
 import { getStaggerDelay } from "@/components/news/animation";
+import {
+  getNewsDetailPath,
+  type NewsCategorySlug,
+} from "@/content/news/routes";
 import type { NewsDateListItem } from "@/types/news";
 
 import styles from "./NewsDateListSection.module.scss";
 
 type NewsDateListSectionProps = {
   articles: readonly NewsDateListItem[];
+  categorySlug: NewsCategorySlug;
   readMoreLabel: string;
   title: string;
 };
 
 export function NewsDateListSection({
   articles,
+  categorySlug,
   readMoreLabel,
   title,
 }: NewsDateListSectionProps) {
@@ -28,11 +35,9 @@ export function NewsDateListSection({
           return (
             <li key={article.id}>
               <ScrollReveal delay={getStaggerDelay(index)} threshold={0.15}>
-              <a
+              <LocalizedLink
                 className={styles.card}
-                href={article.href}
-                rel="noreferrer"
-                target="_blank"
+                href={getNewsDetailPath(categorySlug, article.id)}
               >
                 <time className={styles.date} dateTime={article.publishedAt}>
                   <span>{day}</span>
@@ -46,7 +51,7 @@ export function NewsDateListSection({
                   {readMoreLabel}
                   <span aria-hidden="true">⟶</span>
                 </span>
-              </a>
+              </LocalizedLink>
               </ScrollReveal>
             </li>
           );

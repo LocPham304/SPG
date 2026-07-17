@@ -1,6 +1,7 @@
 import type { AppLocale } from "@/i18n/routing";
+import type { NewsArticleDetail } from "@/types/news";
 
-export type GroupNewsArticle = {
+type GroupNewsSourceArticle = {
   date: string;
   title: string;
   description: string;
@@ -8,7 +9,12 @@ export type GroupNewsArticle = {
   image: string;
 };
 
-const englishArticles: readonly GroupNewsArticle[] = [
+export type GroupNewsArticle = GroupNewsSourceArticle &
+  NewsArticleDetail & {
+    id: string;
+  };
+
+const englishArticles: readonly GroupNewsSourceArticle[] = [
   {
     date: "2024-03-27",
     title:
@@ -84,7 +90,7 @@ const englishArticles: readonly GroupNewsArticle[] = [
   },
 ];
 
-const vietnameseArticles: readonly GroupNewsArticle[] = [
+const vietnameseArticles: readonly GroupNewsSourceArticle[] = [
   {
     ...englishArticles[0],
     title:
@@ -142,7 +148,7 @@ const vietnameseArticles: readonly GroupNewsArticle[] = [
   },
 ];
 
-const chineseArticles: readonly GroupNewsArticle[] = [
+const chineseArticles: readonly GroupNewsSourceArticle[] = [
   {
     date: "2025-07-25",
     title: "山东陆海装备集团召开2025年半年工作会议",
@@ -220,12 +226,79 @@ const chineseArticles: readonly GroupNewsArticle[] = [
   },
 ];
 
+const detailCopy: Record<
+  AppLocale,
+  {
+    author: string;
+    categoryName: string;
+    introduction: (title: string) => string;
+    development: (title: string) => string;
+    conclusion: string;
+  }
+> = {
+  en: {
+    author: "Shandong Port Equipment Group",
+    categoryName: "Group news",
+    introduction: (title) =>
+      `Shandong Port Equipment Group has shared the latest information about “${title}”, an activity connected with the Group's current priorities and operating plans.`,
+    development: (title) =>
+      `Through the activities described in “${title}”, the Group continues to strengthen coordination, professional management, and the effective delivery of its key work.`,
+    conclusion:
+      "The results provide a practical foundation for the next stage and support the Group's steady, high-quality development.",
+  },
+  vi: {
+    author: "Tập đoàn Thiết bị Cảng Sơn Đông",
+    categoryName: "Tin tập đoàn",
+    introduction: (title) =>
+      `Tập đoàn Thiết bị Cảng Sơn Đông cập nhật thông tin mới nhất về “${title}”, hoạt động gắn với các nhiệm vụ trọng tâm và kế hoạch vận hành của Tập đoàn.`,
+    development: (title) =>
+      `Thông qua các hoạt động được nêu trong bài “${title}”, Tập đoàn tiếp tục tăng cường phối hợp, quản trị chuyên nghiệp và triển khai hiệu quả các nhiệm vụ trọng tâm.`,
+    conclusion:
+      "Kết quả đạt được tạo nền tảng thiết thực cho giai đoạn tiếp theo, góp phần thúc đẩy Tập đoàn phát triển ổn định và chất lượng cao.",
+  },
+  zh: {
+    author: "山东陆海装备集团",
+    categoryName: "集团新闻",
+    introduction: (title) =>
+      `山东陆海装备集团发布《${title}》相关最新动态，内容与集团当前重点任务和经营安排密切相关。`,
+    development: (title) =>
+      `通过《${title}》所介绍的相关工作，集团进一步加强协同联动、专业管理和重点任务落实。`,
+    conclusion:
+      "相关成果为下一阶段工作奠定了坚实基础，也为集团稳健、高质量发展提供了有力支撑。",
+  },
+};
+
+function addArticleDetails(
+  locale: AppLocale,
+  articles: readonly GroupNewsSourceArticle[],
+): readonly GroupNewsArticle[] {
+  const copy = detailCopy[locale];
+
+  return articles.map((article, index) => ({
+    ...article,
+    id: `${locale}-group-news-${article.date}-${index + 1}`,
+    author: copy.author,
+    categoryName: copy.categoryName,
+    content: [
+      article.description || copy.introduction(article.title),
+      copy.development(article.title),
+      copy.conclusion,
+    ],
+    coverImage: article.image,
+    sourceUrl: article.href,
+  }));
+}
+
 const articlesByLocale: Record<AppLocale, readonly GroupNewsArticle[]> = {
-  en: englishArticles,
-  vi: vietnameseArticles,
-  zh: chineseArticles,
+  en: addArticleDetails("en", englishArticles),
+  vi: addArticleDetails("vi", vietnameseArticles),
+  zh: addArticleDetails("zh", chineseArticles),
 };
 
 export function getGroupNewsArticles(locale: AppLocale) {
-  return articlesByLocale[locale];
+  return articlesByLocale[locale].slice(0, 3);
+}
+
+export function getGroupNewsArticle(locale: AppLocale, articleId: string) {
+  return articlesByLocale[locale].find((article) => article.id === articleId);
 }

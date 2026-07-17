@@ -50,3 +50,20 @@ export type NewsDateListItem = {
   summary: string;
   href: string;
 };
+
+export type NewsArticleDetail = {
+  author: string;
+  categoryName: string;
+  content: readonly string[];
+  coverImage?: string;
+  sourceUrl: string;
+};
+
+export type DetailedNewsDateListItem = NewsDateListItem & NewsArticleDetail;
+
+export type LocalNewsArticle = NewsArticleDetail & {
+  id: string;
+  publishedAt: string;
+  title: string;
+  summary: string;
+};
