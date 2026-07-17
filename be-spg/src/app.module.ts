@@ -10,6 +10,7 @@ import storageConfig from './config/storage.config';
 import translationConfig from './config/translation.config';
 import { DatabaseModule } from './database/database.module';
 import { HealthModule } from './modules/health/health.module';
+import { UsersModule } from './modules/users/users.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { HealthModule } from './modules/health/health.module';
     ]),
     DatabaseModule,
     HealthModule,
+    UsersModule,
   ],
   providers: [
     {
