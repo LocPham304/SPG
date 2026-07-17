@@ -12,6 +12,18 @@ export type ContactDetails = {
 
 export type ContactContent = {
   description: string;
+  form: {
+    customerName: string;
+    customerNamePlaceholder: string;
+    email: string;
+    emailPlaceholder: string;
+    message: string;
+    messagePlaceholder: string;
+    phone: string;
+    phonePlaceholder: string;
+    submit: string;
+    title: string;
+  };
   heroTitle: string;
   labels: {
     address: string;
@@ -33,6 +45,18 @@ const content: Record<AppLocale, ContactContent> = {
     heroTitle: "Contact us",
     pageTitle: "Contact",
     marketingTitle: "Marketing Network",
+    form: {
+      title: "Send an inquiry",
+      customerName: "Customer name",
+      customerNamePlaceholder: "Enter your name",
+      email: "Email",
+      emailPlaceholder: "Enter your email",
+      phone: "Phone number",
+      phonePlaceholder: "Enter your phone number",
+      message: "Message",
+      messagePlaceholder: "How can we help you?",
+      submit: "Send inquiry",
+    },
     description:
       "Contact Shandong Port Equipment Group and view its marketing network.",
     marketingDescription:
@@ -95,6 +119,18 @@ const content: Record<AppLocale, ContactContent> = {
     heroTitle: "Liên hệ",
     pageTitle: "Liên hệ",
     marketingTitle: "Mạng lưới tiếp thị",
+    form: {
+      title: "Gửi yêu cầu liên hệ",
+      customerName: "Tên khách hàng",
+      customerNamePlaceholder: "Nhập tên khách hàng",
+      email: "Email",
+      emailPlaceholder: "Nhập địa chỉ email",
+      phone: "Số điện thoại",
+      phonePlaceholder: "Nhập số điện thoại",
+      message: "Nội dung",
+      messagePlaceholder: "Nhập nội dung cần trao đổi",
+      submit: "Gửi liên hệ",
+    },
     description:
       "Thông tin liên hệ của Tập đoàn Thiết bị Cảng Sơn Đông và mạng lưới tiếp thị.",
     marketingDescription:
@@ -160,6 +196,18 @@ const content: Record<AppLocale, ContactContent> = {
     heroTitle: "联系我们",
     pageTitle: "联系我们",
     marketingTitle: "营销网络",
+    form: {
+      title: "发送联系请求",
+      customerName: "客户姓名",
+      customerNamePlaceholder: "请输入客户姓名",
+      email: "电子邮箱",
+      emailPlaceholder: "请输入电子邮箱",
+      phone: "电话号码",
+      phonePlaceholder: "请输入电话号码",
+      message: "留言内容",
+      messagePlaceholder: "请输入您想咨询的内容",
+      submit: "发送请求",
+    },
     description: "山东陆海装备集团联系信息与营销网络。",
     marketingDescription: "山东陆海装备集团营销网络各公司的联系信息。",
     labels: {

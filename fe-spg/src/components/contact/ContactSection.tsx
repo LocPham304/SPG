@@ -7,11 +7,12 @@ import type {
   ContactDetails,
 } from "@/content/contact/contact";
 
+import { ContactInquiryForm } from "./ContactInquiryForm.client";
 import styles from "./ContactSection.module.scss";
 
 type ContactSectionProps = Pick<
   ContactContent,
-  "labels" | "marketingTitle" | "network" | "pageTitle" | "primary"
+  "form" | "labels" | "marketingTitle" | "network" | "pageTitle" | "primary"
 >;
 
 type DetailItem = {
@@ -87,6 +88,7 @@ function NetworkCard({
 }
 
 export function ContactSection({
+  form,
   labels,
   marketingTitle,
   network,
@@ -137,6 +139,20 @@ export function ContactSection({
               src="/images/public/files/image/contact_img1.png"
             />
             </article>
+          </ScrollReveal>
+        </section>
+
+        <section aria-labelledby="inquiry-heading" className={styles.block}>
+          <ScrollReveal threshold={0.15}>
+            <h2 className={styles.sectionTitle} id="inquiry-heading">
+              {form.title}
+            </h2>
+          </ScrollReveal>
+          <ScrollReveal threshold={0.15}>
+            <ContactInquiryForm
+              content={form}
+              recipient={primary.mailbox ?? "zbjt@spe.cn"}
+            />
           </ScrollReveal>
         </section>
 

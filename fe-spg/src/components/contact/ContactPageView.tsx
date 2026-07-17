@@ -27,11 +27,9 @@ export function ContactPageView({
         breadcrumbs={[
           { href: "/", label: homeLabel },
           { label: content.heroTitle },
-          {
-            label: isMarketingNetwork
-              ? content.marketingTitle
-              : content.pageTitle,
-          },
+          ...(isMarketingNetwork
+            ? [{ label: content.marketingTitle }]
+            : []),
         ]}
         breadcrumbSeparator="-"
         title={content.heroTitle}
@@ -53,6 +51,7 @@ export function ContactPageView({
         <ScrollToSection targetId="marketing-network" />
       ) : null}
       <ContactSection
+        form={content.form}
         labels={content.labels}
         marketingTitle={content.marketingTitle}
         network={content.network}
