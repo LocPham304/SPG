@@ -4,6 +4,9 @@ import Image from "next/image";
 import { useMemo, useRef, useState, type KeyboardEvent } from "react";
 
 import { LocalizedLink } from "@/components/common/LocalizedLink";
+import { ImageWithSkeleton } from "@/components/news/ImageWithSkeleton";
+import { ScrollReveal } from "@/components/news/ScrollReveal";
+import { getStaggerDelay } from "@/components/news/animation";
 import { homeNewsAssets } from "@/data/home-news";
 import type { AppLocale } from "@/i18n/routing";
 import { formatNewsDate } from "@/lib/news-date";
@@ -96,7 +99,11 @@ export function HomeNewsClient({
       aria-labelledby="home-news-title"
     >
       <div className={styles.container} suppressHydrationWarning>
-        <header className={styles.header}>
+        <ScrollReveal
+          animation="animate__fadeInUp"
+          className={styles.header}
+          duration="0.75s"
+        >
           <div className={styles.headingGroup}>
             {/* <p className={styles.eyebrow}>{copy.eyebrow}</p> */}
             <h2 id="home-news-title" className={styles.heading}>
@@ -133,7 +140,7 @@ export function HomeNewsClient({
               })}
             </div>
           </div>
-        </header>
+        </ScrollReveal>
 
         <div
           id="home-news-panel"
@@ -146,17 +153,24 @@ export function HomeNewsClient({
         >
           {featured ? (
             <div className={styles.newsGrid}>
-              <article className={styles.featured}>
-                <LocalizedLink href="/news" className={styles.featuredLink}>
-                  <Image
-                    className={styles.featuredImage}
+              <ScrollReveal
+                animation="animate__fadeInUp"
+                className={styles.featuredReveal}
+                duration="0.75s"
+              >
+                <article className={styles.featured}>
+                  <LocalizedLink href="/news" className={styles.featuredLink}>
+                  <ImageWithSkeleton
+                    aspectRatio="auto"
+                    className={styles.featuredImageFrame}
+                    imageClassName={styles.featuredImage}
                     src={featured.media.src}
                     alt={featured.media.alt}
                     fill
                     sizes="(max-width: 767px) 92vw, (max-width: 1199px) 54vw, 52vw"
                     priority={false}
                   />
-                  <span className={styles.featuredShade} aria-hidden="true" />
+                    <span className={styles.featuredShade} aria-hidden="true" />
                   <time
                     className={styles.dateBadge}
                     dateTime={featured.publishedAt}
@@ -176,23 +190,30 @@ export function HomeNewsClient({
                       <ArrowIcon />
                     </span>
                   </div>
-                </LocalizedLink>
-              </article>
+                  </LocalizedLink>
+                </article>
+              </ScrollReveal>
 
-              <div className={styles.secondaryColumn}>
+              <ScrollReveal
+                animation="animate__fadeInUp"
+                className={styles.secondaryColumn}
+                delay="0.1s"
+              >
                 <ul className={styles.secondaryList}>
-                  {secondary.map((article) => (
+                  {secondary.map((article, index) => (
                     <li key={article.id} className={styles.secondaryItem}>
-                      <LocalizedLink
-                        href="/news"
-                        className={styles.secondaryLink}
-                      >
-                        <time dateTime={article.publishedAt}>
-                          {formatNewsDate(article.publishedAt, locale).full}
-                        </time>
-                        <h3>{article.title}</h3>
-                        <ArrowIcon />
-                      </LocalizedLink>
+                      <ScrollReveal delay={getStaggerDelay(index)}>
+                        <LocalizedLink
+                          href="/news"
+                          className={styles.secondaryLink}
+                        >
+                          <time dateTime={article.publishedAt}>
+                            {formatNewsDate(article.publishedAt, locale).full}
+                          </time>
+                          <h3>{article.title}</h3>
+                          <ArrowIcon />
+                        </LocalizedLink>
+                      </ScrollReveal>
                     </li>
                   ))}
                 </ul>
@@ -200,7 +221,7 @@ export function HomeNewsClient({
                   {copy.viewMore}
                   <ArrowIcon />
                 </LocalizedLink>
-              </div>
+              </ScrollReveal>
             </div>
           ) : (
             <NewsEmptyState

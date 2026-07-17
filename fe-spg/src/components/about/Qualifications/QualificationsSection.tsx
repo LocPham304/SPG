@@ -1,10 +1,12 @@
 "use client";
 
-import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
 import { Container } from "@/components/common/Container";
+import { ImageWithSkeleton } from "@/components/news/ImageWithSkeleton";
+import { ScrollReveal } from "@/components/news/ScrollReveal";
+import { getStaggerDelay } from "@/components/news/animation";
 import type {
   QualificationCategoryId,
   QualificationsContent,
@@ -98,12 +100,14 @@ export function QualificationsSection({
   return (
     <section aria-labelledby="qualifications-heading" className={styles.section}>
       <Container>
-        <h2 className={styles.heading} id="qualifications-heading">
-          {title}
-        </h2>
+        <ScrollReveal animation="animate__fadeInUp">
+          <h2 className={styles.heading} id="qualifications-heading">
+            {title}
+          </h2>
+        </ScrollReveal>
 
         <div className={styles.companies}>
-          {content.companies.map((company) => {
+          {content.companies.map((company, companyIndex) => {
             const activeId =
               activeCategories[company.id] ?? company.categories[0].id;
             const activeCategory =
@@ -111,7 +115,12 @@ export function QualificationsSection({
               company.categories[0];
 
             return (
-              <article className={styles.company} key={company.id}>
+              <ScrollReveal
+                animation="animate__fadeInUp"
+                delay={getStaggerDelay(companyIndex)}
+                key={company.id}
+              >
+              <article className={styles.company}>
                 <h3 className={styles.companyName}>{company.name}</h3>
                 <div className={styles.companyCard}>
                   <div
@@ -165,10 +174,12 @@ export function QualificationsSection({
                           }}
                           type="button"
                         >
-                          <Image
+                          <ImageWithSkeleton
                             alt={alt}
-                            className={styles.certificate}
+                            aspectRatio="auto"
+                            className={styles.certificateFrame}
                             fill
+                            imageClassName={styles.certificate}
                             sizes="(max-width: 767px) 42vw, 27vw"
                             src={src}
                           />
@@ -178,6 +189,7 @@ export function QualificationsSection({
                   </div>
                 </div>
               </article>
+              </ScrollReveal>
             );
           })}
         </div>
@@ -205,10 +217,12 @@ export function QualificationsSection({
               <span />
             </button>
             <div className={styles.previewImage}>
-              <Image
+              <ImageWithSkeleton
                 alt={preview.alt}
-                className={styles.previewCertificate}
+                aspectRatio="auto"
+                className={styles.previewCertificateFrame}
                 fill
+                imageClassName={styles.previewCertificate}
                 sizes="92vw"
                 src={preview.src}
               />

@@ -1,12 +1,12 @@
 "use client";
 
-import Image from "next/image";
 import { useCallback, useRef, useState } from "react";
 import { A11y, Keyboard } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import type { Swiper as SwiperInstance } from "swiper/types";
 
 import { LocalizedLink } from "@/components/common/LocalizedLink";
+import { ImageWithSkeleton } from "@/components/news/ImageWithSkeleton";
 import type { HomeSolutionItem } from "@/data/home-solutions";
 
 import "swiper/css";
@@ -89,13 +89,15 @@ export function HomeSolutionsSlider({
           >
             <LocalizedLink className={styles.card} href={item.href}>
               <span className={styles.media}>
-                <Image
-                  className={styles.image}
+                <ImageWithSkeleton
+                  aspectRatio="auto"
+                  className={styles.imageFrame}
+                  imageClassName={styles.image}
+                  imageStyle={{ objectPosition: item.objectPosition }}
                   src={item.image}
                   alt={item.imageAlt}
                   fill
                   sizes="(max-width: 767px) 84vw, 43vw"
-                  style={{ objectPosition: item.objectPosition }}
                 />
               </span>
               <span className={styles.caption}>{item.title}</span>

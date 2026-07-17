@@ -114,12 +114,16 @@
 }
 
 .contactImage {
+  object-fit: contain;
+}
+
+.contactImageFrame {
   position: absolute;
   right: 0;
   bottom: 0;
   z-index: 1;
   width: min(47%, 688px);
-  height: auto;
+  aspect-ratio: 688 / 460;
   pointer-events: none;
 }
 
@@ -209,7 +213,7 @@
     line-height: 1.6;
   }
 
-  .contactImage {
+  .contactImageFrame {
     width: 42%;
     max-width: 260px;
   }
@@ -285,7 +289,7 @@
     line-height: 1.65;
   }
 
-  .contactImage {
+  .contactImageFrame {
     width: clamp(150px, 58vw, 245px);
     max-width: none;
   }

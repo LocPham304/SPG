@@ -232,6 +232,12 @@
   transition: opacity 180ms ease;
 }
 
+.modalHeroImageFrame {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+}
+
 .modalHeroShade {
   position: absolute;
   z-index: -1;

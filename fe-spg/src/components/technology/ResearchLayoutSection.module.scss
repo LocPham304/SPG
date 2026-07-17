@@ -60,6 +60,12 @@
   object-fit: contain;
 }
 
+.imageSkeletonFrame {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+}
+
 .caption {
   display: grid;
   justify-items: center;

@@ -15,9 +15,11 @@
 }
 
 .overviewImage {
-  display: block;
-  width: 100%;
-  height: auto;
+  object-fit: cover;
+}
+
+.overviewImageFrame {
+  aspect-ratio: 1520 / 570;
 }
 
 .introOverlay,
@@ -121,6 +123,12 @@
 .galleryImage {
   object-fit: cover;
   transition: transform 420ms ease;
+}
+
+.galleryImageFrame {
+  position: absolute;
+  inset: 0;
+  height: 100%;
 }
 
 .galleryCard figcaption {

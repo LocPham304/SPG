@@ -42,10 +42,12 @@
   overflow: hidden;
 }
 
+.mapImageFrame {
+  aspect-ratio: 1520 / 660;
+}
+
 .mapImage {
-  display: block;
-  width: 100%;
-  height: auto;
+  object-fit: cover;
 }
 
 .map figcaption {
@@ -230,6 +232,16 @@
   background: #edf1f3;
   box-shadow: 0 0 20px rgb(19 54 79 / 10%);
   transition: box-shadow 260ms ease;
+}
+
+.cardImageFrame {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+}
+
+.cardImageElement {
+  object-fit: cover;
 }
 
 .cardImage img {

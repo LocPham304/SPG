@@ -1,6 +1,7 @@
-import Image from "next/image";
-
 import { Container } from "@/components/common/Container";
+import { ImageWithSkeleton } from "@/components/news/ImageWithSkeleton";
+import { ScrollReveal } from "@/components/news/ScrollReveal";
+import { getStaggerDelay } from "@/components/news/animation";
 import type { ProductDeliveryContent } from "@/content/news/product-delivery";
 
 import styles from "./ProductDeliverySection.module.scss";
@@ -30,11 +31,14 @@ export function ProductDeliverySection({
 
   return (
     <Container as="section" className={styles.section}>
-      <h2 className={styles.heading}>{title}</h2>
+      <ScrollReveal threshold={0.15}>
+        <h2 className={styles.heading}>{title}</h2>
+      </ScrollReveal>
 
       <ul className={styles.newsGrid}>
-        {articles.map((article) => (
+        {articles.map((article, index) => (
           <li key={article.href}>
+            <ScrollReveal delay={getStaggerDelay(index)} threshold={0.15}>
             <article className={styles.newsCard}>
               <a
                 aria-label={article.title}
@@ -43,12 +47,12 @@ export function ProductDeliverySection({
                 rel="noreferrer"
                 target="_blank"
               >
-                <Image
+                <ImageWithSkeleton
                   alt={article.title}
                   fill
+                  imageClassName={styles.newsImage}
                   sizes="(max-width: 767px) 1px, 28vw"
                   src={article.image}
-                  unoptimized={article.image.startsWith("http://")}
                 />
               </a>
               <time className={styles.cardDate} dateTime={article.date}>
@@ -71,6 +75,7 @@ export function ProductDeliverySection({
                 {readMoreLabel} <span aria-hidden="true">⟶</span>
               </a>
             </article>
+            </ScrollReveal>
           </li>
         ))}
       </ul>

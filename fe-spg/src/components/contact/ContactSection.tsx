@@ -1,6 +1,7 @@
-import Image from "next/image";
-
 import { Container } from "@/components/common/Container";
+import { ImageWithSkeleton } from "@/components/news/ImageWithSkeleton";
+import { ScrollReveal } from "@/components/news/ScrollReveal";
+import { getStaggerDelay } from "@/components/news/animation";
 import type {
   ContactContent,
   ContactDetails,
@@ -96,10 +97,13 @@ export function ContactSection({
     <div className={styles.contactPage}>
       <Container className={styles.inner}>
         <section aria-labelledby="contact-heading" className={styles.block}>
-          <h2 className={styles.sectionTitle} id="contact-heading">
-            {pageTitle}
-          </h2>
-          <article className={styles.primaryCard}>
+          <ScrollReveal threshold={0.15}>
+            <h2 className={styles.sectionTitle} id="contact-heading">
+              {pageTitle}
+            </h2>
+          </ScrollReveal>
+          <ScrollReveal animation="animate__fadeInUp" threshold={0.15}>
+            <article className={styles.primaryCard}>
             <div className={styles.primaryContent}>
               <h3>{primary.company}</h3>
               <DetailsList
@@ -123,16 +127,17 @@ export function ContactSection({
                 ]}
               />
             </div>
-            <Image
+            <ImageWithSkeleton
               alt=""
-              aria-hidden="true"
-              className={styles.contactImage}
-              height={460}
+              className={styles.contactImageFrame}
+              fill
+              imageClassName={styles.contactImage}
               priority
+              sizes="(max-width: 767px) 85vw, 47vw"
               src="/images/public/files/image/contact_img1.png"
-              width={688}
             />
-          </article>
+            </article>
+          </ScrollReveal>
         </section>
 
         <section
@@ -140,16 +145,20 @@ export function ContactSection({
           className={`${styles.block} ${styles.marketingBlock}`}
           id="marketing-network"
         >
-          <h2 className={styles.sectionTitle} id="network-heading">
-            {marketingTitle}
-          </h2>
+          <ScrollReveal threshold={0.15}>
+            <h2 className={styles.sectionTitle} id="network-heading">
+              {marketingTitle}
+            </h2>
+          </ScrollReveal>
           <div className={styles.networkGrid}>
-            {network.map((contact) => (
-              <NetworkCard
-                contact={contact}
+            {network.map((contact, index) => (
+              <ScrollReveal
+                delay={getStaggerDelay(index)}
                 key={contact.company}
-                labels={labels}
-              />
+                threshold={0.15}
+              >
+                <NetworkCard contact={contact} labels={labels} />
+              </ScrollReveal>
             ))}
           </div>
         </section>

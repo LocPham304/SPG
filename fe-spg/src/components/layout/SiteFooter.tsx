@@ -1,7 +1,9 @@
-import Image from "next/image";
 import { getTranslations } from "next-intl/server";
 
 import { LocalizedLink } from "@/components/common/LocalizedLink";
+import { ImageWithSkeleton } from "@/components/news/ImageWithSkeleton";
+import { ScrollReveal } from "@/components/news/ScrollReveal";
+import { getStaggerDelay } from "@/components/news/animation";
 import {
   companyContact,
   companyLegal,
@@ -39,11 +41,14 @@ export async function SiteFooter() {
     <footer className={styles.footer} id="site-footer">
       <FooterWave />
       <div className={styles.footerInner}>
-        <FooterNavigation
-          ariaLabel={t("navigationLabel")}
-          groups={navigationGroups}
-        />
+        <ScrollReveal threshold={0.1}>
+          <FooterNavigation
+            ariaLabel={t("navigationLabel")}
+            groups={navigationGroups}
+          />
+        </ScrollReveal>
 
+        <ScrollReveal animation="animate__fadeInUp" threshold={0.1}>
         <div className={styles.footerDetails}>
           <FooterLinksDropdown
             label={t("links")}
@@ -64,21 +69,29 @@ export async function SiteFooter() {
           </address>
 
           <div className={styles.footerQrCodes}>
-            {footerQrCodes.map((qr) => (
-              <figure key={qr.id}>
-                <Image
+            {footerQrCodes.map((qr, index) => (
+              <ScrollReveal
+                className={styles.footerQrReveal}
+                delay={getStaggerDelay(index)}
+                key={qr.id}
+                threshold={0.1}
+              >
+              <figure>
+                <ImageWithSkeleton
                   alt={t(`${qr.labelKey}Alt`)}
-                  height={qr.height}
-                  loading="eager"
+                  aspectRatio="square"
+                  className={styles.footerQrImage}
+                  imageClassName={styles.footerQrImageElement}
                   sizes="(max-width: 767px) 96px, 126px"
                   src={qr.src}
-                  width={qr.width}
                 />
                 <figcaption>{t(qr.labelKey)}</figcaption>
               </figure>
+              </ScrollReveal>
             ))}
           </div>
         </div>
+        </ScrollReveal>
 
         <div className={styles.footerLegal}>
           <p>{t("copyright", { year: new Date().getFullYear() })}</p>

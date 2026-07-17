@@ -1,4 +1,5 @@
 import { Container } from "@/components/common/Container";
+import { ScrollReveal } from "@/components/news/ScrollReveal";
 import type { TechnologyAchievementsContent } from "@/content/technology/technological-achievements";
 
 import styles from "./TechnologyAchievementsSection.module.scss";
@@ -17,7 +18,9 @@ export function TechnologyAchievementsSection({
     <main className={styles.layout}>
       <section className={styles.intro}>
         <Container>
-          <h2 className={styles.pageTitle}>{pageTitle}</h2>
+          <ScrollReveal threshold={0.15}>
+            <h2 className={styles.pageTitle}>{pageTitle}</h2>
+          </ScrollReveal>
         </Container>
       </section>
       {groups.map((group) => (
@@ -27,10 +30,14 @@ export function TechnologyAchievementsSection({
           key={group.id}
         >
           <Container className={styles.groupInner}>
-            <h3 className={styles.groupTitle} id={`${group.id}-title`}>
-              {group.title}
-            </h3>
-            <TechnologyAchievementsSlider items={group.items} label={group.title} />
+            <ScrollReveal threshold={0.15}>
+              <h3 className={styles.groupTitle} id={`${group.id}-title`}>
+                {group.title}
+              </h3>
+            </ScrollReveal>
+            <ScrollReveal animation="animate__fadeInUp" threshold={0.15}>
+              <TechnologyAchievementsSlider items={group.items} label={group.title} />
+            </ScrollReveal>
           </Container>
         </section>
       ))}

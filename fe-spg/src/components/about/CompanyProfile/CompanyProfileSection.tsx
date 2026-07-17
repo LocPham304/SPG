@@ -1,5 +1,6 @@
 import { Container } from "@/components/common/Container";
-import { ResponsiveImage } from "@/components/common/ResponsiveImage";
+import { ImageWithSkeleton } from "@/components/news/ImageWithSkeleton";
+import { ScrollReveal } from "@/components/news/ScrollReveal";
 import type { CompanyProfileContent } from "@/content/about/company-profile";
 
 import styles from "./CompanyProfileSection.module.scss";
@@ -15,7 +16,11 @@ export function CompanyProfileSection({ content }: CompanyProfileSectionProps) {
       className={styles.section}
     >
       <Container className={styles.container}>
-        <header className={styles.introduction}>
+        <ScrollReveal
+          animation="animate__fadeInUp"
+          className={styles.introduction}
+          duration="0.75s"
+        >
           <h2 className={styles.heading} id="company-profile-heading">
             {content.heading}
           </h2>
@@ -24,28 +29,40 @@ export function CompanyProfileSection({ content }: CompanyProfileSectionProps) {
               <p key={paragraph}>{paragraph}</p>
             ))}
           </div>
-        </header>
+        </ScrollReveal>
 
         <div className={styles.blocks}>
-          {content.blocks.map((block) => {
+          {content.blocks.map((block, index) => {
             const media = (
-              <figure className={styles.media}>
-                <ResponsiveImage
+              <ScrollReveal
+                animation="animate__fadeInUp"
+                className={styles.media}
+                delay="0.1s"
+                duration="0.75s"
+              >
+                <ImageWithSkeleton
                   alt={block.image.alt}
-                  className={styles.image}
+                  aspectRatio="auto"
+                  className={styles.imageFrame}
+                  imageClassName={styles.image}
                   height={block.image.height}
                   sizes="(max-width: 767px) calc(100vw - 40px), (max-width: 1199px) 46vw, 700px"
                   src={block.image.src}
                   width={block.image.width}
                 />
-              </figure>
+              </ScrollReveal>
             );
             const copy = (
-              <div className={styles.blockCopy}>
+              <ScrollReveal
+                animation="animate__fadeInUp"
+                className={styles.blockCopy}
+                delay={index > 0 ? "0.1s" : "0s"}
+                duration="0.75s"
+              >
                 {block.paragraphs.map((paragraph) => (
                   <p key={paragraph}>{paragraph}</p>
                 ))}
-              </div>
+              </ScrollReveal>
             );
 
             return (
@@ -61,11 +78,15 @@ export function CompanyProfileSection({ content }: CompanyProfileSectionProps) {
           })}
         </div>
 
-        <div className={styles.advantages}>
+        <ScrollReveal
+          animation="animate__fadeInUp"
+          className={styles.advantages}
+          duration="0.75s"
+        >
           {content.advantages.map((paragraph) => (
             <p key={paragraph}>{paragraph}</p>
           ))}
-        </div>
+        </ScrollReveal>
       </Container>
     </section>
   );

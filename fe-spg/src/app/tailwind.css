@@ -1,0 +1,5 @@
+@layer theme, base, components, utilities;
+
+/* Keep the existing SCSS reset intact and load only Tailwind's tokens/utilities. */
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);

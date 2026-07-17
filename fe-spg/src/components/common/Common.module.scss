@@ -54,11 +54,48 @@
 }
 
 .pageHero {
+  position: relative;
+  overflow: hidden;
   display: grid;
   min-height: 280px;
   align-items: end;
   padding-block: calc(var(--header-height) + 48px) 48px;
   background: var(--color-surface-muted);
+}
+
+.pageHeroMedia {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  height: 100%;
+}
+
+.pageHeroMedia img {
+  object-position: center;
+}
+
+.pageHeroOverlay {
+  position: absolute;
+  z-index: 0;
+  background: rgb(0 25 39 / 20%);
+  inset: 0;
+  pointer-events: none;
+}
+
+.pageHeroImageAbout {
+  object-position: center 52% !important;
+}
+
+.pageHeroImageProducts {
+  object-position: 48% center !important;
+}
+
+.pageHeroImageProductDetail {
+  object-position: 54% center !important;
+}
+
+.pageHeroImageTechnology {
+  object-position: center 46% !important;
 }
 
 .pageHeroInner {
@@ -92,43 +129,30 @@
 }
 
 .pageHeroAbout {
-  background:
-    linear-gradient(rgb(5 45 66 / 22%), rgb(5 45 66 / 22%)),
-    url("/images/public/files/image/banner_about.jpg") center 52% / cover no-repeat;
+  background: var(--color-surface-muted);
 }
 
 .pageHeroNews {
-  background:
-    linear-gradient(rgb(0 25 39 / 28%), rgb(0 25 39 / 28%)),
-    url("/images/public/files/image/banner_news.jpg") center center / cover no-repeat;
+  background: var(--color-surface-muted);
 }
 
 .pageHeroProducts {
-  background:
-    linear-gradient(rgb(0 25 39 / 20%), rgb(0 25 39 / 20%)),
-    url("/images/products/banner_solution.jpg") center center / cover no-repeat;
+  background: var(--color-surface-muted);
 }
 
 .pageHeroProductDetail {
   min-height: clamp(260px, 20vw, 384px);
-  background:
-    linear-gradient(rgb(8 27 61 / 12%), rgb(8 27 61 / 12%)),
-    url("/images/Container handling systems/article_solution_banner.jpg") center / cover no-repeat;
+  background: var(--color-surface-muted);
 }
 
 .pageHeroTechnology {
   min-height: clamp(300px, 20.31vw, 390px);
-  background:
-    linear-gradient(rgb(0 25 39 / 20%), rgb(0 25 39 / 20%)),
-    url("/images/public/files/image/banner_technology.jpg") center 46% / cover no-repeat;
+  background: var(--color-surface-muted);
 }
 
 .pageHeroContact {
   min-height: clamp(270px, 19.69vw, 378px);
-  background:
-    linear-gradient(rgb(0 25 39 / 18%), rgb(0 25 39 / 18%)),
-    url("/images/public/files/image/banner_contact.jpg") center center / cover
-      no-repeat;
+  background: var(--color-surface-muted);
 }
 
 .pageHeroAbout .pageHeroInner,
@@ -240,30 +264,26 @@
   .pageHeroContact {
     min-height: 320px;
     padding-block: var(--header-height) 0;
-    background-position: 58% center;
   }
 
-  .pageHeroNews {
-    background-position: center center;
+  .pageHeroImageAbout {
+    object-position: 58% center !important;
   }
 
-  .pageHeroProducts {
-    background-position: 48% center;
+  .pageHeroImageProducts {
+    object-position: 48% center !important;
   }
 
   .pageHeroProductDetail {
     min-height: 184px;
-    background-position: 54% center;
   }
 
   .pageHeroTechnology {
     min-height: 210px;
-    background-position: center center;
   }
 
   .pageHeroContact {
     min-height: clamp(172px, 34vw, 226px);
-    background-position: center center;
   }
 
   .pageHeroAbout .pageHeroInner,

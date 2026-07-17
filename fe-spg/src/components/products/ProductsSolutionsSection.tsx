@@ -1,8 +1,10 @@
 import type { CSSProperties } from "react";
-import Image from "next/image";
 
 import { Container } from "@/components/common/Container";
 import { LocalizedLink } from "@/components/common/LocalizedLink";
+import { ImageWithSkeleton } from "@/components/news/ImageWithSkeleton";
+import { ScrollReveal } from "@/components/news/ScrollReveal";
+import { getStaggerDelay } from "@/components/news/animation";
 import type { ProductSolutionsContent } from "@/content/products/solutions";
 
 import styles from "./ProductsSolutions.module.scss";
@@ -28,18 +30,19 @@ export function ProductsSolutionsSection({
 }: ProductsSolutionsSectionProps) {
   return (
     <Container as="section" className={styles.section}>
-      <figure className={styles.map}>
-        <Image
-          alt={mapTitle}
-          className={styles.mapImage}
-          height={660}
-          priority
-          sizes="(max-width: 767px) calc(100vw - 32px), calc(100vw - 15vw)"
-          src="/images/public/files/image/list_solution_img1.jpg"
-          width={1520}
-        />
-        <figcaption>{mapTitle}</figcaption>
-        <ul className={styles.hotspots}>
+      <ScrollReveal animation="animate__fadeInUp" duration="0.7s" threshold={0.15}>
+        <figure className={styles.map}>
+          <ImageWithSkeleton
+            alt={mapTitle}
+            className={styles.mapImageFrame}
+            fill
+            imageClassName={styles.mapImage}
+            priority
+            sizes="(max-width: 767px) calc(100vw - 32px), calc(100vw - 15vw)"
+            src="/images/public/files/image/list_solution_img1.jpg"
+          />
+          <figcaption>{mapTitle}</figcaption>
+          <ul className={styles.hotspots}>
           {hotspots.map((hotspot) => {
             const label = hotspot.sections.map(({ title }) => title).join(", ");
             const style: HotspotStyle = {
@@ -67,18 +70,23 @@ export function ProductsSolutionsSection({
               </li>
             );
           })}
-        </ul>
-      </figure>
+          </ul>
+        </figure>
+      </ScrollReveal>
 
-      <h2 className={styles.heading}>{title}</h2>
+      <ScrollReveal threshold={0.15}>
+        <h2 className={styles.heading}>{title}</h2>
+      </ScrollReveal>
       <ul className={styles.grid}>
-        {items.map((item) => {
+        {items.map((item, index) => {
           const cardContent = (
             <>
               <span className={styles.cardImage}>
-                <Image
+                <ImageWithSkeleton
                   alt={item.title}
+                  className={styles.cardImageFrame}
                   fill
+                  imageClassName={styles.cardImageElement}
                   sizes="(max-width: 767px) calc(100vw - 32px), 42.5vw"
                   src={item.image}
                 />
@@ -93,6 +101,7 @@ export function ProductsSolutionsSection({
 
           return (
             <li key={item.id}>
+              <ScrollReveal delay={getStaggerDelay(index)} threshold={0.15}>
               {item.external ? (
                 <a
                   className={styles.card}
@@ -107,6 +116,7 @@ export function ProductsSolutionsSection({
                   {cardContent}
                 </LocalizedLink>
               )}
+              </ScrollReveal>
             </li>
           );
         })}

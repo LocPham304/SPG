@@ -1,6 +1,6 @@
-import Image from "next/image";
-
 import { Container } from "@/components/common/Container";
+import { ImageWithSkeleton } from "@/components/news/ImageWithSkeleton";
+import { ScrollReveal } from "@/components/news/ScrollReveal";
 import {
   containerHandlingOverviewImage,
   type ContainerHandlingContent,
@@ -75,15 +75,16 @@ export function ProductSystemDetailSection({
   return (
     <main className={styles.main}>
       <Container as="section" className={styles.overviewSection}>
+        <ScrollReveal animation="animate__fadeInUp" duration="0.7s" threshold={0.15}>
         <div className={styles.overviewMedia}>
-          <Image
+          <ImageWithSkeleton
             alt={overviewAlt}
-            className={styles.overviewImage}
-            height={570}
+            className={styles.overviewImageFrame}
+            fill
+            imageClassName={styles.overviewImage}
             priority
             sizes="(max-width: 767px) calc(100vw - 32px), 85vw"
             src={overviewImage}
-            width={1520}
           />
           <Introduction
             compact
@@ -91,6 +92,7 @@ export function ProductSystemDetailSection({
             title={title}
           />
         </div>
+        </ScrollReveal>
         <Introduction intro={intro} title={title} />
       </Container>
 
@@ -101,18 +103,25 @@ export function ProductSystemDetailSection({
           key={section.id}
         >
           <Container className={styles.productSectionInner}>
+            <ScrollReveal
+              animation="animate__fadeInUp"
+              threshold={0.15}
+            >
             <h2>{section.title}</h2>
             <div className={styles.productCopy}>
               {section.paragraphs.map((paragraph) => (
                 <p key={paragraph}>{paragraph}</p>
               ))}
             </div>
+            </ScrollReveal>
+            <ScrollReveal animation="animate__fadeInUp" threshold={0.15}>
             <ContainerHandlingGallery
               items={section.images}
               label={`${galleryLabel}: ${section.title}`}
               nextLabel={nextLabel}
               previousLabel={previousLabel}
             />
+            </ScrollReveal>
           </Container>
         </section>
       ))}

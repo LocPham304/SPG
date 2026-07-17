@@ -208,9 +208,14 @@
   width: 126px;
 }
 
-.footerQrCodes img {
+.footerQrReveal,
+.footerQrImage {
   width: 126px;
-  height: auto;
+}
+
+.footerQrImageElement {
+  width: 126px;
+  height: 100%;
   background: #fff;
   object-fit: contain;
 }
@@ -410,13 +415,15 @@
     gap: 18px;
   }
 
-  .footerQrCodes figure {
+  .footerQrCodes figure,
+  .footerQrReveal,
+  .footerQrImage {
     width: min(112px, calc(50% - 9px));
   }
 
-  .footerQrCodes img {
+  .footerQrImageElement {
     width: 100%;
-    height: auto;
+    height: 100%;
   }
 
   .footerQrCodes figcaption {

@@ -1,6 +1,7 @@
-import Image from "next/image";
-
 import { Container } from "@/components/common/Container";
+import { ImageWithSkeleton } from "@/components/news/ImageWithSkeleton";
+import { ScrollReveal } from "@/components/news/ScrollReveal";
+import { getStaggerDelay } from "@/components/news/animation";
 import type { ResearchLayoutContent } from "@/content/technology/r-and-d-layout";
 
 import styles from "./ResearchLayoutSection.module.scss";
@@ -24,19 +25,29 @@ export function ResearchLayoutSection({
         >
           <Container className={styles.inner}>
             {sectionIndex === 0 ? (
-              <h2 className={styles.pageTitle}>{pageTitle}</h2>
+              <ScrollReveal threshold={0.15}>
+                <h2 className={styles.pageTitle}>{pageTitle}</h2>
+              </ScrollReveal>
             ) : null}
-            <h3 className={styles.sectionTitle} id={`${section.id}-title`}>
-              {section.title}
-            </h3>
+            <ScrollReveal threshold={0.15}>
+              <h3 className={styles.sectionTitle} id={`${section.id}-title`}>
+                {section.title}
+              </h3>
+            </ScrollReveal>
             <div className={styles.grid}>
-              {section.cards.map((card) => (
-                <figure className={styles.card} key={card.image.src}>
-                  <div className={styles.imageFrame}>
-                    <Image
+              {section.cards.map((card, index) => (
+                <ScrollReveal
+                  delay={getStaggerDelay(index)}
+                  key={card.image.src}
+                  threshold={0.15}
+                >
+                  <figure className={styles.card}>
+                    <div className={styles.imageFrame}>
+                    <ImageWithSkeleton
                       alt={card.image.alt}
-                      className={styles.image}
+                      className={styles.imageSkeletonFrame}
                       fill
+                      imageClassName={styles.image}
                       sizes="(max-width: 767px) 44vw, (max-width: 1199px) 22vw, 20vw"
                       src={card.image.src}
                     />
@@ -45,7 +56,8 @@ export function ResearchLayoutSection({
                     <strong>{card.primaryLabel}</strong>
                     {card.secondaryLabel ? <span>{card.secondaryLabel}</span> : null}
                   </figcaption>
-                </figure>
+                  </figure>
+                </ScrollReveal>
               ))}
             </div>
           </Container>

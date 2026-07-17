@@ -98,6 +98,16 @@
   min-width: 0;
 }
 
+.featuredReveal {
+  min-width: 0;
+}
+
+.featuredImageFrame {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+}
+
 .featuredLink {
   position: relative;
   display: block;

@@ -41,6 +41,11 @@
   z-index: 0;
 }
 
+.posterImage {
+  object-fit: cover;
+  object-position: 50% 50%;
+}
+
 .video {
   z-index: 1;
   max-width: none;

@@ -1,6 +1,6 @@
-import Image from "next/image";
-
 import { Container } from "@/components/common/Container";
+import { ImageWithSkeleton } from "@/components/news/ImageWithSkeleton";
+import { ScrollReveal } from "@/components/news/ScrollReveal";
 import type { MajorProjectContent } from "@/content/technology/major-project";
 
 import styles from "./MajorProjectSection.module.scss";
@@ -17,7 +17,9 @@ export function MajorProjectSection({
   return (
     <main className={styles.layout}>
       <Container className={styles.heading}>
-        <h2>{pageTitle}</h2>
+        <ScrollReveal threshold={0.15}>
+          <h2>{pageTitle}</h2>
+        </ScrollReveal>
       </Container>
 
       <div className={styles.projects}>
@@ -31,27 +33,40 @@ export function MajorProjectSection({
               key={project.title}
             >
               <div className={styles.backgroundPanel} aria-hidden="true">
-                <Image
+                <ImageWithSkeleton
                   alt=""
-                  className={styles.decorativeBackground}
+                  className={styles.decorativeBackgroundFrame}
                   fill
+                  imageClassName={styles.decorativeBackground}
                   sizes="(max-width: 900px) 100vw, 72vw"
                   src={project.background}
                 />
               </div>
               <Container className={styles.projectInner}>
+                <ScrollReveal
+                  animation="animate__fadeInUp"
+                  className={styles.visualReveal}
+                  threshold={0.15}
+                >
                 <figure className={styles.visual}>
-                  <Image
+                  <ImageWithSkeleton
                     alt={project.title}
-                    className={styles.projectImage}
-                    height={project.imageHeight}
+                    className={styles.projectImageFrame}
+                    fill
+                    imageClassName={styles.projectImage}
                     priority={index === 0}
                     sizes="(max-width: 767px) 92vw, (max-width: 1199px) 45vw, 40vw"
                     src={project.image}
-                    width={project.imageWidth}
+                    style={{ aspectRatio: `${project.imageWidth} / ${project.imageHeight}` }}
                   />
                 </figure>
+                </ScrollReveal>
 
+                <ScrollReveal
+                  animation="animate__fadeInUp"
+                  className={styles.copyReveal}
+                  threshold={0.15}
+                >
                 <div className={styles.copy}>
                   <h3>{project.title}</h3>
                   {project.subtitle ? (
@@ -63,6 +78,7 @@ export function MajorProjectSection({
                     ))}
                   </div>
                 </div>
+                </ScrollReveal>
               </Container>
             </article>
           );

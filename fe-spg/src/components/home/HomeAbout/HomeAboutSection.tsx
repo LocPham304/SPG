@@ -1,7 +1,8 @@
-import Image from "next/image";
 import { getTranslations } from "next-intl/server";
 
 import { LocalizedLink } from "@/components/common/LocalizedLink";
+import { ImageWithSkeleton } from "@/components/news/ImageWithSkeleton";
+import { ScrollReveal } from "@/components/news/ScrollReveal";
 import type { AppLocale } from "@/i18n/routing";
 
 import styles from "./HomeAbout.module.scss";
@@ -26,7 +27,11 @@ export async function HomeAboutSection({ locale }: HomeAboutSectionProps) {
       data-content-status="temporary"
       aria-labelledby="home-about-title"
     >
-      <div className={styles.content}>
+      <ScrollReveal
+        animation="animate__fadeInUp"
+        className={styles.content}
+        duration="0.75s"
+      >
         <h2 id="home-about-title" className={styles.heading}>
           {aboutT("title")}
         </h2>
@@ -42,17 +47,24 @@ export async function HomeAboutSection({ locale }: HomeAboutSectionProps) {
           <span>{commonT("learnMore")}</span>
           <span className={styles.arrow} aria-hidden="true" />
         </LocalizedLink>
-      </div>
+      </ScrollReveal>
 
-      <div className={styles.media}>
-        <Image
-          className={styles.image}
+      <ScrollReveal
+        animation="animate__fadeInUp"
+        className={styles.media}
+        delay="0.1s"
+        duration="0.75s"
+      >
+        <ImageWithSkeleton
+          aspectRatio="auto"
+          className={styles.imageFrame}
+          imageClassName={styles.image}
           src={HOME_ABOUT_IMAGE}
           alt={aboutT("imageAlt")}
           fill
           sizes="(max-width: 900px) 100vw, 57vw"
         />
-      </div>
+      </ScrollReveal>
     </section>
   );
 }

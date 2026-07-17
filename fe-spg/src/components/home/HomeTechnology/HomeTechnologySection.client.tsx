@@ -3,10 +3,11 @@
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Atom, FileBadge2, FolderCog } from "lucide-react";
-import Image from "next/image";
 import { useLayoutEffect, useMemo, useRef, useState } from "react";
 
 import { LocalizedLink } from "@/components/common/LocalizedLink";
+import { ImageWithSkeleton } from "@/components/news/ImageWithSkeleton";
+import { ScrollReveal } from "@/components/news/ScrollReveal";
 import type {
   HomeTechnologyCategoryId,
   HomeTechnologyIcon,
@@ -126,9 +127,11 @@ export function HomeTechnologyInteractive({
       aria-labelledby="home-technology-title"
       data-home-technology
     >
-      <Image
+      <ImageWithSkeleton
+        aspectRatio="auto"
+        className={styles.backgroundImageFrame}
+        imageClassName={styles.backgroundImage}
         key={activeCategory.id}
-        className={styles.backgroundImage}
         src={activeCategory.image}
         alt={activeCategory.imageAlt}
         fill
@@ -137,15 +140,19 @@ export function HomeTechnologyInteractive({
       <div className={styles.overlay} aria-hidden="true" />
 
       <div className={styles.inner}>
-        <h2 id="home-technology-title" className={styles.heading}>
-          {title}
-        </h2>
+        <ScrollReveal animation="animate__fadeInUp" duration="0.75s">
+          <h2 id="home-technology-title" className={styles.heading}>
+            {title}
+          </h2>
+        </ScrollReveal>
 
-        <div
+        <ScrollReveal
+          animation="animate__fadeInUp"
           className={styles.activeContent}
+          delay="0.1s"
           key={activeCategory.id}
-          role="tabpanel"
         >
+          <div role="tabpanel">
           <h3 className={styles.categoryTitle}>{activeCategory.title}</h3>
 
           {activeCategory.stats ? (
@@ -186,7 +193,8 @@ export function HomeTechnologyInteractive({
             <span>{learnMore}</span>
             <span className={styles.linkArrow} aria-hidden="true" />
           </LocalizedLink>
-        </div>
+          </div>
+        </ScrollReveal>
       </div>
 
       <div className={styles.navigation} aria-label={tabsLabel} role="tablist">

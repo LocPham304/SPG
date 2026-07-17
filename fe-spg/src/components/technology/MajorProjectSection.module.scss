@@ -45,6 +45,12 @@
   object-fit: cover;
 }
 
+.decorativeBackgroundFrame {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+}
+
 .project[data-image-side="right"] .backgroundPanel {
   left: 0;
 }
@@ -63,17 +69,27 @@
   min-height: inherit;
 }
 
-.visual {
+.visual,
+.visualReveal {
   position: relative;
   z-index: 1;
   margin: 0;
   filter: drop-shadow(0 12px 24px rgb(25 70 103 / 8%));
 }
 
+.copyReveal {
+  position: relative;
+  z-index: 1;
+}
+
+.projectImageFrame {
+  height: auto;
+}
+
 .projectImage {
   display: block;
   width: 100%;
-  height: auto;
+  height: 100%;
   object-fit: cover;
 }
 
@@ -109,23 +125,23 @@
   text-wrap: pretty;
 }
 
-.project[data-image-side="right"] .visual {
+.project[data-image-side="right"] .visualReveal {
   grid-column: 2;
   grid-row: 1;
 }
 
-.project[data-image-side="right"] .copy {
+.project[data-image-side="right"] .copyReveal {
   grid-column: 1;
   grid-row: 1;
   justify-self: start;
 }
 
-.project[data-image-side="left"] .visual {
+.project[data-image-side="left"] .visualReveal {
   grid-column: 1;
   grid-row: 1;
 }
 
-.project[data-image-side="left"] .copy {
+.project[data-image-side="left"] .copyReveal {
   grid-column: 2;
   grid-row: 1;
 }
@@ -188,16 +204,14 @@
     padding-inline: 0;
   }
 
-  .visual {
+  .visual,
+  .visualReveal {
     width: 100%;
     filter: none;
   }
 
-  .projectImage {
-    width: 100%;
-    height: auto;
-    aspect-ratio: 707 / 410;
-    object-fit: cover;
+  .projectImageFrame {
+    aspect-ratio: 707 / 410 !important;
   }
 
   .copy {

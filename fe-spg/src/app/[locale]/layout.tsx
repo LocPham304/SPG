@@ -14,6 +14,8 @@ import {
   locales,
 } from "@/i18n/routing";
 
+import "animate.css";
+import "../tailwind.css";
 import "../globals.scss";
 
 type LocaleLayoutProps = {

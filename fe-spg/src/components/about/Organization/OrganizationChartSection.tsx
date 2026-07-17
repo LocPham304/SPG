@@ -1,10 +1,11 @@
 "use client";
 
-import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
 import { Container } from "@/components/common/Container";
+import { ImageWithSkeleton } from "@/components/news/ImageWithSkeleton";
+import { ScrollReveal } from "@/components/news/ScrollReveal";
 
 import styles from "./OrganizationChartSection.module.scss";
 
@@ -87,31 +88,38 @@ export function OrganizationChartSection({
       className={styles.section}
     >
       <Container>
-        <h2 className={styles.heading} id="organization-chart-heading">
-          {title}
-        </h2>
-        <div
-          aria-label={title}
-          className={styles.chartViewport}
-          role="region"
-          tabIndex={0}
-        >
-          <button
-            aria-haspopup="dialog"
-            className={styles.chartTrigger}
-            onClick={openLightbox}
-            ref={triggerRef}
-            type="button"
+        <ScrollReveal animation="animate__fadeInUp">
+          <h2 className={styles.heading} id="organization-chart-heading">
+            {title}
+          </h2>
+        </ScrollReveal>
+        <ScrollReveal animation="animate__fadeInUp" delay="0.1s" duration="0.7s">
+          <div
+            aria-label={title}
+            className={styles.chartViewport}
+            role="region"
+            tabIndex={0}
           >
-            <Image
-              alt={title}
-              className={styles.chart}
-              fill
-              sizes="(max-width: 767px) 92vw, 86vw"
-              src={organizationChart}
-            />
-          </button>
-        </div>
+            <button
+              aria-haspopup="dialog"
+              className={styles.chartTrigger}
+              onClick={openLightbox}
+              ref={triggerRef}
+              type="button"
+            >
+              <ImageWithSkeleton
+                alt={title}
+                aspectRatio="auto"
+                className={styles.chartFrame}
+                fill
+                imageClassName={styles.chart}
+                sizes="(max-width: 767px) 92vw, 86vw"
+                src={organizationChart}
+                transparent
+              />
+            </button>
+          </div>
+        </ScrollReveal>
       </Container>
       {isOpen &&
         createPortal(
@@ -135,12 +143,15 @@ export function OrganizationChartSection({
               <span />
             </button>
             <div className={styles.lightboxContent}>
-              <Image
+              <ImageWithSkeleton
                 alt={title}
-                className={styles.lightboxImage}
+                aspectRatio="auto"
+                className={styles.lightboxImageFrame}
                 fill
+                imageClassName={styles.lightboxImage}
                 sizes="100vw"
                 src={organizationChart}
+                transparent
               />
             </div>
           </div>,

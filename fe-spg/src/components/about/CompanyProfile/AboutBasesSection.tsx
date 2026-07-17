@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 
 import { Container } from "@/components/common/Container";
+import { ScrollReveal } from "@/components/news/ScrollReveal";
 import { getAboutBaseProfiles } from "@/content/about/company-profile/base-profiles";
 import { homeBaseItems, type HomeBaseId } from "@/data/home-bases";
 import type { AppLocale } from "@/i18n/routing";
@@ -57,16 +58,20 @@ export async function AboutBasesSection({ locale }: AboutBasesSectionProps) {
       id="about-bases"
     >
       <Container className={styles.container}>
-        <h2 className={styles.heading} id="about-bases-heading">
-          {t("title")}
-        </h2>
-        <AboutBasesSlider
-          items={items}
-          learnMoreLabel={common("learnMore")}
-          nextLabel={common("next")}
-          popupCopy={popupData.copy}
-          previousLabel={common("previous")}
-        />
+        <ScrollReveal animation="animate__fadeInUp">
+          <h2 className={styles.heading} id="about-bases-heading">
+            {t("title")}
+          </h2>
+        </ScrollReveal>
+        <ScrollReveal animation="animate__fadeInUp" delay="0.1s">
+          <AboutBasesSlider
+            items={items}
+            learnMoreLabel={common("learnMore")}
+            nextLabel={common("next")}
+            popupCopy={popupData.copy}
+            previousLabel={common("previous")}
+          />
+        </ScrollReveal>
       </Container>
     </section>
   );

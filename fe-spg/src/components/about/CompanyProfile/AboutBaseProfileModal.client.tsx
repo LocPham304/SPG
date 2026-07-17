@@ -1,10 +1,10 @@
 "use client";
 
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
-import Image from "next/image";
 import { useEffect, useId, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
+import { ImageWithSkeleton } from "@/components/news/ImageWithSkeleton";
 import type {
   AboutBasePopupCopy,
   AboutBaseProfile,
@@ -108,11 +108,12 @@ export function AboutBaseProfileModal({
         </button>
 
         <div className={styles.modalHero}>
-          <Image
+          <ImageWithSkeleton
             alt=""
-            aria-hidden="true"
-            className={styles.modalHeroImage}
+            aspectRatio="auto"
+            className={styles.modalHeroImageFrame}
             fill
+            imageClassName={styles.modalHeroImage}
             sizes="(max-width: 767px) 100vw, 92vw"
             src={profile.image}
           />

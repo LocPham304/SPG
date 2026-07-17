@@ -128,6 +128,12 @@
   transition: transform 420ms var(--ease-brand);
 }
 
+.imageFrame {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+}
+
 .caption {
   display: flex;
   min-height: 70px;

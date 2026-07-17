@@ -1,9 +1,9 @@
 "use client";
 
 import gsap from "gsap";
-import Image from "next/image";
 import { useEffect, useLayoutEffect, useRef } from "react";
 
+import { ImageWithSkeleton } from "@/components/news/ImageWithSkeleton";
 import { homeHeroMedia } from "@/data/home-hero";
 
 import styles from "./HomeHero.module.scss";
@@ -158,9 +158,11 @@ export function HomeHeroClient({
       ref={rootRef}
     >
       <div aria-hidden="true" className={styles.media}>
-        <Image
+        <ImageWithSkeleton
           alt=""
+          aspectRatio="auto"
           className={styles.poster}
+          imageClassName={styles.posterImage}
           fill
           priority
           sizes="100vw"

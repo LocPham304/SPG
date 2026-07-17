@@ -1,4 +1,6 @@
 import { Container } from "@/components/common/Container";
+import { ScrollReveal } from "@/components/news/ScrollReveal";
+import { getStaggerDelay } from "@/components/news/animation";
 import type { NewsDateListItem } from "@/types/news";
 
 import styles from "./NewsDateListSection.module.scss";
@@ -16,13 +18,16 @@ export function NewsDateListSection({
 }: NewsDateListSectionProps) {
   return (
     <Container as="section" className={styles.section}>
-      <h2 className={styles.heading}>{title}</h2>
+      <ScrollReveal threshold={0.15}>
+        <h2 className={styles.heading}>{title}</h2>
+      </ScrollReveal>
       <ul className={styles.list}>
-        {articles.map((article) => {
+        {articles.map((article, index) => {
           const [year, month, day] = article.publishedAt.split("-");
 
           return (
             <li key={article.id}>
+              <ScrollReveal delay={getStaggerDelay(index)} threshold={0.15}>
               <a
                 className={styles.card}
                 href={article.href}
@@ -42,6 +47,7 @@ export function NewsDateListSection({
                   <span aria-hidden="true">⟶</span>
                 </span>
               </a>
+              </ScrollReveal>
             </li>
           );
         })}

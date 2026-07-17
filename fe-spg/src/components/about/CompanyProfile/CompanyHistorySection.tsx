@@ -1,4 +1,5 @@
 import type { CompanyHistoryContent } from "@/content/about/company-profile/history";
+import { ScrollReveal } from "@/components/news/ScrollReveal";
 
 import { CompanyHistoryTimeline } from "./CompanyHistoryTimeline";
 import styles from "./CompanyHistorySection.module.scss";
@@ -15,7 +16,9 @@ export function CompanyHistorySection({ content }: CompanyHistorySectionProps) {
       id="company-history"
     >
       <div aria-hidden="true" className={styles.background} />
-      <CompanyHistoryTimeline content={content} />
+      <ScrollReveal animation="animate__fadeInUp" duration="0.8s">
+        <CompanyHistoryTimeline content={content} />
+      </ScrollReveal>
     </section>
   );
 }

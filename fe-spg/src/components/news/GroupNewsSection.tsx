@@ -1,9 +1,11 @@
 "use client";
 
-import Image from "next/image";
 import { useEffect, useState } from "react";
 
 import { Container } from "@/components/common/Container";
+import { ImageWithSkeleton } from "@/components/news/ImageWithSkeleton";
+import { ScrollReveal } from "@/components/news/ScrollReveal";
+import { getStaggerDelay } from "@/components/news/animation";
 import type { GroupNewsArticle } from "@/content/news/group-news";
 
 import styles from "./GroupNewsSection.module.scss";
@@ -16,12 +18,12 @@ type GroupNewsSectionProps = {
 
 function NewsImage({ article, sizes }: { article: GroupNewsArticle; sizes: string }) {
   return (
-    <Image
+    <ImageWithSkeleton
       alt={article.title}
       fill
+      imageClassName={styles.newsImage}
       sizes={sizes}
       src={article.image}
-      unoptimized={article.image.startsWith("http://")}
     />
   );
 }
@@ -57,8 +59,11 @@ export function GroupNewsSection({
 
   return (
     <Container as="section" className={styles.section}>
-      <h2 className={styles.heading}>{title}</h2>
+      <ScrollReveal threshold={0.15}>
+        <h2 className={styles.heading}>{title}</h2>
+      </ScrollReveal>
 
+      <ScrollReveal animation="animate__fadeInUp" duration="0.7s" threshold={0.15}>
       <div className={styles.featuredArea}>
         <a
           className={styles.featuredCard}
@@ -106,10 +111,12 @@ export function GroupNewsSection({
           ))}
         </ol>
       </div>
+      </ScrollReveal>
 
       <ul className={styles.newsGrid}>
-        {articles.map((article) => (
+        {articles.map((article, index) => (
           <li key={article.href}>
+            <ScrollReveal delay={getStaggerDelay(index)} threshold={0.15}>
             <article className={styles.newsCard}>
               <a
                 aria-label={article.title}
@@ -143,6 +150,7 @@ export function GroupNewsSection({
                 {readMoreLabel} <span aria-hidden="true">⟶</span>
               </a>
             </article>
+            </ScrollReveal>
           </li>
         ))}
       </ul>

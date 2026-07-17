@@ -1,10 +1,10 @@
 "use client";
 
-import Image from "next/image";
 import { A11y, Keyboard, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 
 import type { TechnologyAchievement } from "@/content/technology/technological-achievements";
+import { ImageWithSkeleton } from "@/components/news/ImageWithSkeleton";
 
 import "swiper/css";
 import "swiper/css/pagination";
@@ -41,10 +41,11 @@ export function TechnologyAchievementsSlider({
         <SwiperSlide className={styles.slide} key={`${item.image}-${item.title}`}>
           <article className={styles.card}>
             <div className={styles.imageFrame}>
-              <Image
+              <ImageWithSkeleton
                 alt={item.title}
-                className={styles.image}
+                className={styles.imageSkeletonFrame}
                 fill
+                imageClassName={styles.image}
                 sizes="(max-width: 767px) 92vw, (max-width: 1199px) 46vw, 30vw"
                 src={item.image}
               />

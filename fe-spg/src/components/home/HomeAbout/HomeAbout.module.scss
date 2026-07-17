@@ -154,6 +154,12 @@
   object-position: center;
 }
 
+.imageFrame {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+}
+
 @media (width >= 901px) and (width <= 1100px) {
   .section {
     grid-template-columns: minmax(0, 35.42vw) minmax(0, 1fr);

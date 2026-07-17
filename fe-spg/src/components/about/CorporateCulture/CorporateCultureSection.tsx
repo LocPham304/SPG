@@ -3,6 +3,8 @@
 import { useState } from "react";
 
 import { Container } from "@/components/common/Container";
+import { ScrollReveal } from "@/components/news/ScrollReveal";
+import { getStaggerDelay } from "@/components/news/animation";
 import type { CultureGroup } from "@/content/about/corporate-culture";
 
 import styles from "./CorporateCultureSection.module.scss";
@@ -25,11 +27,14 @@ export function CorporateCultureSection({
       className={styles.section}
     >
       <Container className={styles.container}>
-        <h2 className={styles.heading} id="corporate-culture-heading">
-          {title}
-        </h2>
+        <ScrollReveal animation="animate__fadeInUp">
+          <h2 className={styles.heading} id="corporate-culture-heading">
+            {title}
+          </h2>
+        </ScrollReveal>
 
-        <div aria-label={title} className={styles.tabs} role="tablist">
+        <ScrollReveal animation="animate__fadeInUp" delay="0.1s">
+          <div aria-label={title} className={styles.tabs} role="tablist">
           {groups.map((group) => {
             const isActive = group.id === activeGroup.id;
 
@@ -49,7 +54,8 @@ export function CorporateCultureSection({
               </button>
             );
           })}
-        </div>
+          </div>
+        </ScrollReveal>
 
         <div
           aria-labelledby={`culture-tab-${activeGroup.id}`}
@@ -59,8 +65,13 @@ export function CorporateCultureSection({
           role="tabpanel"
           tabIndex={0}
         >
-          {activeGroup.sections.map((cultureSection) => (
-            <article className={styles.cultureBlock} key={cultureSection.title}>
+          {activeGroup.sections.map((cultureSection, index) => (
+            <ScrollReveal
+              animation="animate__fadeInUp"
+              delay={getStaggerDelay(index)}
+              key={cultureSection.title}
+            >
+              <article className={styles.cultureBlock}>
               <h3 className={styles.blockTitle}>{cultureSection.title}</h3>
               <dl className={styles.details}>
                 {cultureSection.items.map((item, index) => (
@@ -80,7 +91,8 @@ export function CorporateCultureSection({
                   </div>
                 ))}
               </dl>
-            </article>
+              </article>
+            </ScrollReveal>
           ))}
         </div>
       </Container>

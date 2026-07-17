@@ -65,6 +65,12 @@
   object-fit: contain;
 }
 
+.imageSkeletonFrame {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+}
+
 .cardTitle {
   max-width: 94%;
   margin-inline: auto;

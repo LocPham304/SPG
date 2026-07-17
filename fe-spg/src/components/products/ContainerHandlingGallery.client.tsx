@@ -1,13 +1,13 @@
 "use client";
 
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import Image from "next/image";
 import { useCallback, useRef, useState } from "react";
 import { A11y, Keyboard } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import type { Swiper as SwiperInstance } from "swiper/types";
 
 import type { ContainerHandlingGalleryItem } from "@/content/products/container-handling";
+import { ImageWithSkeleton } from "@/components/news/ImageWithSkeleton";
 
 import "swiper/css";
 import styles from "./ContainerHandlingSection.module.scss";
@@ -68,10 +68,11 @@ export function ContainerHandlingGallery({
         {items.map((item, index) => (
           <SwiperSlide className={styles.gallerySlide} key={`${item.src}-${index}`}>
             <figure className={styles.galleryCard}>
-              <Image
+              <ImageWithSkeleton
                 alt={item.caption}
-                className={styles.galleryImage}
+                className={styles.galleryImageFrame}
                 fill
+                imageClassName={styles.galleryImage}
                 sizes="(max-width: 639px) calc(100vw - 32px), (max-width: 1023px) 45vw, 27vw"
                 src={item.src}
                 unoptimized={item.src.endsWith(".gif")}

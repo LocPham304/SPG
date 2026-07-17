@@ -12,6 +12,12 @@
   animation: background-fade 360ms ease both;
 }
 
+.backgroundImageFrame {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+}
+
 .overlay {
   position: absolute;
   inset: 0;
