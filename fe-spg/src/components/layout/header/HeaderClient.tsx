@@ -20,10 +20,13 @@ type HeaderClientProps = {
 export function HeaderClient({ items, labels }: HeaderClientProps) {
   const pathname = usePathname();
   const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const lastScrollYRef = useRef(0);
+  const scrollFrameRef = useRef<number | null>(null);
   const [activeDropdown, setActiveDropdown] = useState<number | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isHeaderVisible, setIsHeaderVisible] = useState(true);
   const [isHeaderHovered, setIsHeaderHovered] = useState(false);
 
   const closeMenu = useCallback(() => setIsMenuOpen(false), []);
@@ -31,18 +34,45 @@ export function HeaderClient({ items, labels }: HeaderClientProps) {
 
   useEffect(() => {
     function updateHeaderState() {
-      setIsScrolled(window.scrollY > 96);
+      if (scrollFrameRef.current !== null) {
+        return;
+      }
+
+      scrollFrameRef.current = window.requestAnimationFrame(() => {
+        const currentScrollY = Math.max(window.scrollY, 0);
+        const scrollDelta = currentScrollY - lastScrollYRef.current;
+
+        setIsScrolled(currentScrollY > 96);
+
+        if (currentScrollY <= 96) {
+          setIsHeaderVisible(true);
+        } else if (Math.abs(scrollDelta) >= 6) {
+          setIsHeaderVisible(scrollDelta < 0);
+        }
+
+        lastScrollYRef.current = currentScrollY;
+        scrollFrameRef.current = null;
+      });
     }
 
+    lastScrollYRef.current = Math.max(window.scrollY, 0);
     updateHeaderState();
     window.addEventListener("scroll", updateHeaderState, { passive: true });
-    return () => window.removeEventListener("scroll", updateHeaderState);
+
+    return () => {
+      window.removeEventListener("scroll", updateHeaderState);
+
+      if (scrollFrameRef.current !== null) {
+        window.cancelAnimationFrame(scrollFrameRef.current);
+      }
+    };
   }, []);
 
   useEffect(() => {
     setActiveDropdown(null);
     setIsMenuOpen(false);
     setIsSearchOpen(false);
+    setIsHeaderVisible(true);
   }, [pathname]);
 
   useEffect(() => {
@@ -74,7 +104,8 @@ export function HeaderClient({ items, labels }: HeaderClientProps) {
   return (
     <>
       <header
-        className={`${styles.header} ${isScrolled ? styles.headerScrolled : ""} ${isHeaderHovered || activeDropdown !== null ? styles.headerInteractive : ""} ${isMenuOpen ? styles.headerMenuOpen : ""}`}
+        className={`${styles.header} ${isScrolled ? styles.headerScrolled : ""} ${!isHeaderVisible && !isMenuOpen && !isSearchOpen && activeDropdown === null ? styles.headerHidden : ""} ${isHeaderHovered || activeDropdown !== null ? styles.headerInteractive : ""} ${isMenuOpen ? styles.headerMenuOpen : ""}`}
+        onFocusCapture={() => setIsHeaderVisible(true)}
         onMouseEnter={() => setIsHeaderHovered(true)}
         onMouseLeave={() => {
           setIsHeaderHovered(false);

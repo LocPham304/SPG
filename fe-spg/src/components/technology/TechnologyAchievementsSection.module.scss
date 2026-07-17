@@ -26,7 +26,15 @@
 
 .groupInner {
   display: grid;
+  width: 100%;
+  min-width: 0;
   gap: clamp(38px, 2.6vw, 50px);
+}
+
+.groupInner > * {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .groupTitle {
@@ -38,11 +46,19 @@
 
 .slider {
   width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
   padding-bottom: 54px !important;
+}
+
+.slider :global(.swiper-wrapper) {
+  min-width: 0;
 }
 
 .slide {
   height: auto;
+  min-width: 0;
 }
 
 .card {
