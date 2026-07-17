@@ -14,10 +14,8 @@ export type AdminUser = {
 
 export type ArticleStatus =
   | "draft"
-  | "pending_review"
   | "published"
-  | "hidden"
-  | "rejected";
+  | "hidden";
 
 export type AdminArticle = {
   authorEmail: string;

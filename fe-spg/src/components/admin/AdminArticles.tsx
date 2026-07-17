@@ -13,7 +13,6 @@ import { StatusBadge } from "./StatusBadge";
 const statusFilters: Array<{ label: string; value: "all" | ArticleStatus }> = [
   { label: "Tất cả", value: "all" },
   { label: "Nháp", value: "draft" },
-  { label: "Chờ duyệt", value: "pending_review" },
   { label: "Đã đăng", value: "published" },
   { label: "Đang ẩn", value: "hidden" },
 ];

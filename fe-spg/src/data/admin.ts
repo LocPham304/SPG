@@ -31,8 +31,9 @@ export const adminArticles: readonly AdminArticle[] = [
     category: "Bàn giao sản phẩm",
     authorName: "Nhân viên",
     authorEmail: "employee@example.com",
-    status: "pending_review",
+    status: "published",
     createdAt: "2024-03-18",
+    publishedAt: "2024-03-19",
     content:
       "Đội ngũ dự án đã phối hợp hoàn thành các hạng mục sản xuất, kiểm tra và nghiệm thu theo kế hoạch. Thiết bị đáp ứng các yêu cầu kỹ thuật trước khi bàn giao.",
     seoTitle: "Bàn giao thiết bị cảng đúng tiến độ",
@@ -95,7 +96,7 @@ export const adminArticles: readonly AdminArticle[] = [
     category: "Tin tức tập đoàn",
     authorName: "Nhân viên",
     authorEmail: "employee@example.com",
-    status: "rejected",
+    status: "draft",
     createdAt: "2024-03-01",
     content:
       "Nội dung tổng hợp các hoạt động nổi bật trong tháng và dự kiến kế hoạch truyền thông tiếp theo.",
@@ -207,8 +208,8 @@ export const adminUsers: readonly ManagedAdminUser[] = [
 export const adminActivities: readonly AdminActivity[] = [
   {
     id: "activity-001",
-    title: "Bài viết được gửi duyệt",
-    description: "Nhân viên đã gửi bài “Hoàn thành bàn giao thiết bị cảng”.",
+    title: "Nhân viên đã đăng bài viết",
+    description: "Nhân viên đã đăng bài “Hoàn thành bàn giao thiết bị cảng”.",
     occurredAt: "28/03/2024, 10:20",
   },
   {

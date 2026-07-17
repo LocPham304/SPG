@@ -71,17 +71,13 @@ export function ArticleForm({ article }: ArticleFormProps) {
       .submitter as HTMLButtonElement | null;
     const requestedStatus =
       (submitter?.value as ArticleStatus | undefined) ?? adminStatus;
-    const finalStatus =
-      user.role === "employee" && requestedStatus === "published"
-        ? "pending_review"
-        : requestedStatus;
 
     setErrors({});
-    setAdminStatus(finalStatus);
+    setAdminStatus(requestedStatus);
     setMessage(
       isEditing
-        ? "Đã lưu thay đổi bài viết trong bản demo."
-        : "Đã tạo bài viết trong bản demo.",
+        ? `Đã lưu thay đổi bài viết của ${user.name} trong bản demo.`
+        : `Đã tạo bài viết và ghi nhận người đăng là ${user.name} (${user.email}) trong bản demo.`,
     );
   }
 
@@ -119,7 +115,14 @@ export function ArticleForm({ article }: ArticleFormProps) {
             <StatusBadge type="article" value={adminStatus} />
           </div>
         </section>
-      ) : null}
+      ) : (
+        <section className="mb-5 rounded-xl border border-slate-200 bg-white px-5 py-4 text-sm text-slate-600 shadow-sm">
+          Người tạo:{" "}
+          <strong className="text-slate-800">
+            {user.name} ({user.email})
+          </strong>
+        </section>
+      )}
 
       {message ? (
         <p
@@ -286,10 +289,8 @@ export function ArticleForm({ article }: ArticleFormProps) {
                 value={adminStatus}
               >
                 <option value="draft">Nháp</option>
-                <option value="pending_review">Chờ duyệt</option>
                 <option value="published">Đã đăng</option>
                 <option value="hidden">Đang ẩn</option>
-                <option value="rejected">Từ chối</option>
               </select>
             </label>
           ) : null}
@@ -305,23 +306,13 @@ export function ArticleForm({ article }: ArticleFormProps) {
             Lưu nháp
           </button>
           <button
-            className="h-10 rounded-lg border border-[#1d2088] bg-white px-4 text-sm font-semibold text-[#1d2088] hover:bg-blue-50"
+            className="h-10 rounded-lg border-0 bg-[#1d2088] px-4 text-sm font-semibold text-white hover:bg-[#171a70]"
             name="action"
             type="submit"
-            value="pending_review"
+            value="published"
           >
-            Gửi duyệt
+            Đăng bài
           </button>
-          {user.role === "admin" ? (
-            <button
-              className="h-10 rounded-lg border-0 bg-[#1d2088] px-4 text-sm font-semibold text-white hover:bg-[#171a70]"
-              name="action"
-              type="submit"
-              value="published"
-            >
-              Đăng bài
-            </button>
-          ) : null}
         </div>
       </form>
     </>

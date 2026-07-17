@@ -13,10 +13,8 @@ type StatusBadgeProps =
 
 const labels = {
   draft: "Nháp",
-  pending_review: "Chờ duyệt",
   published: "Đã đăng",
   hidden: "Đang ẩn",
-  rejected: "Từ chối",
   new: "Mới",
   in_progress: "Đang xử lý",
   waiting_customer: "Chờ khách phản hồi",
@@ -31,10 +29,8 @@ const labels = {
 
 const badgeStyles: Record<keyof typeof labels, string> = {
   draft: "bg-slate-100 text-slate-700",
-  pending_review: "bg-amber-50 text-amber-700",
   published: "bg-emerald-50 text-emerald-700",
   hidden: "bg-violet-50 text-violet-700",
-  rejected: "bg-red-50 text-red-700",
   new: "bg-blue-50 text-blue-700",
   in_progress: "bg-amber-50 text-amber-700",
   waiting_customer: "bg-violet-50 text-violet-700",
