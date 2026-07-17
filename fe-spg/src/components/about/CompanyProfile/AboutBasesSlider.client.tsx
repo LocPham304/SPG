@@ -8,6 +8,12 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import type { Swiper as SwiperInstance } from "swiper/types";
 
 import "swiper/css";
+import type {
+  AboutBasePopupCopy,
+  AboutBaseProfile,
+} from "@/content/about/company-profile/base-profiles";
+
+import { AboutBaseProfileModal } from "./AboutBaseProfileModal.client";
 import styles from "./AboutBasesSection.module.scss";
 
 type AboutBaseItem = {
@@ -19,6 +25,7 @@ type AboutBaseItem = {
     width: number;
     height: number;
   };
+  profiles: readonly AboutBaseProfile[];
 };
 
 type AboutBasesSliderProps = {
@@ -26,6 +33,7 @@ type AboutBasesSliderProps = {
   learnMoreLabel: string;
   previousLabel: string;
   nextLabel: string;
+  popupCopy: AboutBasePopupCopy;
 };
 
 type NavigationState = {
@@ -38,8 +46,13 @@ export function AboutBasesSlider({
   learnMoreLabel,
   previousLabel,
   nextLabel,
+  popupCopy,
 }: AboutBasesSliderProps) {
   const swiperRef = useRef<SwiperInstance | null>(null);
+  const openerRef = useRef<HTMLButtonElement | null>(null);
+  const [activeProfiles, setActiveProfiles] = useState<
+    readonly AboutBaseProfile[] | null
+  >(null);
   const [navigation, setNavigation] = useState<NavigationState>({
     isBeginning: true,
     isEnd: false,
@@ -50,6 +63,11 @@ export function AboutBasesSlider({
       isBeginning: swiper.isBeginning,
       isEnd: swiper.isEnd,
     });
+  }, []);
+
+  const closeModal = useCallback(() => {
+    setActiveProfiles(null);
+    window.requestAnimationFrame(() => openerRef.current?.focus());
   }, []);
 
   return (
@@ -87,10 +105,17 @@ export function AboutBasesSlider({
                   <p key={description}>{description}</p>
                 ))}
               </div>
-              <span className={styles.learnMore}>
+              <button
+                className={styles.learnMore}
+                onClick={(event) => {
+                  openerRef.current = event.currentTarget;
+                  setActiveProfiles(item.profiles);
+                }}
+                type="button"
+              >
                 {learnMoreLabel}
                 <span aria-hidden="true" className={styles.learnMoreArrow} />
-              </span>
+              </button>
               {item.illustration ? (
                 <Image
                   alt=""
@@ -127,6 +152,14 @@ export function AboutBasesSlider({
           <ChevronRight aria-hidden="true" />
         </button>
       </div>
+
+      {activeProfiles ? (
+        <AboutBaseProfileModal
+          copy={popupCopy}
+          onClose={closeModal}
+          profiles={activeProfiles}
+        />
+      ) : null}
     </div>
   );
 }

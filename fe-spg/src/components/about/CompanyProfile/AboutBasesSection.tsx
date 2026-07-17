@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 
 import { Container } from "@/components/common/Container";
+import { getAboutBaseProfiles } from "@/content/about/company-profile/base-profiles";
 import { homeBaseItems, type HomeBaseId } from "@/data/home-bases";
 import type { AppLocale } from "@/i18n/routing";
 
@@ -36,6 +37,7 @@ const baseIllustrations: Partial<Record<HomeBaseId, BaseIllustration>> = {
 };
 
 export async function AboutBasesSection({ locale }: AboutBasesSectionProps) {
+  const popupData = getAboutBaseProfiles(locale);
   const [t, common] = await Promise.all([
     getTranslations({ locale, namespace: "home.bases" }),
     getTranslations({ locale, namespace: "common" }),
@@ -45,6 +47,7 @@ export async function AboutBasesSection({ locale }: AboutBasesSectionProps) {
     title: t(`items.${base.id}.title`),
     descriptions: base.descriptionKeys.map((key) => t(key)),
     illustration: baseIllustrations[base.id],
+    profiles: popupData.profiles[base.id],
   }));
 
   return (
@@ -61,6 +64,7 @@ export async function AboutBasesSection({ locale }: AboutBasesSectionProps) {
           items={items}
           learnMoreLabel={common("learnMore")}
           nextLabel={common("next")}
+          popupCopy={popupData.copy}
           previousLabel={common("previous")}
         />
       </Container>
