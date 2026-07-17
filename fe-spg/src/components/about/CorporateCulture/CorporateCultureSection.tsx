@@ -71,7 +71,10 @@ export function CorporateCultureSection({
               delay={getStaggerDelay(index)}
               key={cultureSection.title}
             >
-              <article className={styles.cultureBlock}>
+              <article
+                className={styles.cultureBlock}
+                data-divider={index < activeGroup.sections.length - 1}
+              >
               <h3 className={styles.blockTitle}>{cultureSection.title}</h3>
               <dl className={styles.details}>
                 {cultureSection.items.map((item, index) => (

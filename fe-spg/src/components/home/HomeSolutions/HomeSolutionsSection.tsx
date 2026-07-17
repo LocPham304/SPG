@@ -34,23 +34,30 @@ export async function HomeSolutionsSection({
     >
       <div className={styles.background} aria-hidden="true" />
       <div className={styles.inner}>
-        <ScrollReveal
-          animation="animate__fadeInUp"
-          className={styles.header}
-          duration="0.75s"
-        >
-          <div>
+        <div className={styles.header}>
+          <ScrollReveal
+            animation="animate__fadeInUp"
+            className={styles.headerContent}
+            duration="0.75s"
+          >
             <h2 id="home-solutions-title" className={styles.heading}>
               {t("title")}
             </h2>
             <p className={styles.subtitle}>{t("subtitle")}</p>
-          </div>
+          </ScrollReveal>
 
-          <LocalizedLink className={styles.learnMore} href="/products">
-            <span>{t("learnMore")}</span>
-            <span className={styles.linkArrow} aria-hidden="true" />
-          </LocalizedLink>
-        </ScrollReveal>
+          <ScrollReveal
+            animation="animate__fadeInUp"
+            className={styles.learnMoreReveal}
+            delay="0.1s"
+            duration="0.75s"
+          >
+            <LocalizedLink className={styles.learnMore} href="/products">
+              <span>{t("learnMore")}</span>
+              <span className={styles.linkArrow} aria-hidden="true" />
+            </LocalizedLink>
+          </ScrollReveal>
+        </div>
 
         <ScrollReveal animation="animate__fadeInUp" delay="0.1s">
           <HomeSolutionsSlider

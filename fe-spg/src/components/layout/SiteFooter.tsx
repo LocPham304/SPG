@@ -82,7 +82,7 @@ export async function SiteFooter() {
                   aspectRatio="square"
                   className={styles.footerQrImage}
                   imageClassName={styles.footerQrImageElement}
-                  sizes="(max-width: 767px) 96px, 126px"
+                          sizes="(max-width: 767px) 112px, 126px"
                   src={qr.src}
                 />
                 <figcaption>{t(qr.labelKey)}</figcaption>

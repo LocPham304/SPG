@@ -415,10 +415,13 @@
     gap: 18px;
   }
 
-  .footerQrCodes figure,
-  .footerQrReveal,
-  .footerQrImage {
+  .footerQrReveal {
     width: min(112px, calc(50% - 9px));
+  }
+
+  .footerQrCodes figure,
+  .footerQrImage {
+    width: 100%;
   }
 
   .footerQrImageElement {
@@ -471,7 +474,7 @@
     margin: 36px auto 0;
   }
 
-  .footerQrCodes figure {
+  .footerQrReveal {
     width: 126px;
   }
 
