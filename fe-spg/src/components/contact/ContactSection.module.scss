@@ -1,0 +1,308 @@
+@use "../../styles/mixins" as *;
+
+.contactPage {
+  background: #fff;
+  color: #2f3033;
+}
+
+.inner {
+  display: grid;
+  gap: clamp(58px, 4.17vw, 80px);
+  padding-block: clamp(58px, 4.17vw, 80px) clamp(82px, 6.25vw, 120px);
+}
+
+.block {
+  display: grid;
+  gap: clamp(34px, 2.6vw, 50px);
+}
+
+.marketingBlock {
+  scroll-margin-top: clamp(80px, 6.25vw, 120px);
+}
+
+.sectionTitle {
+  color: #1684c7;
+  font-size: clamp(28px, 1.88vw, 36px);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.primaryCard,
+.networkCard {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #fff 24%, #eef8ff 100%);
+  box-shadow: 0 2px 18px rgb(29 70 97 / 10%);
+}
+
+.primaryCard {
+  min-height: clamp(280px, 20.41vw, 392px);
+  padding: clamp(42px, 3.13vw, 60px);
+}
+
+.primaryCard::before {
+  position: absolute;
+  bottom: -44px;
+  left: 15px;
+  width: 290px;
+  height: 230px;
+  background: url("/images/public/files/image/bg_logo.png") left bottom / contain
+    no-repeat;
+  content: "";
+  opacity: 0.12;
+  pointer-events: none;
+}
+
+.primaryContent {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  max-width: 58%;
+  gap: clamp(32px, 2.08vw, 40px);
+}
+
+.primaryContent h3,
+.networkCard h3 {
+  font-size: clamp(20px, 1.25vw, 24px);
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+.primaryDetails,
+.networkDetails {
+  display: grid;
+  margin: 0;
+}
+
+.primaryDetails {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px clamp(42px, 4.17vw, 80px);
+}
+
+.primaryDetails > div,
+.networkDetails > div {
+  display: grid;
+  min-width: 0;
+  align-content: start;
+  gap: 6px;
+}
+
+.primaryDetails dt,
+.networkDetails dt {
+  color: #70767b;
+}
+
+.primaryDetails dd,
+.networkDetails dd {
+  min-width: 0;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.primaryDetails a,
+.networkDetails a {
+  transition: color 180ms ease;
+}
+
+.primaryDetails a:hover,
+.networkDetails a:hover {
+  color: #1684c7;
+}
+
+.addressField {
+  grid-column: 1 / -1;
+}
+
+.contactImage {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  width: min(47%, 688px);
+  height: auto;
+  pointer-events: none;
+}
+
+.networkGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(24px, 1.56vw, 30px);
+}
+
+.networkCard {
+  min-height: clamp(230px, 17.71vw, 340px);
+  padding: clamp(30px, 2.08vw, 40px);
+}
+
+.networkCard h3 {
+  margin-bottom: clamp(25px, 1.82vw, 35px);
+}
+
+.networkDetails {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px 34px;
+}
+
+@media (width <= 1023px) {
+  .primaryContent {
+    max-width: 66%;
+  }
+
+  .networkGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .networkCard {
+    min-height: 0;
+  }
+}
+
+@include mobile {
+  .inner {
+    gap: 42px;
+    padding-block: 38px 54px;
+  }
+
+  .block {
+    gap: 28px;
+  }
+
+  .sectionTitle {
+    font-size: 22px;
+  }
+
+  .primaryCard {
+    min-height: 266px;
+    padding: 32px;
+  }
+
+  .primaryCard::before {
+    bottom: -28px;
+    left: 0;
+    width: 220px;
+    height: 175px;
+  }
+
+  .primaryContent {
+    max-width: 68%;
+    gap: 22px;
+  }
+
+  .primaryContent h3,
+  .networkCard h3 {
+    font-size: 17px;
+    line-height: 1.55;
+  }
+
+  .primaryDetails {
+    gap: 16px 28px;
+  }
+
+  .primaryDetails > div,
+  .networkDetails > div {
+    gap: 4px;
+  }
+
+  .primaryDetails,
+  .networkDetails {
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  .contactImage {
+    width: 42%;
+    max-width: 260px;
+  }
+
+  .networkGrid {
+    gap: 16px;
+  }
+
+  .networkCard {
+    padding: 24px;
+  }
+
+  .networkCard h3 {
+    margin-bottom: 20px;
+  }
+
+  .networkDetails {
+    gap: 14px 24px;
+  }
+}
+
+@media (width <= 480px) {
+  .inner {
+    gap: 30px;
+    padding-block: 30px 44px;
+  }
+
+  .block {
+    gap: 24px;
+  }
+
+  .sectionTitle {
+    font-size: 19px;
+    text-align: center;
+  }
+
+  .primaryCard {
+    min-height: 270px;
+    padding: 18px 14px 105px;
+  }
+
+  .primaryCard::before {
+    bottom: -24px;
+    left: -12px;
+    width: 180px;
+    height: 145px;
+  }
+
+  .primaryContent {
+    max-width: 100%;
+    gap: 16px;
+  }
+
+  .primaryContent h3,
+  .networkCard h3 {
+    font-size: 14px;
+  }
+
+  .primaryDetails {
+    grid-template-columns: 1fr;
+    gap: 9px;
+    max-width: 82%;
+  }
+
+  .primaryDetails > div,
+  .networkDetails > div {
+    gap: 3px;
+  }
+
+  .primaryDetails,
+  .networkDetails {
+    font-size: 11px;
+    line-height: 1.65;
+  }
+
+  .contactImage {
+    width: clamp(150px, 58vw, 245px);
+    max-width: none;
+  }
+
+  .networkGrid {
+    gap: 12px;
+  }
+
+  .networkCard {
+    padding: 16px 14px 18px;
+  }
+
+  .networkCard h3 {
+    margin-bottom: 14px;
+  }
+
+  .networkDetails {
+    gap: 9px 15px;
+  }
+}

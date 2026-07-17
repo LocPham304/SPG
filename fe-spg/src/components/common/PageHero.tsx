@@ -17,7 +17,21 @@ type PageHeroProps = {
     | "news"
     | "products"
     | "productDetail"
-    | "technology";
+    | "technology"
+    | "contact";
+};
+
+const heroVariantClasses: Record<
+  NonNullable<PageHeroProps["variant"]>,
+  string
+> = {
+  about: styles.pageHeroAbout,
+  contact: styles.pageHeroContact,
+  default: "",
+  news: styles.pageHeroNews,
+  productDetail: styles.pageHeroProductDetail,
+  products: styles.pageHeroProducts,
+  technology: styles.pageHeroTechnology,
 };
 
 export function PageHero({
@@ -28,18 +42,7 @@ export function PageHero({
   children,
   variant = "default",
 }: PageHeroProps) {
-  const variantClass =
-    variant === "about"
-      ? styles.pageHeroAbout
-      : variant === "news"
-        ? styles.pageHeroNews
-        : variant === "products"
-          ? styles.pageHeroProducts
-          : variant === "productDetail"
-            ? styles.pageHeroProductDetail
-            : variant === "technology"
-              ? styles.pageHeroTechnology
-              : "";
+  const variantClass = heroVariantClasses[variant];
 
   return (
     <header className={`${styles.pageHero} ${variantClass}`}>
