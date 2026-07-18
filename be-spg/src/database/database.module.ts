@@ -20,7 +20,10 @@ import { TypeOrmModule, type TypeOrmModuleOptions } from '@nestjs/typeorm';
           synchronize: false,
           migrationsRun: false,
           installExtensions: false,
-          logging: nodeEnvironment !== 'production',
+          logging:
+            nodeEnvironment !== 'production'
+              ? ['error', 'warn', 'schema']
+              : false,
         };
       },
     }),

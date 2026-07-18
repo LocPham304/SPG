@@ -8,7 +8,9 @@ import authConfig from './config/auth.config';
 import databaseConfig from './config/database.config';
 import storageConfig from './config/storage.config';
 import translationConfig from './config/translation.config';
+import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
 import { DatabaseModule } from './database/database.module';
+import { AuthModule } from './modules/auth/auth.module';
 import { HealthModule } from './modules/health/health.module';
 import { UsersModule } from './modules/users/users.module';
 
@@ -35,6 +37,7 @@ import { UsersModule } from './modules/users/users.module';
       },
     ]),
     DatabaseModule,
+    AuthModule,
     HealthModule,
     UsersModule,
   ],
@@ -42,6 +45,10 @@ import { UsersModule } from './modules/users/users.module';
     {
       provide: APP_GUARD,
       useClass: ThrottlerGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
     },
   ],
 })
