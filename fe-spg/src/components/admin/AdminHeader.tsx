@@ -20,6 +20,14 @@ function getPageTitle(pathname: string) {
     return "Chỉnh sửa bài viết";
   }
   if (pathname.startsWith("/admin/articles")) return "Quản lý bài viết";
+  if (pathname === "/admin/categories/create") return "Tạo danh mục";
+  if (
+    pathname.includes("/admin/categories/") &&
+    pathname.endsWith("/edit")
+  ) {
+    return "Chỉnh sửa danh mục";
+  }
+  if (pathname.startsWith("/admin/categories")) return "Quản lý danh mục";
   if (
     pathname.startsWith("/admin/contact-messages/") &&
     pathname !== "/admin/contact-messages"

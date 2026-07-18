@@ -24,7 +24,6 @@ import {
   AdminCategoryResponseDto,
   PublicCategoryResponseDto,
 } from './dto/category-response.dto';
-import { CreateCategoryDto } from './dto/create-category.dto';
 import { QueryAdminCategoriesDto } from './dto/query-admin-categories.dto';
 import { QueryPublicCategoriesDto } from './dto/query-public-categories.dto';
 import { SetCategoryStatusDto } from './dto/set-category-status.dto';
@@ -66,16 +65,8 @@ export class AdminCategoriesController {
 
   @Roles('admin')
   @Post()
-  create(
-    @Body() dto: CreateCategoryDto,
-    @CurrentUser() currentUser: AuthenticatedUser,
-    @Req() request: Request,
-  ): Promise<AdminCategoryResponseDto> {
-    return this.categoriesService.create(
-      dto,
-      currentUser,
-      this.getRequestInfo(request),
-    );
+  create(): never {
+    return this.categoriesService.create();
   }
 
   @Roles('admin')
@@ -113,16 +104,9 @@ export class AdminCategoriesController {
   @Roles('admin')
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  remove(
-    @Param('id', ParseIntPipe) id: number,
-    @CurrentUser() currentUser: AuthenticatedUser,
-    @Req() request: Request,
-  ): Promise<void> {
-    return this.categoriesService.remove(
-      id,
-      currentUser,
-      this.getRequestInfo(request),
-    );
+  remove(@Param('id', ParseIntPipe) id: number): never {
+    void id;
+    return this.categoriesService.remove();
   }
 
   private getRequestInfo(request: Request): {

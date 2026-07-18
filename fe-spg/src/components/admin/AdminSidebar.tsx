@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  FolderTree,
   LayoutDashboard,
   LogOut,
   MessagesSquare,
@@ -41,6 +42,12 @@ const navigationItems: readonly AdminNavigationItem[] = [
     href: "/admin/articles",
     icon: Newspaper,
     label: "Quản lý bài viết",
+    roles: ["admin", "employee"],
+  },
+  {
+    href: "/admin/categories",
+    icon: FolderTree,
+    label: "Quản lý danh mục",
     roles: ["admin", "employee"],
   },
   {

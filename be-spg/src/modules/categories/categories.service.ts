@@ -5,13 +5,16 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { EntityManager, Not, Repository } from 'typeorm';
+import { EntityManager, In, Not, Repository } from 'typeorm';
 
 import { PaginationResponseDto } from '../../common/dto/pagination-response.dto';
 import type { AuthenticatedUser } from '../../common/types/authenticated-user.type';
 import { ActivityLogsService } from '../activity-logs/activity-logs.service';
 import type { ActivityLogChanges } from '../activity-logs/types/activity-log-action.type';
-import { CreateCategoryDto } from './dto/create-category.dto';
+import {
+  FIXED_CATEGORY_CODES,
+  isFixedCategoryCode,
+} from './constants/fixed-category-codes';
 import {
   AdminCategoryResponseDto,
   PublicCategoryResponseDto,
@@ -27,7 +30,8 @@ import { LocaleCode } from './enums/locale-code.enum';
 const POSTGRES_UNIQUE_VIOLATION_CODE = '23505';
 const CATEGORY_NOT_FOUND_MESSAGE = 'Không tìm thấy danh mục.';
 const CATEGORY_CONFLICT_MESSAGE = 'Code hoặc slug danh mục đã tồn tại.';
-const CATEGORY_HAS_ARTICLES_MESSAGE = 'Không thể xóa danh mục đang có bài viết';
+const FIXED_CATEGORIES_ONLY_MESSAGE = 'Hệ thống chỉ hỗ trợ 4 danh mục cố định';
+const FIXED_CATEGORY_DELETE_MESSAGE = 'Không thể xóa danh mục cố định';
 
 type RequestInfo = {
   ipAddress?: string | null;
@@ -49,6 +53,9 @@ export class CategoriesService {
       .createQueryBuilder('category')
       .leftJoinAndSelect('category.translations', 'translation')
       .where('category.isActive = :isActive', { isActive: true })
+      .andWhere('category.code IN (:...fixedCategoryCodes)', {
+        fixedCategoryCodes: FIXED_CATEGORY_CODES,
+      })
       .orderBy('category.sortOrder', 'ASC')
       .addOrderBy('category.id', 'ASC');
 
@@ -74,6 +81,9 @@ export class CategoriesService {
       .leftJoinAndSelect('category.translations', 'translation')
       .leftJoin('category.translations', 'searchTranslation')
       .distinct(true)
+      .where('category.code IN (:...fixedCategoryCodes)', {
+        fixedCategoryCodes: FIXED_CATEGORY_CODES,
+      })
       .orderBy('category.sortOrder', 'ASC')
       .addOrderBy('category.id', 'ASC');
 
@@ -130,6 +140,7 @@ export class CategoriesService {
     currentUser: AuthenticatedUser,
   ): Promise<AdminCategoryResponseDto> {
     const category = await this.findCategoryEntity(id);
+    this.assertFixedCategory(category);
 
     if (currentUser.role === 'employee' && !category.isActive) {
       throw new NotFoundException(CATEGORY_NOT_FOUND_MESSAGE);
@@ -143,6 +154,7 @@ export class CategoriesService {
       where: {
         id,
         isActive: true,
+        code: In(FIXED_CATEGORY_CODES),
       },
       relations: {
         translations: true,
@@ -156,82 +168,8 @@ export class CategoriesService {
     return category;
   }
 
-  async create(
-    dto: CreateCategoryDto,
-    currentUser: AuthenticatedUser,
-    requestInfo: RequestInfo = {},
-  ): Promise<AdminCategoryResponseDto> {
-    this.validateTranslations(dto.translations, true);
-
-    try {
-      return await this.categoriesRepository.manager.transaction(
-        async (manager) => {
-          const categoryRepository = manager.getRepository(NewsCategoryEntity);
-          const translationRepository = manager.getRepository(
-            NewsCategoryTranslationEntity,
-          );
-          await this.ensureUniqueCodeAndSlug(
-            manager,
-            dto.code.trim(),
-            dto.slug,
-          );
-
-          const category = categoryRepository.create({
-            code: dto.code.trim(),
-            slug: dto.slug,
-            sortOrder: dto.sortOrder ?? 0,
-            isActive: dto.isActive ?? true,
-            showOnHome: dto.showOnHome ?? false,
-            createdBy: currentUser.id,
-            updatedBy: null,
-          });
-          const savedCategory = await categoryRepository.save(category);
-          const translations = dto.translations.map((translation) =>
-            translationRepository.create({
-              categoryId: savedCategory.id,
-              locale: translation.locale,
-              name: translation.name.trim(),
-              description: this.normalizeDescription(translation.description),
-            }),
-          );
-
-          await translationRepository.save(translations);
-          await this.activityLogsService.recordWithManager(manager, {
-            actorUserId: currentUser.id,
-            action: 'category.created',
-            entityType: 'news_category',
-            entityId: savedCategory.id,
-            title: 'Tạo danh mục',
-            description: `Admin tạo danh mục ${savedCategory.code}`,
-            changes: {
-              code: savedCategory.code,
-              slug: savedCategory.slug,
-              sortOrder: savedCategory.sortOrder,
-              isActive: savedCategory.isActive,
-              showOnHome: savedCategory.showOnHome,
-              translations: translations.map((translation) => ({
-                locale: translation.locale,
-                name: translation.name,
-                description: translation.description,
-              })),
-            },
-            ...requestInfo,
-          });
-
-          const result = await this.findCategoryWithManager(
-            manager,
-            savedCategory.id,
-          );
-          return this.toAdminResponse(result);
-        },
-      );
-    } catch (error: unknown) {
-      if (this.isUniqueViolation(error)) {
-        throw new ConflictException(CATEGORY_CONFLICT_MESSAGE);
-      }
-
-      throw error;
-    }
+  create(): never {
+    throw new BadRequestException(FIXED_CATEGORIES_ONLY_MESSAGE);
   }
 
   async update(
@@ -249,6 +187,7 @@ export class CategoriesService {
         async (manager) => {
           const categoryRepository = manager.getRepository(NewsCategoryEntity);
           const category = await this.findCategoryWithManager(manager, id);
+          this.assertFixedCategory(category);
           const changes = this.createCategoryChanges(category, dto);
 
           if (dto.slug !== undefined && dto.slug !== category.slug) {
@@ -311,6 +250,7 @@ export class CategoriesService {
     return this.categoriesRepository.manager.transaction(async (manager) => {
       const repository = manager.getRepository(NewsCategoryEntity);
       const category = await this.findCategoryWithManager(manager, id);
+      this.assertFixedCategory(category);
 
       if (category.isActive === isActive) {
         return this.toAdminResponse(category);
@@ -343,43 +283,8 @@ export class CategoriesService {
     });
   }
 
-  async remove(
-    id: number,
-    currentUser: AuthenticatedUser,
-    requestInfo: RequestInfo = {},
-  ): Promise<void> {
-    await this.categoriesRepository.manager.transaction(async (manager) => {
-      const repository = manager.getRepository(NewsCategoryEntity);
-      const category = await this.findCategoryWithManager(manager, id);
-      const articleCountResult = await manager
-        .createQueryBuilder()
-        .select('COUNT(article.id)', 'count')
-        .from('news_articles', 'article')
-        .where('article.category_id = :categoryId', {
-          categoryId: category.id,
-        })
-        .getRawOne<{ count: string }>();
-      const articleCount = Number(articleCountResult?.count ?? 0);
-
-      if (articleCount > 0) {
-        throw new ConflictException(CATEGORY_HAS_ARTICLES_MESSAGE);
-      }
-
-      await repository.remove(category);
-      await this.activityLogsService.recordWithManager(manager, {
-        actorUserId: currentUser.id,
-        action: 'category.deleted',
-        entityType: 'news_category',
-        entityId: id,
-        title: 'Xóa danh mục',
-        description: `Admin xóa danh mục ${category.code}`,
-        changes: {
-          code: category.code,
-          slug: category.slug,
-        },
-        ...requestInfo,
-      });
-    });
+  remove(): never {
+    throw new BadRequestException(FIXED_CATEGORY_DELETE_MESSAGE);
   }
 
   toPublicResponse(
@@ -463,22 +368,6 @@ export class CategoriesService {
     }
 
     return category;
-  }
-
-  private async ensureUniqueCodeAndSlug(
-    manager: EntityManager,
-    code: string,
-    slug: string,
-  ): Promise<void> {
-    const existingCategory = await manager
-      .getRepository(NewsCategoryEntity)
-      .findOne({
-        where: [{ code }, { slug }],
-      });
-
-    if (existingCategory) {
-      throw new ConflictException(CATEGORY_CONFLICT_MESSAGE);
-    }
   }
 
   private async ensureUniqueSlug(
@@ -614,6 +503,12 @@ export class CategoriesService {
       LocaleCode.English,
       LocaleCode.Chinese,
     ].indexOf(locale);
+  }
+
+  private assertFixedCategory(category: NewsCategoryEntity): void {
+    if (!isFixedCategoryCode(category.code)) {
+      throw new BadRequestException(FIXED_CATEGORIES_ONLY_MESSAGE);
+    }
   }
 
   private isUniqueViolation(error: unknown): boolean {

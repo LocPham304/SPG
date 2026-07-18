@@ -1,16 +1,17 @@
 import { type INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test, type TestingModule } from '@nestjs/testing';
 import cookieParser from 'cookie-parser';
-import { randomUUID } from 'node:crypto';
 import request from 'supertest';
 import type { App } from 'supertest/types';
-import { DataSource, In, MoreThanOrEqual } from 'typeorm';
+import { DataSource, MoreThanOrEqual } from 'typeorm';
 
 import { AppModule } from '../src/app.module';
-import type { AuthenticatedUser } from '../src/common/types/authenticated-user.type';
 import { ActivityLogEntity } from '../src/modules/activity-logs/entities/activity-log.entity';
 import { AuthSessionEntity } from '../src/modules/auth/entities/auth-session.entity';
-import { CategoriesService } from '../src/modules/categories/categories.service';
+import {
+  FIXED_CATEGORY_CODES,
+  isFixedCategoryCode,
+} from '../src/modules/categories/constants/fixed-category-codes';
 import { NewsCategoryEntity } from '../src/modules/categories/entities/news-category.entity';
 import { LocaleCode } from '../src/modules/categories/enums/locale-code.enum';
 import { CmsUserEntity } from '../src/modules/users/entities/cms-user.entity';
@@ -23,11 +24,19 @@ const ADMIN_EMAIL = 'admin123@gmail.com';
 const ADMIN_PASSWORD = 'Admin@123';
 const EMPLOYEE_EMAIL = 'categories.employee-fixture@example.com';
 const EMPLOYEE_PASSWORD = 'Employee@123';
-const CATEGORY_CODE = 'e2eCategoryMain';
-const CATEGORY_SLUG = 'e2e-category-main';
-const INACTIVE_CATEGORY_CODE = 'e2eCategoryInactive';
-const INACTIVE_CATEGORY_SLUG = 'e2e-category-inactive';
-const TEST_CATEGORY_CODES = [CATEGORY_CODE, INACTIVE_CATEGORY_CODE];
+const ROGUE_CATEGORY_CODE = 'e2eRogueCategory';
+const ROGUE_CATEGORY_SLUG = 'e2e-rogue-category';
+const FIXED_ONLY_MESSAGE = 'Hệ thống chỉ hỗ trợ 4 danh mục cố định';
+const DELETE_FIXED_MESSAGE = 'Không thể xóa danh mục cố định';
+
+type FixedCategorySnapshot = {
+  id: number;
+  isActive: boolean;
+  showOnHome: boolean;
+  slug: string;
+  sortOrder: number;
+  updatedBy: number | null;
+};
 
 function asRecord(value: unknown): Record<string, unknown> {
   if (typeof value !== 'object' || value === null || Array.isArray(value)) {
@@ -67,18 +76,16 @@ function getCodes(items: unknown[]): string[] {
   });
 }
 
-describe('Categories API (e2e)', () => {
+describe('Categories API fixed category policy (e2e)', () => {
   let app: INestApplication<App>;
   let dataSource: DataSource;
   let usersService: UsersService;
-  let categoriesService: CategoriesService;
   let adminId: number;
   let employeeId: number;
   let adminAccessToken: string;
   let employeeAccessToken: string;
-  let categoryId: number;
-  let inactiveCategoryId: number;
-  const temporaryCategoryIds: number[] = [];
+  let fixedCategory: FixedCategorySnapshot;
+  let rogueCategoryId: number;
   const testStartedAt = new Date();
 
   async function login(email: string, password: string): Promise<string> {
@@ -109,34 +116,11 @@ describe('Categories API (e2e)', () => {
 
     dataSource = app.get(DataSource);
     usersService = app.get(UsersService);
-    categoriesService = app.get(CategoriesService);
 
     const usersRepository = dataSource.getRepository(CmsUserEntity);
     const categoriesRepository = dataSource.getRepository(NewsCategoryEntity);
     const sessionsRepository = dataSource.getRepository(AuthSessionEntity);
     const activityLogsRepository = dataSource.getRepository(ActivityLogEntity);
-
-    const staleCategories = await categoriesRepository.find({
-      select: { id: true },
-      where: { code: In(TEST_CATEGORY_CODES) },
-    });
-    const staleCategoryIds = staleCategories.map((category) => category.id);
-
-    if (staleCategoryIds.length > 0) {
-      await dataSource
-        .createQueryBuilder()
-        .delete()
-        .from('news_articles')
-        .where('category_id IN (:...categoryIds)', {
-          categoryIds: staleCategoryIds,
-        })
-        .execute();
-      await activityLogsRepository.delete({
-        entityType: 'news_category',
-        entityId: In(staleCategoryIds),
-      });
-      await categoriesRepository.delete({ id: In(staleCategoryIds) });
-    }
 
     const staleEmployee = await usersRepository.findOne({
       where: { email: EMPLOYEE_EMAIL },
@@ -150,6 +134,8 @@ describe('Categories API (e2e)', () => {
       await sessionsRepository.delete({ userId: staleEmployee.id });
       await usersRepository.delete({ id: staleEmployee.id });
     }
+
+    await categoriesRepository.delete({ code: ROGUE_CATEGORY_CODE });
 
     const admin = await usersService.findByEmail(ADMIN_EMAIL);
 
@@ -172,79 +158,65 @@ describe('Categories API (e2e)', () => {
     );
     employeeId = employee.id;
 
-    const authenticatedAdmin: AuthenticatedUser = {
-      id: admin.id,
-      email: admin.email,
-      fullName: admin.fullName,
-      role: 'admin',
-      mustChangePassword: false,
-      sessionId: randomUUID(),
+    const category = await categoriesRepository.findOne({
+      where: { code: FIXED_CATEGORY_CODES[0] },
+    });
+
+    if (!category) {
+      throw new Error('Không tìm thấy danh mục cố định để chạy E2E.');
+    }
+
+    fixedCategory = {
+      id: category.id,
+      isActive: category.isActive,
+      showOnHome: category.showOnHome,
+      slug: category.slug,
+      sortOrder: category.sortOrder,
+      updatedBy: category.updatedBy,
     };
-    const inactiveCategory = await categoriesService.create(
-      {
-        code: INACTIVE_CATEGORY_CODE,
-        slug: INACTIVE_CATEGORY_SLUG,
+
+    const rogueCategory = await categoriesRepository.save(
+      categoriesRepository.create({
+        code: ROGUE_CATEGORY_CODE,
+        slug: ROGUE_CATEGORY_SLUG,
         sortOrder: 999,
-        isActive: false,
+        isActive: true,
         showOnHome: false,
-        translations: [
-          {
-            locale: LocaleCode.Vietnamese,
-            name: 'Danh mục đang tắt',
-            description: null,
-          },
-        ],
-      },
-      authenticatedAdmin,
+        createdBy: admin.id,
+        updatedBy: null,
+      }),
     );
-    inactiveCategoryId = inactiveCategory.id;
-    temporaryCategoryIds.push(inactiveCategoryId);
+    rogueCategoryId = rogueCategory.id;
 
     adminAccessToken = await login(ADMIN_EMAIL, ADMIN_PASSWORD);
     employeeAccessToken = await login(EMPLOYEE_EMAIL, EMPLOYEE_PASSWORD);
   });
 
-  it('allows public access without a token', async () => {
-    const response = await request(app.getHttpServer())
-      .get('/api/v1/news/categories')
-      .expect(200);
-    const categories = asArray(response.body as unknown);
-    const codes = getCodes(categories);
-
-    expect(codes).toEqual(
-      expect.arrayContaining([
-        'currentAffairs',
-        'groupNews',
-        'productDelivery',
-        'notices',
-      ]),
-    );
-  });
-
-  it('only exposes active categories to the public', async () => {
+  it('only exposes fixed categories publicly', async () => {
     const response = await request(app.getHttpServer())
       .get('/api/v1/news/categories')
       .query({ locale: LocaleCode.Vietnamese })
       .expect(200);
     const codes = getCodes(asArray(response.body as unknown));
 
-    expect(codes).not.toContain(INACTIVE_CATEGORY_CODE);
+    expect(codes).not.toContain(ROGUE_CATEGORY_CODE);
+    expect(codes.every(isFixedCategoryCode)).toBe(true);
   });
 
-  it('allows an admin to list every category', async () => {
+  it('only lists the four fixed categories for an admin', async () => {
     const response = await request(app.getHttpServer())
       .get('/api/v1/admin/categories')
       .query({ page: 1, limit: 100 })
       .set('Authorization', `Bearer ${adminAccessToken}`)
       .expect(200);
     const body = asRecord(response.body as unknown);
-    const categories = asArray(body.data);
+    const codes = getCodes(asArray(body.data));
 
-    expect(getCodes(categories)).toContain(INACTIVE_CATEGORY_CODE);
-    expect(JSON.stringify(body)).not.toContain('passwordHash');
+    expect(new Set(codes)).toEqual(new Set(FIXED_CATEGORY_CODES));
+    expect(codes).not.toContain(ROGUE_CATEGORY_CODE);
   });
 
-  it('allows an employee to list active categories only', async () => {
+  it('allows an employee to list active fixed categories only', async () => {
     const response = await request(app.getHttpServer())
       .get('/api/v1/admin/categories')
       .query({ page: 1, limit: 100, isActive: false })
@@ -253,9 +225,10 @@ describe('Categories API (e2e)', () => {
     const body = asRecord(response.body as unknown);
     const categories = asArray(body.data);
 
-    expect(getCodes(categories)).not.toContain(INACTIVE_CATEGORY_CODE);
     for (const item of categories) {
-      expect(asRecord(item).isActive).toBe(true);
+      const category = asRecord(item);
+      expect(category.isActive).toBe(true);
+      expect(FIXED_CATEGORY_CODES).toContain(category.code);
     }
   });
 
@@ -276,245 +249,122 @@ describe('Categories API (e2e)', () => {
       .expect(403);
   });
 
-  it('allows an admin to create a category', async () => {
+  it('blocks category creation for an admin', async () => {
     const response = await request(app.getHttpServer())
       .post('/api/v1/admin/categories')
       .set('Authorization', `Bearer ${adminAccessToken}`)
       .send({
-        code: CATEGORY_CODE,
-        slug: CATEGORY_SLUG,
-        sortOrder: 55,
-        isActive: true,
-        showOnHome: true,
+        code: 'adminCannotCreate',
+        slug: 'admin-cannot-create',
         translations: [
           {
             locale: LocaleCode.Vietnamese,
-            name: 'Danh mục E2E',
-            description: 'Mô tả tiếng Việt',
-          },
-          {
-            locale: LocaleCode.English,
-            name: 'E2E Category',
-            description: 'English description',
-          },
-        ],
-      })
-      .expect(201);
-    const category = asRecord(response.body as unknown);
-
-    if (typeof category.id !== 'number') {
-      throw new Error('Create category response không có id hợp lệ.');
-    }
-
-    categoryId = category.id;
-    temporaryCategoryIds.push(categoryId);
-
-    expect(category).toEqual(
-      expect.objectContaining({
-        code: CATEGORY_CODE,
-        slug: CATEGORY_SLUG,
-        createdBy: adminId,
-        updatedBy: null,
-      }),
-    );
-    expect(JSON.stringify(category)).not.toContain('passwordHash');
-  });
-
-  it('returns 409 when code or slug already exists', () => {
-    return request(app.getHttpServer())
-      .post('/api/v1/admin/categories')
-      .set('Authorization', `Bearer ${adminAccessToken}`)
-      .send({
-        code: CATEGORY_CODE,
-        slug: 'another-category-slug',
-        translations: [
-          {
-            locale: LocaleCode.Vietnamese,
-            name: 'Danh mục trùng',
-          },
-        ],
-      })
-      .expect(409);
-  });
-
-  it('returns 400 when the Vietnamese translation is missing', () => {
-    return request(app.getHttpServer())
-      .post('/api/v1/admin/categories')
-      .set('Authorization', `Bearer ${adminAccessToken}`)
-      .send({
-        code: 'missingVietnameseTranslation',
-        slug: 'missing-vietnamese-translation',
-        translations: [
-          {
-            locale: LocaleCode.English,
-            name: 'Missing Vietnamese',
+            name: 'Không được tạo',
           },
         ],
       })
       .expect(400);
+
+    expect(asRecord(response.body as unknown).message).toBe(FIXED_ONLY_MESSAGE);
   });
 
-  it('allows an admin to update category data and translations', async () => {
+  it('updates an existing fixed category without changing its code', async () => {
     const response = await request(app.getHttpServer())
-      .patch(`/api/v1/admin/categories/${categoryId}`)
+      .patch(`/api/v1/admin/categories/${fixedCategory.id}`)
       .set('Authorization', `Bearer ${adminAccessToken}`)
       .send({
-        slug: 'e2e-category-updated',
-        sortOrder: 56,
-        showOnHome: false,
-        translations: [
-          {
-            locale: LocaleCode.Vietnamese,
-            name: 'Danh mục E2E đã cập nhật',
-            description: 'Mô tả đã cập nhật',
-          },
-        ],
+        slug: `${fixedCategory.slug}-e2e`,
+        sortOrder: fixedCategory.sortOrder + 1,
+        showOnHome: !fixedCategory.showOnHome,
       })
       .expect(200);
     const category = asRecord(response.body as unknown);
 
     expect(category).toEqual(
       expect.objectContaining({
-        id: categoryId,
-        code: CATEGORY_CODE,
-        slug: 'e2e-category-updated',
-        sortOrder: 56,
-        showOnHome: false,
+        id: fixedCategory.id,
+        code: FIXED_CATEGORY_CODES[0],
+        slug: `${fixedCategory.slug}-e2e`,
+        sortOrder: fixedCategory.sortOrder + 1,
+        showOnHome: !fixedCategory.showOnHome,
         updatedBy: adminId,
       }),
     );
-    expect(JSON.stringify(category)).not.toContain('passwordHash');
   });
 
-  it('falls back to Vietnamese when the requested locale is missing', async () => {
-    const response = await request(app.getHttpServer())
-      .get('/api/v1/news/categories')
-      .query({ locale: LocaleCode.Chinese })
-      .expect(200);
-    const category = asArray(response.body as unknown)
-      .map((item) => asRecord(item))
-      .find((item) => item.code === CATEGORY_CODE);
-
-    expect(category).toEqual(
-      expect.objectContaining({
-        name: 'Danh mục E2E đã cập nhật',
-        description: 'Mô tả đã cập nhật',
-      }),
-    );
-  });
-
-  it('allows an admin to deactivate a category', async () => {
-    const response = await request(app.getHttpServer())
-      .patch(`/api/v1/admin/categories/${categoryId}/status`)
+  it('rejects code changes in the update payload', () => {
+    return request(app.getHttpServer())
+      .patch(`/api/v1/admin/categories/${fixedCategory.id}`)
       .set('Authorization', `Bearer ${adminAccessToken}`)
-      .send({ isActive: false })
+      .send({ code: 'changedCode' })
+      .expect(400);
+  });
+
+  it('blocks updates for non-fixed categories', async () => {
+    const response = await request(app.getHttpServer())
+      .patch(`/api/v1/admin/categories/${rogueCategoryId}`)
+      .set('Authorization', `Bearer ${adminAccessToken}`)
+      .send({ slug: 'rogue-category-updated' })
+      .expect(400);
+
+    expect(asRecord(response.body as unknown).message).toBe(FIXED_ONLY_MESSAGE);
+  });
+
+  it('allows status updates for a fixed category', async () => {
+    const response = await request(app.getHttpServer())
+      .patch(`/api/v1/admin/categories/${fixedCategory.id}/status`)
+      .set('Authorization', `Bearer ${adminAccessToken}`)
+      .send({ isActive: !fixedCategory.isActive })
       .expect(200);
 
     expect(response.body).toEqual(
       expect.objectContaining({
-        id: categoryId,
-        isActive: false,
-        updatedBy: adminId,
+        id: fixedCategory.id,
+        code: FIXED_CATEGORY_CODES[0],
+        isActive: !fixedCategory.isActive,
       }),
     );
   });
 
-  it('does not expose a deactivated category publicly', async () => {
+  it('blocks category deletion', async () => {
     const response = await request(app.getHttpServer())
-      .get('/api/v1/news/categories')
-      .expect(200);
-    const codes = getCodes(asArray(response.body as unknown));
-
-    expect(codes).not.toContain(CATEGORY_CODE);
-  });
-
-  it('records category activity logs without sensitive user data', async () => {
-    const response = await request(app.getHttpServer())
-      .get('/api/v1/admin/activity-logs')
-      .query({
-        entityType: 'news_category',
-        entityId: categoryId,
-        page: 1,
-        limit: 20,
-      })
+      .delete(`/api/v1/admin/categories/${fixedCategory.id}`)
       .set('Authorization', `Bearer ${adminAccessToken}`)
-      .expect(200);
-    const body = asRecord(response.body as unknown);
-    const logs = asArray(body.data);
-    const actions = logs.map((log) => asRecord(log).action);
+      .expect(400);
 
-    expect(actions).toEqual(
-      expect.arrayContaining([
-        'category.created',
-        'category.updated',
-        'category.deactivated',
-      ]),
+    expect(asRecord(response.body as unknown).message).toBe(
+      DELETE_FIXED_MESSAGE,
     );
-    expect(JSON.stringify(body)).not.toContain('passwordHash');
-  });
-
-  it('returns 409 when deleting a category that has an article', async () => {
-    await dataSource
-      .createQueryBuilder()
-      .insert()
-      .into('news_articles')
-      .values({
-        categoryId: inactiveCategoryId,
-        createdBy: adminId,
-      })
-      .execute();
-
-    const response = await request(app.getHttpServer())
-      .delete(`/api/v1/admin/categories/${inactiveCategoryId}`)
-      .set('Authorization', `Bearer ${adminAccessToken}`)
-      .expect(409);
-    const body = asRecord(response.body as unknown);
-
-    expect(body.message).toBe('Không thể xóa danh mục đang có bài viết');
-
-    await dataSource
-      .createQueryBuilder()
-      .delete()
-      .from('news_articles')
-      .where('category_id = :categoryId', {
-        categoryId: inactiveCategoryId,
-      })
-      .execute();
-  });
-
-  it('allows an admin to delete a category without articles', () => {
-    return request(app.getHttpServer())
-      .delete(`/api/v1/admin/categories/${categoryId}`)
-      .set('Authorization', `Bearer ${adminAccessToken}`)
-      .expect(204);
   });
 
   afterAll(async () => {
-    if (!dataSource || !app) {
-      return;
-    }
+    if (!dataSource || !app) return;
 
     const activityLogsRepository = dataSource.getRepository(ActivityLogEntity);
     const sessionsRepository = dataSource.getRepository(AuthSessionEntity);
     const usersRepository = dataSource.getRepository(CmsUserEntity);
     const categoriesRepository = dataSource.getRepository(NewsCategoryEntity);
 
-    if (temporaryCategoryIds.length > 0) {
-      await dataSource
-        .createQueryBuilder()
-        .delete()
-        .from('news_articles')
-        .where('category_id IN (:...categoryIds)', {
-          categoryIds: temporaryCategoryIds,
-        })
-        .execute();
+    if (fixedCategory) {
+      await categoriesRepository.update(
+        { id: fixedCategory.id },
+        {
+          isActive: fixedCategory.isActive,
+          showOnHome: fixedCategory.showOnHome,
+          slug: fixedCategory.slug,
+          sortOrder: fixedCategory.sortOrder,
+          updatedBy: fixedCategory.updatedBy,
+        },
+      );
       await activityLogsRepository.delete({
         entityType: 'news_category',
-        entityId: In(temporaryCategoryIds),
+        entityId: fixedCategory.id,
+        createdAt: MoreThanOrEqual(testStartedAt),
       });
-      await categoriesRepository.delete({
-        id: In(temporaryCategoryIds),
-      });
+    }
+
+    if (rogueCategoryId) {
+      await categoriesRepository.delete({ id: rogueCategoryId });
     }
 
     if (employeeId) {
