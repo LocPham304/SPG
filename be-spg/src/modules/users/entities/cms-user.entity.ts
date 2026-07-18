@@ -11,7 +11,7 @@ import {
 import { UserRole } from '../enums/user-role.enum';
 
 @Entity({ name: 'cms_users' })
-@Index('idx_cms_users_role_active', ['role', 'isActive'])
+@Index('idx_cms_users_role_is_active', ['role', 'isActive'])
 @Index('idx_cms_users_created_by', ['createdBy'])
 export class CmsUserEntity {
   @PrimaryGeneratedColumn({ name: 'id', type: 'integer' })
