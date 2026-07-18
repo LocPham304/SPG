@@ -19,15 +19,6 @@ function normalizeEmail({ value }: TransformFnParams): unknown {
   return typeof value === 'string' ? value.trim().toLowerCase() : value;
 }
 
-function normalizeOptionalString({ value }: TransformFnParams): unknown {
-  if (typeof value !== 'string') {
-    return value;
-  }
-
-  const normalizedValue = value.trim();
-  return normalizedValue.length > 0 ? normalizedValue : null;
-}
-
 export class CreateUserDto {
   @Transform(trimString)
   @IsString()
@@ -40,11 +31,11 @@ export class CreateUserDto {
   @MaxLength(255)
   email!: string;
 
-  @IsOptional()
-  @Transform(normalizeOptionalString)
+  @Transform(trimString)
   @IsString()
+  @MinLength(1)
   @MaxLength(50)
-  phone?: string | null;
+  phone!: string;
 
   @IsEnum(UserRole)
   role!: UserRole;

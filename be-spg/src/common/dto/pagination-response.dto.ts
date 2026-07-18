@@ -6,11 +6,11 @@ export type PaginationMeta = {
 };
 
 export class PaginationResponseDto<T> {
-  readonly items: T[];
+  readonly data: T[];
   readonly meta: PaginationMeta;
 
-  constructor(items: T[], total: number, page: number, limit: number) {
-    this.items = items;
+  constructor(data: T[], total: number, page: number, limit: number) {
+    this.data = data;
     this.meta = {
       page,
       limit,

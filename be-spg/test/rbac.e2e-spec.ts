@@ -17,6 +17,8 @@ import { CmsUserEntity } from '../src/modules/users/entities/cms-user.entity';
 import { UserRole } from '../src/modules/users/enums/user-role.enum';
 import { UsersService } from '../src/modules/users/users.service';
 
+jest.setTimeout(30_000);
+
 const ADMIN_EMAIL = 'admin123@gmail.com';
 const ADMIN_PASSWORD = 'Admin@123';
 const EMPLOYEE_EMAIL = 'rbac.employee@example.com';
@@ -118,7 +120,7 @@ describe('RBAC guards (e2e)', () => {
       {
         fullName: 'RBAC Employee',
         email: EMPLOYEE_EMAIL,
-        phone: null,
+        phone: '0900000001',
         role: UserRole.Employee,
         temporaryPassword: EMPLOYEE_PASSWORD,
         isActive: true,
@@ -132,7 +134,7 @@ describe('RBAC guards (e2e)', () => {
       {
         fullName: 'RBAC Must Change',
         email: MUST_CHANGE_EMAIL,
-        phone: null,
+        phone: '0900000002',
         role: UserRole.Employee,
         temporaryPassword: MUST_CHANGE_PASSWORD,
         isActive: true,

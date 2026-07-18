@@ -6,9 +6,10 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { hash } from 'bcrypt';
-import { Repository } from 'typeorm';
+import { IsNull, Repository } from 'typeorm';
 
 import { PaginationResponseDto } from '../../common/dto/pagination-response.dto';
+import { AuthSessionEntity } from '../auth/entities/auth-session.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { QueryUsersDto } from './dto/query-users.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -25,6 +26,8 @@ export class UsersService {
   constructor(
     @InjectRepository(CmsUserEntity)
     private readonly usersRepository: Repository<CmsUserEntity>,
+    @InjectRepository(AuthSessionEntity)
+    private readonly sessionsRepository: Repository<AuthSessionEntity>,
   ) {}
 
   async findById(id: number): Promise<CmsUserEntity> {
@@ -171,6 +174,11 @@ export class UsersService {
     }
 
     const savedUser = await this.usersRepository.save(user);
+
+    if (dto.isActive === false) {
+      await this.revokeAllSessions(id);
+    }
+
     return this.toResponseDto(savedUser);
   }
 
@@ -182,6 +190,10 @@ export class UsersService {
     const user = await this.findById(id);
 
     if (user.isActive === isActive) {
+      if (!isActive) {
+        await this.revokeAllSessions(id);
+      }
+
       return this.toResponseDto(user);
     }
 
@@ -197,7 +209,21 @@ export class UsersService {
 
     user.isActive = isActive;
     const savedUser = await this.usersRepository.save(user);
+
+    if (!isActive) {
+      await this.revokeAllSessions(id);
+    }
+
     return this.toResponseDto(savedUser);
+  }
+
+  async resetTemporaryPassword(
+    id: number,
+    temporaryPassword: string,
+  ): Promise<UserResponseDto> {
+    const newPasswordHash = await hash(temporaryPassword, PASSWORD_SALT_ROUNDS);
+
+    return this.resetPassword(id, newPasswordHash);
   }
 
   async resetPassword(
@@ -214,7 +240,21 @@ export class UsersService {
     user.lockedUntil = null;
 
     const savedUser = await this.usersRepository.save(user);
+    await this.revokeAllSessions(id);
+
     return this.toResponseDto(savedUser);
+  }
+
+  async revokeAllSessions(userId: number): Promise<void> {
+    await this.sessionsRepository.update(
+      {
+        userId,
+        revokedAt: IsNull(),
+      },
+      {
+        revokedAt: new Date(),
+      },
+    );
   }
 
   async recordSuccessfulLogin(userId: number): Promise<void> {
