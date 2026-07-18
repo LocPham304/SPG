@@ -2,6 +2,7 @@
 
 import {
   FolderTree,
+  Images,
   LayoutDashboard,
   LogOut,
   MessagesSquare,
@@ -48,6 +49,12 @@ const navigationItems: readonly AdminNavigationItem[] = [
     href: "/admin/categories",
     icon: FolderTree,
     label: "Quản lý danh mục",
+    roles: ["admin", "employee"],
+  },
+  {
+    href: "/admin/media",
+    icon: Images,
+    label: "Thư viện ảnh",
     roles: ["admin", "employee"],
   },
   {
