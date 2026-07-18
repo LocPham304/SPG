@@ -459,8 +459,8 @@ describe('Categories API (e2e)', () => {
       .insert()
       .into('news_articles')
       .values({
-        category_id: inactiveCategoryId,
-        created_by: adminId,
+        categoryId: inactiveCategoryId,
+        createdBy: adminId,
       })
       .execute();
 

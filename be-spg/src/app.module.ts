@@ -13,6 +13,7 @@ import { MustChangePasswordGuard } from './common/guards/must-change-password.gu
 import { RolesGuard } from './common/guards/roles.guard';
 import { DatabaseModule } from './database/database.module';
 import { ActivityLogsModule } from './modules/activity-logs/activity-logs.module';
+import { ArticlesModule } from './modules/articles/articles.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { CategoriesModule } from './modules/categories/categories.module';
 import { HealthModule } from './modules/health/health.module';
@@ -45,6 +46,7 @@ import { UsersModule } from './modules/users/users.module';
     ActivityLogsModule,
     AuthModule,
     CategoriesModule,
+    ArticlesModule,
     HealthModule,
     MediaModule,
     UsersModule,

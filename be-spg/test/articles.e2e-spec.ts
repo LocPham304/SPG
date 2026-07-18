@@ -1,0 +1,526 @@
+import { type INestApplication, ValidationPipe } from '@nestjs/common';
+import { Test, type TestingModule } from '@nestjs/testing';
+import cookieParser from 'cookie-parser';
+import request from 'supertest';
+import type { App } from 'supertest/types';
+import { DataSource, In, MoreThanOrEqual } from 'typeorm';
+
+import { AppModule } from '../src/app.module';
+import { ActivityLogEntity } from '../src/modules/activity-logs/entities/activity-log.entity';
+import { NewsArticleTranslationEntity } from '../src/modules/articles/entities/news-article-translation.entity';
+import { NewsArticleEntity } from '../src/modules/articles/entities/news-article.entity';
+import { ArticleStatus } from '../src/modules/articles/enums/article-status.enum';
+import { TranslationStatus } from '../src/modules/articles/enums/translation-status.enum';
+import { AuthSessionEntity } from '../src/modules/auth/entities/auth-session.entity';
+import { NewsCategoryEntity } from '../src/modules/categories/entities/news-category.entity';
+import { LocaleCode } from '../src/modules/categories/enums/locale-code.enum';
+import { CmsUserEntity } from '../src/modules/users/entities/cms-user.entity';
+import { UserRole } from '../src/modules/users/enums/user-role.enum';
+import { UsersService } from '../src/modules/users/users.service';
+
+jest.setTimeout(45_000);
+
+const ADMIN_EMAIL = 'admin123@gmail.com';
+const ADMIN_PASSWORD = 'Admin@123';
+const EMPLOYEE_EMAIL = 'articles.employee-fixture@example.com';
+const EMPLOYEE_PASSWORD = 'Employee@123';
+const ADMIN_SLUG = 'e2e-articles-admin-draft';
+const EMPLOYEE_SLUG = 'e2e-articles-employee-draft';
+const INCOMPLETE_SLUG = 'e2e-articles-incomplete';
+const TEST_SLUG_PREFIX = 'e2e-articles-';
+
+function asRecord(value: unknown): Record<string, unknown> {
+  if (typeof value !== 'object' || value === null || Array.isArray(value)) {
+    throw new Error('Response body không phải object hợp lệ.');
+  }
+  return value as Record<string, unknown>;
+}
+
+function asArray(value: unknown): unknown[] {
+  if (!Array.isArray(value)) {
+    throw new Error('Response body không phải array hợp lệ.');
+  }
+  return value;
+}
+
+function getAccessToken(body: unknown): string {
+  const response = asRecord(body);
+  if (typeof response.accessToken !== 'string') {
+    throw new Error('Login response không có accessToken hợp lệ.');
+  }
+  return response.accessToken;
+}
+
+describe('Articles API (e2e)', () => {
+  let app: INestApplication<App>;
+  let dataSource: DataSource;
+  let usersService: UsersService;
+  let adminId: number;
+  let employeeId: number;
+  let categoryId: number;
+  let adminToken: string;
+  let employeeToken: string;
+  let adminArticleId: number;
+  let employeeArticleId: number;
+  let incompleteArticleId: number;
+  const articleIds: number[] = [];
+  const testStartedAt = new Date();
+
+  async function login(email: string, password: string): Promise<string> {
+    const response = await request(app.getHttpServer())
+      .post('/api/v1/auth/login')
+      .send({ email, password, rememberMe: false })
+      .expect(200);
+    return getAccessToken(response.body as unknown);
+  }
+
+  async function cleanupArticles(): Promise<void> {
+    const translationsRepository = dataSource.getRepository(
+      NewsArticleTranslationEntity,
+    );
+    const staleTranslations = await translationsRepository
+      .createQueryBuilder('translation')
+      .select('translation.articleId', 'articleId')
+      .where('translation.slug LIKE :prefix', {
+        prefix: `${TEST_SLUG_PREFIX}%`,
+      })
+      .getRawMany<{ articleId: number }>();
+    const ids = staleTranslations.map((item) => Number(item.articleId));
+
+    if (ids.length > 0) {
+      await dataSource.getRepository(ActivityLogEntity).delete({
+        entityType: 'news_article',
+        entityId: In(ids),
+      });
+      await dataSource.getRepository(NewsArticleEntity).delete({ id: In(ids) });
+    }
+  }
+
+  beforeAll(async () => {
+    const moduleFixture: TestingModule = await Test.createTestingModule({
+      imports: [AppModule],
+    }).compile();
+
+    app = moduleFixture.createNestApplication();
+    app.setGlobalPrefix('api/v1');
+    app.use(cookieParser());
+    app.useGlobalPipes(
+      new ValidationPipe({
+        whitelist: true,
+        forbidNonWhitelisted: true,
+        transform: true,
+      }),
+    );
+    await app.init();
+
+    dataSource = app.get(DataSource);
+    usersService = app.get(UsersService);
+    await cleanupArticles();
+
+    const usersRepository = dataSource.getRepository(CmsUserEntity);
+    const staleEmployee = await usersRepository.findOne({
+      where: { email: EMPLOYEE_EMAIL },
+    });
+    if (staleEmployee) {
+      await dataSource.getRepository(AuthSessionEntity).delete({
+        userId: staleEmployee.id,
+      });
+      await dataSource.getRepository(ActivityLogEntity).delete({
+        actorUserId: staleEmployee.id,
+      });
+      await usersRepository.delete({ id: staleEmployee.id });
+    }
+
+    const admin = await usersService.findByEmail(ADMIN_EMAIL);
+    if (!admin) {
+      throw new Error('Không tìm thấy admin seed để chạy Articles E2E.');
+    }
+    adminId = admin.id;
+    const employee = await usersService.createUser(
+      {
+        fullName: 'Articles Employee',
+        email: EMPLOYEE_EMAIL,
+        phone: '0900000051',
+        role: UserRole.Employee,
+        temporaryPassword: EMPLOYEE_PASSWORD,
+        isActive: true,
+        mustChangePassword: false,
+      },
+      adminId,
+    );
+    employeeId = employee.id;
+
+    const category = await dataSource
+      .getRepository(NewsCategoryEntity)
+      .findOne({
+        where: { code: 'currentAffairs', isActive: true },
+      });
+    if (!category) {
+      throw new Error('Không tìm thấy category currentAffairs.');
+    }
+    categoryId = category.id;
+    adminToken = await login(ADMIN_EMAIL, ADMIN_PASSWORD);
+    employeeToken = await login(EMPLOYEE_EMAIL, EMPLOYEE_PASSWORD);
+  });
+
+  it('allows public listing without a token', async () => {
+    const response = await request(app.getHttpServer())
+      .get('/api/v1/news')
+      .expect(200);
+    const body = asRecord(response.body as unknown);
+    expect(Array.isArray(body.data)).toBe(true);
+    expect(asRecord(body.meta)).toEqual(
+      expect.objectContaining({ page: 1, limit: 20 }),
+    );
+  });
+
+  it('allows an admin to create a sanitized draft with JWT ownership', async () => {
+    const response = await request(app.getHttpServer())
+      .post('/api/v1/admin/articles')
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send({
+        categoryId,
+        title: 'Bài viết admin E2E',
+        slug: ADMIN_SLUG.toUpperCase(),
+        summary: 'Tóm tắt bài viết admin.',
+        contentHtml:
+          '<p>Nội dung an toàn</p><script>alert("xss")</script><a href="https://example.com" target="_blank">Link</a>',
+        status: ArticleStatus.Draft,
+      })
+      .expect(201);
+    const body = asRecord(response.body as unknown);
+    adminArticleId = body.id as number;
+    articleIds.push(adminArticleId);
+
+    expect(body).toEqual(
+      expect.objectContaining({
+        id: adminArticleId,
+        status: ArticleStatus.Draft,
+        sourceVersion: 1,
+      }),
+    );
+    expect(asRecord(body.createdBy)).toEqual(
+      expect.objectContaining({ id: adminId, email: ADMIN_EMAIL }),
+    );
+    const translations = asArray(body.translations).map(asRecord);
+    const vi = translations.find(
+      (translation) => translation.locale === LocaleCode.Vietnamese,
+    );
+    const translated = translations.filter(
+      (translation) => translation.locale !== LocaleCode.Vietnamese,
+    );
+    expect(vi?.contentHtml).not.toContain('<script');
+    expect(vi?.contentHtml).toContain('rel="noopener noreferrer"');
+    expect(
+      translated.every((item) => item.translationStatus === 'queued'),
+    ).toBe(true);
+    expect(JSON.stringify(body)).not.toContain('passwordHash');
+  });
+
+  it('does not expose draft articles publicly', async () => {
+    const response = await request(app.getHttpServer())
+      .get('/api/v1/news')
+      .query({ search: 'Bài viết admin E2E' })
+      .expect(200);
+    expect(asArray(asRecord(response.body as unknown).data)).toHaveLength(0);
+  });
+
+  it('allows an employee to create their own draft', async () => {
+    const response = await request(app.getHttpServer())
+      .post('/api/v1/admin/articles')
+      .set('Authorization', `Bearer ${employeeToken}`)
+      .send({
+        categoryId,
+        title: 'Bài viết employee E2E',
+        slug: EMPLOYEE_SLUG,
+        summary: 'Tóm tắt bài viết employee.',
+        contentHtml: '<p>Nội dung employee.</p>',
+      })
+      .expect(201);
+    const body = asRecord(response.body as unknown);
+    employeeArticleId = body.id as number;
+    articleIds.push(employeeArticleId);
+    expect(asRecord(body.createdBy).id).toBe(employeeId);
+  });
+
+  it('rejects actor fields supplied by a client', () => {
+    return request(app.getHttpServer())
+      .post('/api/v1/admin/articles')
+      .set('Authorization', `Bearer ${employeeToken}`)
+      .send({
+        categoryId,
+        title: 'Không nhận actor',
+        slug: 'e2e-articles-forged-actor',
+        summary: 'Không nhận actor từ body.',
+        contentHtml: '<p>Nội dung.</p>',
+        createdBy: adminId,
+      })
+      .expect(400);
+  });
+
+  it('forbids an employee from managing another author article', async () => {
+    const auth = { Authorization: `Bearer ${employeeToken}` };
+    await request(app.getHttpServer())
+      .get(`/api/v1/admin/articles/${adminArticleId}`)
+      .set(auth)
+      .expect(403);
+    await request(app.getHttpServer())
+      .patch(`/api/v1/admin/articles/${adminArticleId}`)
+      .set(auth)
+      .send({ title: 'Không được sửa' })
+      .expect(403);
+    await request(app.getHttpServer())
+      .post(`/api/v1/admin/articles/${adminArticleId}/publish`)
+      .set(auth)
+      .expect(403);
+    await request(app.getHttpServer())
+      .post(`/api/v1/admin/articles/${adminArticleId}/hide`)
+      .set(auth)
+      .expect(403);
+  });
+
+  it('allows an admin to read and update an employee article', async () => {
+    await request(app.getHttpServer())
+      .get(`/api/v1/admin/articles/${employeeArticleId}`)
+      .set('Authorization', `Bearer ${adminToken}`)
+      .expect(200);
+    const response = await request(app.getHttpServer())
+      .patch(`/api/v1/admin/articles/${employeeArticleId}`)
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send({ summary: 'Admin đã cập nhật tóm tắt.' })
+      .expect(200);
+    expect(asRecord(response.body as unknown).sourceVersion).toBe(2);
+  });
+
+  it('marks translations outdated when Vietnamese content changes', async () => {
+    const response = await request(app.getHttpServer())
+      .patch(`/api/v1/admin/articles/${employeeArticleId}`)
+      .set('Authorization', `Bearer ${employeeToken}`)
+      .send({ contentHtml: '<p>Nội dung employee đã cập nhật.</p>' })
+      .expect(200);
+    const body = asRecord(response.body as unknown);
+    const translations = asArray(body.translations).map(asRecord);
+    expect(body.sourceVersion).toBe(3);
+    expect(
+      translations
+        .filter((item) => item.locale !== LocaleCode.Vietnamese)
+        .every((item) => item.translationStatus === TranslationStatus.Outdated),
+    ).toBe(true);
+  });
+
+  it('returns 409 for a duplicate Vietnamese slug', () => {
+    return request(app.getHttpServer())
+      .post('/api/v1/admin/articles')
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send({
+        categoryId,
+        title: 'Slug trùng',
+        slug: EMPLOYEE_SLUG,
+        summary: 'Slug trùng.',
+        contentHtml: '<p>Nội dung.</p>',
+      })
+      .expect(409);
+  });
+
+  it('returns 400 when publishing an incomplete Vietnamese translation', async () => {
+    const articleRepository = dataSource.getRepository(NewsArticleEntity);
+    const translationRepository = dataSource.getRepository(
+      NewsArticleTranslationEntity,
+    );
+    const article = await articleRepository.save(
+      articleRepository.create({
+        categoryId,
+        status: ArticleStatus.Draft,
+        isFeatured: false,
+        sourceVersion: 1,
+        sourceUrl: null,
+        createdBy: employeeId,
+        updatedBy: employeeId,
+        publishedBy: null,
+        publishedAt: null,
+      }),
+    );
+    incompleteArticleId = article.id;
+    articleIds.push(article.id);
+    await translationRepository.save(
+      translationRepository.create({
+        articleId: article.id,
+        locale: LocaleCode.Vietnamese,
+        sourceVersion: 1,
+        title: null,
+        slug: INCOMPLETE_SLUG,
+        summary: null,
+        contentHtml: null,
+        translationStatus: TranslationStatus.Original,
+      }),
+    );
+
+    await request(app.getHttpServer())
+      .post(`/api/v1/admin/articles/${incompleteArticleId}/publish`)
+      .set('Authorization', `Bearer ${employeeToken}`)
+      .expect(400);
+  });
+
+  it('publishes a valid employee article', async () => {
+    const response = await request(app.getHttpServer())
+      .post(`/api/v1/admin/articles/${employeeArticleId}/publish`)
+      .set('Authorization', `Bearer ${employeeToken}`)
+      .expect(201);
+    const body = asRecord(response.body as unknown);
+    expect(body.status).toBe(ArticleStatus.Published);
+    expect(asRecord(body.publishedBy).id).toBe(employeeId);
+    expect(typeof body.publishedAt).toBe('string');
+  });
+
+  it('exposes a published article publicly with Vietnamese fallback', async () => {
+    const listResponse = await request(app.getHttpServer())
+      .get('/api/v1/news')
+      .query({ locale: LocaleCode.English, search: 'employee E2E' })
+      .expect(200);
+    const items = asArray(asRecord(listResponse.body as unknown).data).map(
+      asRecord,
+    );
+    expect(items.some((item) => item.id === employeeArticleId)).toBe(true);
+    expect(items.find((item) => item.id === employeeArticleId)?.locale).toBe(
+      LocaleCode.Vietnamese,
+    );
+    expect(JSON.stringify(items)).not.toContain('contentHtml');
+
+    const detailResponse = await request(app.getHttpServer())
+      .get(`/api/v1/news/${EMPLOYEE_SLUG}`)
+      .query({ locale: LocaleCode.English })
+      .expect(200);
+    expect(detailResponse.body).toEqual(
+      expect.objectContaining({
+        id: employeeArticleId,
+        locale: LocaleCode.Vietnamese,
+        contentHtml: '<p>Nội dung employee đã cập nhật.</p>',
+      }),
+    );
+  });
+
+  it('allows only an admin to set featured', async () => {
+    await request(app.getHttpServer())
+      .patch(`/api/v1/admin/articles/${employeeArticleId}/featured`)
+      .set('Authorization', `Bearer ${employeeToken}`)
+      .send({ isFeatured: true })
+      .expect(403);
+    const response = await request(app.getHttpServer())
+      .patch(`/api/v1/admin/articles/${employeeArticleId}/featured`)
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send({ isFeatured: true })
+      .expect(200);
+    expect(asRecord(response.body as unknown).isFeatured).toBe(true);
+  });
+
+  it('hides an article and removes it from public results', async () => {
+    await request(app.getHttpServer())
+      .post(`/api/v1/admin/articles/${employeeArticleId}/hide`)
+      .set('Authorization', `Bearer ${employeeToken}`)
+      .expect(201);
+    await request(app.getHttpServer())
+      .get(`/api/v1/news/${EMPLOYEE_SLUG}`)
+      .expect(404);
+  });
+
+  it('does not expose hidden articles in the public list', async () => {
+    const response = await request(app.getHttpServer())
+      .get('/api/v1/news')
+      .query({ search: 'employee E2E' })
+      .expect(200);
+    expect(asArray(asRecord(response.body as unknown).data)).toHaveLength(0);
+  });
+
+  it('soft deletes, excludes from admin list, and restores an article', async () => {
+    await request(app.getHttpServer())
+      .delete(`/api/v1/admin/articles/${employeeArticleId}`)
+      .set('Authorization', `Bearer ${adminToken}`)
+      .expect(204);
+    const listResponse = await request(app.getHttpServer())
+      .get('/api/v1/admin/articles')
+      .query({ search: 'employee E2E' })
+      .set('Authorization', `Bearer ${adminToken}`)
+      .expect(200);
+    expect(asArray(asRecord(listResponse.body as unknown).data)).toHaveLength(
+      0,
+    );
+
+    const restoreResponse = await request(app.getHttpServer())
+      .post(`/api/v1/admin/articles/${employeeArticleId}/restore`)
+      .set('Authorization', `Bearer ${adminToken}`)
+      .expect(201);
+    expect(asRecord(restoreResponse.body as unknown).deletedAt).toBeNull();
+  });
+
+  it('records create, update, publish and lifecycle activity', async () => {
+    const response = await request(app.getHttpServer())
+      .get('/api/v1/admin/activity-logs')
+      .query({
+        entityType: 'news_article',
+        entityId: employeeArticleId,
+        page: 1,
+        limit: 30,
+      })
+      .set('Authorization', `Bearer ${adminToken}`)
+      .expect(200);
+    const actions = asArray(asRecord(response.body as unknown).data)
+      .map(asRecord)
+      .map((item) => item.action);
+    expect(actions).toEqual(
+      expect.arrayContaining([
+        'article.created',
+        'article.updated',
+        'article.published',
+        'article.hidden',
+        'article.featured',
+        'article.deleted',
+        'article.restored',
+      ]),
+    );
+    expect(JSON.stringify(response.body)).not.toContain('passwordHash');
+  });
+
+  it('limits employee admin listings to their own articles', async () => {
+    const response = await request(app.getHttpServer())
+      .get('/api/v1/admin/articles')
+      .query({ page: 1, limit: 100 })
+      .set('Authorization', `Bearer ${employeeToken}`)
+      .expect(200);
+    const items = asArray(asRecord(response.body as unknown).data).map(
+      asRecord,
+    );
+    expect(items.some((item) => item.id === employeeArticleId)).toBe(true);
+    expect(items.some((item) => item.id === adminArticleId)).toBe(false);
+  });
+
+  afterAll(async () => {
+    if (!dataSource || !app) return;
+
+    if (articleIds.length > 0) {
+      await dataSource.getRepository(ActivityLogEntity).delete({
+        entityType: 'news_article',
+        entityId: In(articleIds),
+      });
+      await dataSource
+        .getRepository(NewsArticleEntity)
+        .delete({ id: In(articleIds) });
+    }
+    if (employeeId) {
+      await dataSource
+        .getRepository(AuthSessionEntity)
+        .delete({ userId: employeeId });
+      await dataSource.getRepository(ActivityLogEntity).delete({
+        actorUserId: employeeId,
+      });
+      await dataSource.getRepository(CmsUserEntity).delete({ id: employeeId });
+    }
+    if (adminId) {
+      await dataSource.getRepository(AuthSessionEntity).delete({
+        userId: adminId,
+        createdAt: MoreThanOrEqual(testStartedAt),
+      });
+    }
+    await cleanupArticles();
+    await app.close();
+  });
+});

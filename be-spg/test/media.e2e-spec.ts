@@ -365,8 +365,8 @@ describe('Media API (e2e)', () => {
       .insert()
       .into('news_articles')
       .values({
-        thumbnail_id: adminMediaId,
-        created_by: adminId,
+        thumbnailId: adminMediaId,
+        createdBy: adminId,
       })
       .execute();
 
