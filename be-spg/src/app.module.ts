@@ -16,6 +16,7 @@ import { ActivityLogsModule } from './modules/activity-logs/activity-logs.module
 import { ArticlesModule } from './modules/articles/articles.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { CategoriesModule } from './modules/categories/categories.module';
+import { ContactsModule } from './modules/contacts/contacts.module';
 import { HealthModule } from './modules/health/health.module';
 import { MediaModule } from './modules/media/media.module';
 import { UsersModule } from './modules/users/users.module';
@@ -47,6 +48,7 @@ import { UsersModule } from './modules/users/users.module';
     AuthModule,
     CategoriesModule,
     ArticlesModule,
+    ContactsModule,
     HealthModule,
     MediaModule,
     UsersModule,

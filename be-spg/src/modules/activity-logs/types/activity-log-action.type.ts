@@ -22,7 +22,13 @@ export const ACTIVITY_LOG_ACTIONS = [
   'media.uploaded',
   'media.updated',
   'media.deleted',
+  'contact.created',
+  'contact.claimed',
+  'contact.assigned',
   'contact.status_changed',
+  'contact.note_updated',
+  'contact.deleted',
+  'contact.restored',
 ] as const;
 
 export type ActivityLogAction = (typeof ACTIVITY_LOG_ACTIONS)[number];
