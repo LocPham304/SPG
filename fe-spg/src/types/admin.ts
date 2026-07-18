@@ -61,13 +61,6 @@ export type AdminContactMessage = {
 
 export type AdminUserStatus = "active" | "inactive";
 
-export type ManagedAdminUser = AdminUser & {
-  createdAt: string;
-  id: string;
-  phone: string;
-  status: AdminUserStatus;
-};
-
 export type AdminActivity = {
   description: string;
   id: string;

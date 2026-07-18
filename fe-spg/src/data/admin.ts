@@ -2,7 +2,6 @@ import type {
   AdminActivity,
   AdminArticle,
   AdminContactMessage,
-  ManagedAdminUser,
 } from "@/types/admin";
 
 export const adminArticles: readonly AdminArticle[] = [
@@ -163,45 +162,6 @@ export const adminContacts: readonly AdminContactMessage[] = [
     assignee: "Quản trị viên",
     sentAt: "2024-03-20 14:05",
     message: "Yêu cầu gửi lại hồ sơ năng lực của doanh nghiệp.",
-  },
-];
-
-export const adminUsers: readonly ManagedAdminUser[] = [
-  {
-    id: "user-001",
-    name: "Quản trị viên",
-    email: "admin@example.com",
-    phone: "0901 111 222",
-    role: "admin",
-    status: "active",
-    createdAt: "2024-01-05",
-  },
-  {
-    id: "user-002",
-    name: "Nhân viên",
-    email: "employee@example.com",
-    phone: "0902 222 333",
-    role: "employee",
-    status: "active",
-    createdAt: "2024-01-10",
-  },
-  {
-    id: "user-003",
-    name: "Nguyễn Hoàng Lan",
-    email: "hoanglan@example.com",
-    phone: "0903 333 444",
-    role: "employee",
-    status: "active",
-    createdAt: "2024-02-02",
-  },
-  {
-    id: "user-004",
-    name: "Trần Đức Minh",
-    email: "ducminh@example.com",
-    phone: "0904 444 555",
-    role: "employee",
-    status: "inactive",
-    createdAt: "2024-02-12",
   },
 ];
 
