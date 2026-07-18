@@ -59,18 +59,18 @@ class EnvironmentVariables {
   @IsNotEmpty()
   JWT_REFRESH_SECRET!: string;
 
-  @IsOptional()
   @IsString()
+  @IsNotEmpty()
   @IsUrl({ require_tld: false })
-  SUPABASE_URL?: string;
+  SUPABASE_URL!: string;
 
-  @IsOptional()
   @IsString()
-  SUPABASE_SERVICE_ROLE_KEY?: string;
+  @IsNotEmpty()
+  SUPABASE_SERVICE_ROLE_KEY!: string;
 
-  @IsOptional()
   @IsString()
-  SUPABASE_STORAGE_BUCKET?: string;
+  @IsNotEmpty()
+  SUPABASE_STORAGE_BUCKET!: string;
 
   @IsOptional()
   @IsString()

@@ -15,6 +15,7 @@ export const ACTIVITY_LOG_ACTIONS = [
   'article.published',
   'article.hidden',
   'media.uploaded',
+  'media.updated',
   'media.deleted',
   'contact.status_changed',
 ] as const;

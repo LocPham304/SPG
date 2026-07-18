@@ -16,6 +16,7 @@ import { ActivityLogsModule } from './modules/activity-logs/activity-logs.module
 import { AuthModule } from './modules/auth/auth.module';
 import { CategoriesModule } from './modules/categories/categories.module';
 import { HealthModule } from './modules/health/health.module';
+import { MediaModule } from './modules/media/media.module';
 import { UsersModule } from './modules/users/users.module';
 
 @Module({
@@ -45,6 +46,7 @@ import { UsersModule } from './modules/users/users.module';
     AuthModule,
     CategoriesModule,
     HealthModule,
+    MediaModule,
     UsersModule,
   ],
   providers: [
