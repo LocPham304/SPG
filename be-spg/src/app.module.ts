@@ -17,6 +17,7 @@ import { ArticlesModule } from './modules/articles/articles.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { CategoriesModule } from './modules/categories/categories.module';
 import { ContactsModule } from './modules/contacts/contacts.module';
+import { DashboardModule } from './modules/dashboard/dashboard.module';
 import { HealthModule } from './modules/health/health.module';
 import { MediaModule } from './modules/media/media.module';
 import { UsersModule } from './modules/users/users.module';
@@ -49,6 +50,7 @@ import { UsersModule } from './modules/users/users.module';
     CategoriesModule,
     ArticlesModule,
     ContactsModule,
+    DashboardModule,
     HealthModule,
     MediaModule,
     UsersModule,
