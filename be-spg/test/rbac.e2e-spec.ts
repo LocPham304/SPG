@@ -11,6 +11,7 @@ import type { App } from 'supertest/types';
 import { DataSource, In, MoreThanOrEqual } from 'typeorm';
 
 import { AppModule } from '../src/app.module';
+import { ActivityLogEntity } from '../src/modules/activity-logs/entities/activity-log.entity';
 import { Roles } from '../src/common/decorators/roles.decorator';
 import { AuthSessionEntity } from '../src/modules/auth/entities/auth-session.entity';
 import { CmsUserEntity } from '../src/modules/users/entities/cms-user.entity';
@@ -104,9 +105,24 @@ describe('RBAC guards (e2e)', () => {
     dataSource = app.get(DataSource);
 
     const usersRepository = dataSource.getRepository(CmsUserEntity);
-    await usersRepository.delete({
-      email: In([EMPLOYEE_EMAIL, MUST_CHANGE_EMAIL]),
+    const sessionsRepository = dataSource.getRepository(AuthSessionEntity);
+    const activityLogsRepository = dataSource.getRepository(ActivityLogEntity);
+    const staleUsers = await usersRepository.find({
+      select: { id: true },
+      where: {
+        email: In([EMPLOYEE_EMAIL, MUST_CHANGE_EMAIL]),
+      },
     });
+    const staleUserIds = staleUsers.map((user) => user.id);
+
+    if (staleUserIds.length > 0) {
+      await activityLogsRepository.delete({
+        entityType: 'cms_user',
+        entityId: In(staleUserIds),
+      });
+      await sessionsRepository.delete({ userId: In(staleUserIds) });
+      await usersRepository.delete({ id: In(staleUserIds) });
+    }
 
     const admin = await usersService.findByEmail(ADMIN_EMAIL);
 
@@ -231,8 +247,13 @@ describe('RBAC guards (e2e)', () => {
 
     const sessionsRepository = dataSource.getRepository(AuthSessionEntity);
     const usersRepository = dataSource.getRepository(CmsUserEntity);
+    const activityLogsRepository = dataSource.getRepository(ActivityLogEntity);
 
     if (temporaryUserIds.length > 0) {
+      await activityLogsRepository.delete({
+        entityType: 'cms_user',
+        entityId: In(temporaryUserIds),
+      });
       await sessionsRepository.delete({
         userId: In(temporaryUserIds),
       });

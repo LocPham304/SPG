@@ -10,7 +10,9 @@ import {
   Patch,
   Post,
   Query,
+  Req,
 } from '@nestjs/common';
+import type { Request } from 'express';
 
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { Roles } from '../../common/decorators/roles.decorator';
@@ -48,8 +50,13 @@ export class UsersController {
   create(
     @Body() dto: CreateUserDto,
     @CurrentUser() currentUser: AuthenticatedUser,
+    @Req() request: Request,
   ): Promise<UserResponseDto> {
-    return this.usersService.createUser(dto, currentUser.id);
+    return this.usersService.createUser(
+      dto,
+      currentUser.id,
+      this.getActivityMetadata(request),
+    );
   }
 
   @Patch(':id')
@@ -57,8 +64,14 @@ export class UsersController {
     @Param('id', ParseIntPipe) id: number,
     @Body() dto: UpdateUserDto,
     @CurrentUser() currentUser: AuthenticatedUser,
+    @Req() request: Request,
   ): Promise<UserResponseDto> {
-    return this.usersService.updateUser(id, dto, currentUser.id);
+    return this.usersService.updateUser(
+      id,
+      dto,
+      currentUser.id,
+      this.getActivityMetadata(request),
+    );
   }
 
   @Patch(':id/status')
@@ -66,8 +79,14 @@ export class UsersController {
     @Param('id', ParseIntPipe) id: number,
     @Body() dto: SetUserStatusDto,
     @CurrentUser() currentUser: AuthenticatedUser,
+    @Req() request: Request,
   ): Promise<UserResponseDto> {
-    return this.usersService.setActiveStatus(id, dto.isActive, currentUser.id);
+    return this.usersService.setActiveStatus(
+      id,
+      dto.isActive,
+      currentUser.id,
+      this.getActivityMetadata(request),
+    );
   }
 
   @Post(':id/reset-password')
@@ -75,8 +94,15 @@ export class UsersController {
   async resetPassword(
     @Param('id', ParseIntPipe) id: number,
     @Body() dto: AdminResetPasswordDto,
+    @CurrentUser() currentUser: AuthenticatedUser,
+    @Req() request: Request,
   ): Promise<{ message: string }> {
-    await this.usersService.resetTemporaryPassword(id, dto.temporaryPassword);
+    await this.usersService.resetTemporaryPassword(
+      id,
+      dto.temporaryPassword,
+      currentUser.id,
+      this.getActivityMetadata(request),
+    );
 
     return { message: 'Đặt lại mật khẩu thành công' };
   }
@@ -85,10 +111,25 @@ export class UsersController {
   @HttpCode(HttpStatus.OK)
   async revokeSessions(
     @Param('id', ParseIntPipe) id: number,
+    @CurrentUser() currentUser: AuthenticatedUser,
+    @Req() request: Request,
   ): Promise<{ message: string }> {
-    await this.usersService.findById(id);
-    await this.usersService.revokeAllSessions(id);
+    await this.usersService.revokeAllSessionsByAdmin(
+      id,
+      currentUser.id,
+      this.getActivityMetadata(request),
+    );
 
     return { message: 'Đã thu hồi toàn bộ phiên đăng nhập' };
+  }
+
+  private getActivityMetadata(request: Request): {
+    ipAddress: string | null;
+    userAgent: string | null;
+  } {
+    return {
+      ipAddress: request.ip || request.socket.remoteAddress || null,
+      userAgent: request.get('user-agent') ?? null,
+    };
   }
 }

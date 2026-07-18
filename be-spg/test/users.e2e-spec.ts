@@ -6,6 +6,7 @@ import type { App } from 'supertest/types';
 import { DataSource, In, MoreThanOrEqual } from 'typeorm';
 
 import { AppModule } from '../src/app.module';
+import { ActivityLogEntity } from '../src/modules/activity-logs/entities/activity-log.entity';
 import { AuthSessionEntity } from '../src/modules/auth/entities/auth-session.entity';
 import { CmsUserEntity } from '../src/modules/users/entities/cms-user.entity';
 import { UserRole } from '../src/modules/users/enums/user-role.enum';
@@ -94,6 +95,7 @@ describe('Admin Users API (e2e)', () => {
 
     const usersRepository = dataSource.getRepository(CmsUserEntity);
     const sessionsRepository = dataSource.getRepository(AuthSessionEntity);
+    const activityLogsRepository = dataSource.getRepository(ActivityLogEntity);
     const staleUsers = await usersRepository.find({
       select: { id: true },
       where: { email: In(TEST_EMAILS) },
@@ -101,6 +103,10 @@ describe('Admin Users API (e2e)', () => {
     const staleUserIds = staleUsers.map((user) => user.id);
 
     if (staleUserIds.length > 0) {
+      await activityLogsRepository.delete({
+        entityType: 'cms_user',
+        entityId: In(staleUserIds),
+      });
       await sessionsRepository.delete({ userId: In(staleUserIds) });
       await usersRepository.delete({ id: In(staleUserIds) });
     }
@@ -348,6 +354,7 @@ describe('Admin Users API (e2e)', () => {
 
     const usersRepository = dataSource.getRepository(CmsUserEntity);
     const sessionsRepository = dataSource.getRepository(AuthSessionEntity);
+    const activityLogsRepository = dataSource.getRepository(ActivityLogEntity);
     const temporaryUsers = await usersRepository.find({
       select: { id: true },
       where: { email: In(TEST_EMAILS) },
@@ -355,6 +362,10 @@ describe('Admin Users API (e2e)', () => {
     const temporaryUserIds = temporaryUsers.map((user) => user.id);
 
     if (temporaryUserIds.length > 0) {
+      await activityLogsRepository.delete({
+        entityType: 'cms_user',
+        entityId: In(temporaryUserIds),
+      });
       await sessionsRepository.delete({ userId: In(temporaryUserIds) });
       await usersRepository.delete({ id: In(temporaryUserIds) });
     }
