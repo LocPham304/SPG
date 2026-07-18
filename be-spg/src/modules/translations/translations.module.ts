@@ -5,7 +5,7 @@ import { ActivityLogsModule } from '../activity-logs/activity-logs.module';
 import { ArticlesModule } from '../articles/articles.module';
 import { NewsArticleTranslationEntity } from '../articles/entities/news-article-translation.entity';
 import { NewsArticleEntity } from '../articles/entities/news-article.entity';
-import { DeepLTranslateProvider } from './providers/deepl-translate.provider';
+import { GeminiTranslationProvider } from './providers/gemini-translation.provider';
 import { ARTICLE_TRANSLATION_PROVIDER } from './providers/translation-provider.interface';
 import { TranslationsController } from './translations.controller';
 import { TranslationsService } from './translations.service';
@@ -18,10 +18,10 @@ import { TranslationsService } from './translations.service';
   ],
   controllers: [TranslationsController],
   providers: [
-    DeepLTranslateProvider,
+    GeminiTranslationProvider,
     {
       provide: ARTICLE_TRANSLATION_PROVIDER,
-      useExisting: DeepLTranslateProvider,
+      useExisting: GeminiTranslationProvider,
     },
     TranslationsService,
   ],

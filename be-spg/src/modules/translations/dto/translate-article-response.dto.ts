@@ -5,6 +5,7 @@ export class TranslateArticleResultDto {
   locale!: TranslationTargetLocale;
   status!: TranslationStatus;
   skipped!: boolean;
+  reason?: string;
   title!: string | null;
   slug!: string | null;
   summary!: string | null;
@@ -18,5 +19,6 @@ export class TranslateArticleResultDto {
 export class TranslateArticleResponseDto {
   articleId!: number;
   sourceLocale!: 'vi';
+  provider!: string;
   results!: TranslateArticleResultDto[];
 }

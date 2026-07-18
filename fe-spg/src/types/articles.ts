@@ -134,6 +134,7 @@ export type TranslateArticleData = {
 export type TranslateArticleResult = {
   contentHtml: string | null;
   locale: Extract<LocaleCode, "en" | "zh">;
+  reason?: string;
   seoDescription: string | null;
   seoTitle: string | null;
   skipped: boolean;
@@ -147,6 +148,7 @@ export type TranslateArticleResult = {
 
 export type TranslateArticleResponse = {
   articleId: number;
+  provider: "gemini";
   results: TranslateArticleResult[];
   sourceLocale: "vi";
 };

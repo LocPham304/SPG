@@ -24,6 +24,7 @@ import {
 } from './dto/translate-article-response.dto';
 import {
   ARTICLE_TRANSLATION_PROVIDER,
+  type TranslationArticleContent,
   type TranslationProvider,
   TranslationProviderError,
   type TranslationTargetLocale,
@@ -32,15 +33,6 @@ import {
 type RequestInfo = {
   ipAddress?: string | null;
   userAgent?: string | null;
-};
-
-type TranslatedArticleFields = {
-  title: string;
-  summary: string;
-  contentHtml: string;
-  seoTitle: string | null;
-  seoDescription: string | null;
-  thumbnailAltText: string | null;
 };
 
 const TARGET_LOCALES: TranslationTargetLocale[] = ['en', 'zh'];
@@ -87,44 +79,98 @@ export class TranslationsService {
     const targets = dto.targets ?? TARGET_LOCALES;
     const results: TranslateArticleResultDto[] = [];
     const translatedTargets: TranslationTargetLocale[] = [];
+    const targetsToTranslate: TranslationTargetLocale[] = [];
+    const targetEntities = new Map<
+      TranslationTargetLocale,
+      NewsArticleTranslationEntity
+    >();
 
     for (const targetLocale of targets) {
       const target = await this.getOrCreateTargetTranslation(
         article,
         targetLocale,
       );
+      targetEntities.set(targetLocale, target);
 
       if (!dto.overwrite && this.shouldSkipTranslation(target)) {
         results.push(this.toPreviewResult(target, true));
         continue;
       }
 
-      try {
-        const translated = await this.translateFields(vietnamese, targetLocale);
-        const slug = await this.createUniqueSlug(
-          article.id,
-          targetLocale,
-          translated.title,
-          target.id,
-        );
+      targetsToTranslate.push(targetLocale);
+    }
 
-        Object.assign(target, translated, {
-          slug,
-          sourceVersion: article.sourceVersion,
-          translationStatus: TranslationStatus.AutoTranslated,
-          translationError: null,
-          translatedAt: new Date(),
-        });
-        const savedTarget = await this.translationsRepository.save(target);
-        results.push(this.toPreviewResult(savedTarget, false));
-        translatedTargets.push(targetLocale);
+    if (targetsToTranslate.length > 0) {
+      let translatedByLocale: Partial<
+        Record<TranslationTargetLocale, TranslationArticleContent>
+      >;
+
+      try {
+        translatedByLocale = await this.translationProvider.translateArticle(
+          this.toProviderSource(vietnamese),
+          targetsToTranslate,
+        );
       } catch (error: unknown) {
         const safeError = this.getSafeTranslationError(error);
-        target.sourceVersion = article.sourceVersion;
-        target.translationStatus = TranslationStatus.Failed;
-        target.translationError = safeError;
-        await this.translationsRepository.save(target);
+        await Promise.all(
+          targetsToTranslate.map(async (targetLocale) => {
+            const target = targetEntities.get(targetLocale);
+            if (!target) return;
+            target.sourceVersion = article.sourceVersion;
+            target.translationStatus = TranslationStatus.Failed;
+            target.translationError = safeError;
+            await this.translationsRepository.save(target);
+          }),
+        );
         throw new SafeHttpException(safeError, HttpStatus.BAD_GATEWAY);
+      }
+
+      for (const targetLocale of targetsToTranslate) {
+        const target = targetEntities.get(targetLocale);
+        const translated = translatedByLocale[targetLocale];
+        if (!target) {
+          throw new SafeHttpException(
+            'Không tìm thấy bản dịch đích.',
+            HttpStatus.BAD_GATEWAY,
+          );
+        }
+
+        try {
+          if (!translated) {
+            throw new TranslationProviderError(
+              'Gemini không trả về đầy đủ bản dịch yêu cầu.',
+            );
+          }
+
+          const sanitizedTranslation = {
+            ...translated,
+            contentHtml: this.sanitizeTranslatedHtml(translated.contentHtml),
+          };
+          const slug = await this.createUniqueSlug(
+            article.id,
+            targetLocale,
+            sanitizedTranslation.title,
+            target.id,
+          );
+
+          Object.assign(target, sanitizedTranslation, {
+            slug,
+            sourceVersion: article.sourceVersion,
+            translationStatus: TranslationStatus.AutoTranslated,
+            translationError: null,
+            translatedAt: new Date(),
+          });
+          const savedTarget = await this.translationsRepository.save(target);
+          results.push(this.toPreviewResult(savedTarget, false));
+          translatedTargets.push(targetLocale);
+        } catch (error: unknown) {
+          const safeError = this.getSafeTranslationError(error);
+          target.sourceVersion = article.sourceVersion;
+          target.translationStatus = TranslationStatus.Failed;
+          target.translationError = safeError;
+          await this.translationsRepository.save(target);
+          throw new SafeHttpException(safeError, HttpStatus.BAD_GATEWAY);
+        }
       }
     }
 
@@ -137,7 +183,7 @@ export class TranslationsService {
         title: 'Dịch tự động bài viết',
         description: `Dịch bài viết sang ${translatedTargets
           .map((locale) => (locale === 'en' ? 'English' : '中文'))
-          .join('/')}`,
+          .join('/')} bằng Gemini`,
         changes: {
           sourceLocale: LocaleCode.Vietnamese,
           targets: translatedTargets,
@@ -149,9 +195,15 @@ export class TranslationsService {
       });
     }
 
+    results.sort(
+      (left, right) =>
+        targets.indexOf(left.locale) - targets.indexOf(right.locale),
+    );
+
     return {
       articleId: article.id,
       sourceLocale: LocaleCode.Vietnamese,
+      provider: this.translationProvider.name,
       results,
     };
   }
@@ -165,6 +217,7 @@ export class TranslationsService {
 
     if (
       !translation?.title?.trim() ||
+      !translation.slug?.trim() ||
       !translation.summary?.trim() ||
       !translation.contentHtml?.trim()
     ) {
@@ -225,55 +278,16 @@ export class TranslationsService {
     return hasContent && translation.translatedAt === null;
   }
 
-  private async translateFields(
+  private toProviderSource(
     source: NewsArticleTranslationEntity,
-    targetLocale: TranslationTargetLocale,
-  ): Promise<TranslatedArticleFields> {
-    const plainFields = [
-      ['title', source.title as string],
-      ['summary', source.summary as string],
-      ['seoTitle', source.seoTitle],
-      ['seoDescription', source.seoDescription],
-      ['thumbnailAltText', source.thumbnailAltText],
-    ] as const;
-    const populatedPlainFields = plainFields.filter(
-      (entry): entry is readonly [(typeof entry)[0], string] =>
-        typeof entry[1] === 'string' && entry[1].trim().length > 0,
-    );
-    const translatedPlainValues = await this.translationProvider.translateTexts(
-      populatedPlainFields.map(([, value]) => value),
-      targetLocale,
-      'plain',
-    );
-    const translatedPlainFields = Object.fromEntries(
-      populatedPlainFields.map(([field], index) => [
-        field,
-        translatedPlainValues[index],
-      ]),
-    ) as Partial<Omit<TranslatedArticleFields, 'contentHtml'>>;
-    const [translatedHtml] = await this.translationProvider.translateTexts(
-      [source.contentHtml as string],
-      targetLocale,
-      'html',
-    );
-
-    if (
-      !translatedPlainFields.title?.trim() ||
-      !translatedPlainFields.summary?.trim() ||
-      !translatedHtml?.trim()
-    ) {
-      throw new TranslationProviderError(
-        'Dịch tự động trả về nội dung không đầy đủ.',
-      );
-    }
-
+  ): TranslationArticleContent {
     return {
-      title: translatedPlainFields.title.trim(),
-      summary: translatedPlainFields.summary.trim(),
-      contentHtml: this.sanitizeTranslatedHtml(translatedHtml),
-      seoTitle: translatedPlainFields.seoTitle?.trim() || null,
-      seoDescription: translatedPlainFields.seoDescription?.trim() || null,
-      thumbnailAltText: translatedPlainFields.thumbnailAltText?.trim() || null,
+      title: source.title as string,
+      summary: source.summary as string,
+      contentHtml: source.contentHtml as string,
+      seoTitle: source.seoTitle,
+      seoDescription: source.seoDescription,
+      thumbnailAltText: source.thumbnailAltText,
     };
   }
 
@@ -398,6 +412,7 @@ export class TranslationsService {
       locale: translation.locale === LocaleCode.English ? 'en' : 'zh',
       status: translation.translationStatus,
       skipped,
+      ...(skipped ? { reason: 'Bản dịch đã được chỉnh sửa thủ công' } : {}),
       title: translation.title,
       slug: translation.slug,
       summary: translation.summary,

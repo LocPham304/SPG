@@ -88,6 +88,7 @@ const localeLabels: Record<LocaleCode, string> = {
 };
 const translationStatusLabels: Partial<Record<TranslationStatus, string>> = {
   queued: "Chờ dịch",
+  translating: "Đang dịch",
   auto_translated: "Dịch tự động",
   reviewed: "Đã chỉnh sửa",
   outdated: "Có thể đã cũ",
@@ -459,10 +460,10 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
     } catch (error: unknown) {
       if (error instanceof ApiError && error.status === 403) {
         setIsForbidden(true);
-      } else if (error instanceof ApiError) {
-        setApiError(error.message);
+      } else if (error instanceof ApiError && error.status === 503) {
+        setApiError("Dịch tự động chưa được cấu hình");
       } else {
-        setApiError("Đã có lỗi xảy ra. Vui lòng thử lại.");
+        setApiError("Không thể dịch tự động. Vui lòng thử lại.");
       }
 
       try {

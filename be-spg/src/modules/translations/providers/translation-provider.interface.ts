@@ -3,15 +3,28 @@ export const ARTICLE_TRANSLATION_PROVIDER = Symbol(
 );
 
 export type TranslationTargetLocale = 'en' | 'zh';
-export type TranslationTextType = 'plain' | 'html';
+
+export type TranslationArticleContent = {
+  title: string;
+  summary: string;
+  contentHtml: string;
+  seoTitle: string | null;
+  seoDescription: string | null;
+  thumbnailAltText: string | null;
+};
+
+export type TranslationProviderResult = Record<
+  TranslationTargetLocale,
+  TranslationArticleContent
+>;
 
 export interface TranslationProvider {
+  readonly name: string;
   isConfigured(): boolean;
-  translateTexts(
-    texts: string[],
-    target: TranslationTargetLocale,
-    textType: TranslationTextType,
-  ): Promise<string[]>;
+  translateArticle(
+    source: TranslationArticleContent,
+    targets: TranslationTargetLocale[],
+  ): Promise<Partial<TranslationProviderResult>>;
 }
 
 export class TranslationProviderError extends Error {

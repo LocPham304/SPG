@@ -21,6 +21,7 @@ import {
   ARTICLE_TRANSLATION_PROVIDER,
   type TranslationProvider,
   TranslationProviderError,
+  type TranslationProviderResult,
 } from '../src/modules/translations/providers/translation-provider.interface';
 
 jest.setTimeout(45_000);
@@ -77,24 +78,33 @@ describe('Articles API (e2e)', () => {
   const articleIds: number[] = [];
   const testStartedAt = new Date();
   const translationProviderMock: TranslationProvider = {
+    name: 'gemini',
     isConfigured: jest.fn(() => translationProviderConfigured),
-    translateTexts: jest.fn((texts, target, textType) => {
+    translateArticle: jest.fn((source, targets) => {
       if (translationProviderShouldFail) {
         return Promise.reject(
-          new TranslationProviderError(
-            'DeepL API không thể xử lý yêu cầu (HTTP 429).',
-            429,
-          ),
+          new TranslationProviderError('Gemini trả về JSON không hợp lệ.'),
         );
       }
 
-      return Promise.resolve(
-        texts.map((text) =>
-          textType === 'html'
-            ? `<p>AUTO ${target.toUpperCase()}</p>${text}<script>secret-key-marker</script>`
-            : `AUTO ${target.toUpperCase()} ${text}`,
-        ),
-      );
+      const result: Partial<TranslationProviderResult> = {};
+      for (const target of targets) {
+        result[target] = {
+          title: `AUTO ${target.toUpperCase()} ${source.title}`,
+          summary: `AUTO ${target.toUpperCase()} ${source.summary}`,
+          contentHtml: `<p>AUTO ${target.toUpperCase()}</p>${source.contentHtml}<script>secret-key-marker</script>`,
+          seoTitle: source.seoTitle
+            ? `AUTO ${target.toUpperCase()} ${source.seoTitle}`
+            : null,
+          seoDescription: source.seoDescription
+            ? `AUTO ${target.toUpperCase()} ${source.seoDescription}`
+            : null,
+          thumbnailAltText: source.thumbnailAltText
+            ? `AUTO ${target.toUpperCase()} ${source.thumbnailAltText}`
+            : null,
+        };
+      }
+      return Promise.resolve(result);
     }),
   };
 
@@ -265,6 +275,7 @@ describe('Articles API (e2e)', () => {
       expect.objectContaining({
         articleId: adminArticleId,
         sourceLocale: LocaleCode.Vietnamese,
+        provider: 'gemini',
       }),
     );
     expect(results).toHaveLength(2);
@@ -401,7 +412,7 @@ describe('Articles API (e2e)', () => {
     }
   });
 
-  it('stores a safe failed status when the translation provider rejects', async () => {
+  it('stores a safe failed status when Gemini returns invalid JSON', async () => {
     translationProviderShouldFail = true;
     try {
       const response = await request(app.getHttpServer())
@@ -410,7 +421,7 @@ describe('Articles API (e2e)', () => {
         .send({ targets: [LocaleCode.Chinese] })
         .expect(502);
       const responseBody = JSON.stringify(response.body);
-      expect(responseBody).toContain('HTTP 429');
+      expect(responseBody).toContain('JSON không hợp lệ');
       expect(responseBody).not.toContain('TRANSLATION_API_KEY');
       expect(responseBody).not.toContain('secret-key-marker');
 
@@ -424,7 +435,7 @@ describe('Articles API (e2e)', () => {
         TranslationStatus.Failed,
       );
       expect(failedTranslation.translationError).toBe(
-        'DeepL API không thể xử lý yêu cầu (HTTP 429).',
+        'Gemini trả về JSON không hợp lệ.',
       );
     } finally {
       translationProviderShouldFail = false;
@@ -605,6 +616,7 @@ describe('Articles API (e2e)', () => {
         locale: LocaleCode.English,
         status: TranslationStatus.Reviewed,
         skipped: true,
+        reason: 'Bản dịch đã được chỉnh sửa thủ công',
         title: 'Employee article',
       }),
     );

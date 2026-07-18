@@ -83,6 +83,10 @@ class EnvironmentVariables {
   @IsOptional()
   @IsString()
   TRANSLATION_API_KEY?: string;
+
+  @IsOptional()
+  @IsString()
+  TRANSLATION_MODEL?: string;
 }
 
 export function validateEnvironment(
