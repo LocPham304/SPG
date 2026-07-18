@@ -14,6 +14,7 @@ import { RolesGuard } from './common/guards/roles.guard';
 import { DatabaseModule } from './database/database.module';
 import { ActivityLogsModule } from './modules/activity-logs/activity-logs.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { CategoriesModule } from './modules/categories/categories.module';
 import { HealthModule } from './modules/health/health.module';
 import { UsersModule } from './modules/users/users.module';
 
@@ -42,6 +43,7 @@ import { UsersModule } from './modules/users/users.module';
     DatabaseModule,
     ActivityLogsModule,
     AuthModule,
+    CategoriesModule,
     HealthModule,
     UsersModule,
   ],
