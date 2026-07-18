@@ -2,28 +2,20 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { ArticleForm } from "@/components/admin/ArticleForm";
-import { adminArticles } from "@/data/admin";
 
 type PageProps = {
   params: Promise<{ id: string }>;
 };
 
-export async function generateMetadata({
-  params,
-}: PageProps): Promise<Metadata> {
-  const { id } = await params;
-  const article = adminArticles.find((item) => item.id === id);
-
-  return {
-    title: article ? `Chỉnh sửa: ${article.title}` : "Không tìm thấy bài viết",
-  };
-}
+export const metadata: Metadata = {
+  title: "Chỉnh sửa bài viết",
+};
 
 export default async function EditAdminArticlePage({ params }: PageProps) {
   const { id } = await params;
-  const article = adminArticles.find((item) => item.id === id);
+  const articleId = Number(id);
 
-  if (!article) notFound();
+  if (!Number.isInteger(articleId) || articleId < 1) notFound();
 
-  return <ArticleForm article={article} />;
+  return <ArticleForm articleId={articleId} />;
 }
