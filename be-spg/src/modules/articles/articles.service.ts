@@ -28,6 +28,7 @@ import {
   type ArticleCategoryResponse,
   type ArticleThumbnailResponse,
 } from './dto/article-public-response.dto';
+import { ArticleTranslationInputDto } from './dto/article-translation-input.dto';
 import { CreateArticleDto } from './dto/create-article.dto';
 import { QueryAdminArticlesDto } from './dto/query-admin-articles.dto';
 import { QueryPublicArticlesDto } from './dto/query-public-articles.dto';
@@ -45,7 +46,13 @@ const DUPLICATE_SLUG = 'Slug đã tồn tại trong ngôn ngữ này.';
 const VALID_PUBLIC_TRANSLATION_STATUSES = [
   TranslationStatus.Original,
   TranslationStatus.AutoTranslated,
+  TranslationStatus.Reviewed,
 ];
+const ARTICLE_LOCALES = [
+  LocaleCode.Vietnamese,
+  LocaleCode.English,
+  LocaleCode.Chinese,
+] as const;
 
 type RequestInfo = {
   ipAddress?: string | null;
@@ -58,6 +65,17 @@ type ArticleLogOptions = {
   description: string;
   changes?: Record<string, unknown>;
   requestInfo: RequestInfo;
+};
+
+type TranslationValues = {
+  locale: LocaleCode;
+  title: string | null;
+  slug: string | null;
+  summary: string | null;
+  contentHtml: string | null;
+  seoTitle: string | null;
+  seoDescription: string | null;
+  thumbnailAltText: string | null;
 };
 
 @Injectable()
@@ -81,6 +99,23 @@ export class ArticlesService {
       })
       .andWhere('article.deletedAt IS NULL')
       .andWhere('article.publishedAt <= CURRENT_TIMESTAMP')
+      .andWhere(
+        `EXISTS (
+          SELECT 1
+          FROM news_article_translations vi_translation
+          WHERE vi_translation.article_id = article.id
+            AND vi_translation.locale = :vietnameseLocale
+            AND vi_translation.translation_status = :originalStatus
+            AND vi_translation.title IS NOT NULL
+            AND vi_translation.slug IS NOT NULL
+            AND vi_translation.summary IS NOT NULL
+            AND vi_translation.content_html IS NOT NULL
+        )`,
+        {
+          vietnameseLocale: LocaleCode.Vietnamese,
+          originalStatus: TranslationStatus.Original,
+        },
+      )
       .andWhere(
         `EXISTS (
           SELECT 1
@@ -156,6 +191,23 @@ export class ArticlesService {
       })
       .andWhere('article.deletedAt IS NULL')
       .andWhere('article.publishedAt <= CURRENT_TIMESTAMP')
+      .andWhere(
+        `EXISTS (
+          SELECT 1
+          FROM news_article_translations vi_translation
+          WHERE vi_translation.article_id = article.id
+            AND vi_translation.locale = :vietnameseLocale
+            AND vi_translation.translation_status = :originalStatus
+            AND vi_translation.title IS NOT NULL
+            AND vi_translation.slug IS NOT NULL
+            AND vi_translation.summary IS NOT NULL
+            AND vi_translation.content_html IS NOT NULL
+        )`,
+        {
+          vietnameseLocale: LocaleCode.Vietnamese,
+          originalStatus: TranslationStatus.Original,
+        },
+      )
       .andWhere(
         `EXISTS (
           SELECT 1
@@ -282,18 +334,25 @@ export class ArticlesService {
       throw new ForbiddenException('Chỉ admin được đặt bài viết nổi bật.');
     }
 
-    const contentHtml = this.sanitizeArticleHtml(dto.contentHtml);
+    const translations = this.prepareCreateTranslations(dto);
+    const vietnameseTranslation = translations.find(
+      (translation) => translation.locale === LocaleCode.Vietnamese,
+    ) as TranslationValues;
     let articleId = 0;
 
     try {
       await this.dataSource.transaction(async (manager) => {
         await this.ensureCategory(manager, dto.categoryId);
         await this.ensureThumbnail(manager, dto.thumbnailId);
-        await this.ensureSlugAvailable(
-          manager,
-          LocaleCode.Vietnamese,
-          dto.slug,
-        );
+        for (const translation of translations) {
+          if (translation.slug) {
+            await this.ensureSlugAvailable(
+              manager,
+              translation.locale,
+              translation.slug,
+            );
+          }
+        }
 
         const isPublished = dto.status === ArticleStatus.Published;
         const now = isPublished ? new Date() : null;
@@ -312,46 +371,27 @@ export class ArticlesService {
         const savedArticle = await manager.save(article);
         articleId = savedArticle.id;
 
-        const translations = [
+        const translationEntities = translations.map((translation) =>
           manager.create(NewsArticleTranslationEntity, {
             articleId,
-            locale: LocaleCode.Vietnamese,
+            ...translation,
             sourceVersion: 1,
-            title: dto.title,
-            slug: dto.slug,
-            summary: dto.summary,
-            contentHtml,
-            seoTitle: dto.seoTitle ?? null,
-            seoDescription: dto.seoDescription ?? null,
-            thumbnailAltText: dto.thumbnailAltText ?? null,
-            translationStatus: TranslationStatus.Original,
+            translationStatus:
+              translation.locale === LocaleCode.Vietnamese
+                ? TranslationStatus.Original
+                : this.hasTranslationContent(translation)
+                  ? TranslationStatus.Reviewed
+                  : TranslationStatus.Queued,
             translationError: null,
             translatedAt: null,
           }),
-          ...[LocaleCode.English, LocaleCode.Chinese].map((locale) =>
-            manager.create(NewsArticleTranslationEntity, {
-              articleId,
-              locale,
-              sourceVersion: 1,
-              title: null,
-              slug: null,
-              summary: null,
-              contentHtml: null,
-              seoTitle: null,
-              seoDescription: null,
-              thumbnailAltText: null,
-              translationStatus: TranslationStatus.Queued,
-              translationError: null,
-              translatedAt: null,
-            }),
-          ),
-        ];
-        await manager.save(translations);
+        );
+        await manager.save(translationEntities);
 
         await this.recordArticleLog(manager, savedArticle, currentUser, {
           action: 'article.created',
-          title: dto.title,
-          description: `Đã tạo bài viết "${dto.title}".`,
+          title: vietnameseTranslation.title as string,
+          description: `Đã tạo bài viết "${vietnameseTranslation.title}".`,
           changes: {
             status: dto.status,
             categoryId: dto.categoryId,
@@ -363,8 +403,8 @@ export class ArticlesService {
         if (isPublished) {
           await this.recordArticleLog(manager, savedArticle, currentUser, {
             action: 'article.published',
-            title: dto.title,
-            description: `Đã đăng bài viết "${dto.title}".`,
+            title: vietnameseTranslation.title as string,
+            description: `Đã đăng bài viết "${vietnameseTranslation.title}".`,
             changes: { from: null, to: ArticleStatus.Published },
             requestInfo,
           });
@@ -387,6 +427,7 @@ export class ArticlesService {
       await this.dataSource.transaction(async (manager) => {
         const article = await this.findArticleForMutation(manager, id);
         this.articlePolicy.assertCanManage(currentUser, article, 'update');
+        this.ensureTranslationEntities(manager, article);
 
         if (dto.categoryId !== undefined) {
           await this.ensureCategory(manager, dto.categoryId);
@@ -402,61 +443,73 @@ export class ArticlesService {
           article.sourceUrl = dto.sourceUrl || null;
         }
 
-        const viTranslation = article.translations.find(
-          (translation) => translation.locale === LocaleCode.Vietnamese,
+        const translationInputs = this.getUpdateTranslationInputs(dto);
+        const preparedUpdates = translationInputs.map((input) => {
+          const entity = article.translations.find(
+            (translation) => translation.locale === input.locale,
+          ) as NewsArticleTranslationEntity;
+          const values = this.mergeTranslationValues(entity, input);
+          this.validateTranslationValues(values);
+          return {
+            changed: this.translationValuesChanged(entity, values),
+            entity,
+            values,
+          };
+        });
+        const vietnameseUpdate = preparedUpdates.find(
+          ({ entity }) => entity.locale === LocaleCode.Vietnamese,
         );
-        if (!viTranslation) {
-          throw new BadRequestException('Bài viết chưa có bản tiếng Việt.');
+        const sourceChanged = Boolean(vietnameseUpdate?.changed);
+
+        for (const { entity, values } of preparedUpdates) {
+          if (values.slug && values.slug !== entity.slug) {
+            await this.ensureSlugAvailable(
+              manager,
+              values.locale,
+              values.slug,
+              entity.id || undefined,
+            );
+          }
         }
 
-        if (dto.slug !== undefined && dto.slug !== viTranslation.slug) {
-          await this.ensureSlugAvailable(
-            manager,
-            LocaleCode.Vietnamese,
-            dto.slug,
-            viTranslation.id,
-          );
-        }
-
-        const sourceChanged = this.hasVietnameseContentChange(dto);
         if (sourceChanged) {
           article.sourceVersion += 1;
-          viTranslation.sourceVersion = article.sourceVersion;
-          viTranslation.title = dto.title ?? viTranslation.title;
-          viTranslation.slug = dto.slug ?? viTranslation.slug;
-          viTranslation.summary = dto.summary ?? viTranslation.summary;
-          viTranslation.contentHtml =
-            dto.contentHtml !== undefined
-              ? this.sanitizeArticleHtml(dto.contentHtml)
-              : viTranslation.contentHtml;
-          if (dto.seoTitle !== undefined) {
-            viTranslation.seoTitle = dto.seoTitle || null;
-          }
-          if (dto.seoDescription !== undefined) {
-            viTranslation.seoDescription = dto.seoDescription || null;
-          }
-          if (dto.thumbnailAltText !== undefined) {
-            viTranslation.thumbnailAltText = dto.thumbnailAltText || null;
-          }
-          viTranslation.translationStatus = TranslationStatus.Original;
-          viTranslation.translationError = null;
-          await manager.save(viTranslation);
-
-          const translatedVersions = article.translations.filter(
-            (translation) => translation.locale !== LocaleCode.Vietnamese,
-          );
-          translatedVersions.forEach((translation) => {
-            translation.translationStatus = TranslationStatus.Outdated;
-            translation.translationError = null;
-          });
-          await manager.save(translatedVersions);
+          article.translations
+            .filter(
+              (translation) => translation.locale !== LocaleCode.Vietnamese,
+            )
+            .forEach((translation) => {
+              translation.translationStatus = this.hasTranslationContent(
+                translation,
+              )
+                ? TranslationStatus.Outdated
+                : TranslationStatus.Queued;
+              translation.translationError = null;
+            });
         }
+
+        for (const { changed, entity, values } of preparedUpdates) {
+          Object.assign(entity, values);
+          entity.translationError = null;
+
+          if (entity.locale === LocaleCode.Vietnamese) {
+            entity.sourceVersion = article.sourceVersion;
+            entity.translationStatus = TranslationStatus.Original;
+          } else if (changed) {
+            entity.sourceVersion = article.sourceVersion;
+            entity.translationStatus = this.hasTranslationContent(values)
+              ? TranslationStatus.Reviewed
+              : TranslationStatus.Queued;
+          }
+        }
+        await manager.save(article.translations);
 
         article.updatedBy = currentUser.id;
         await manager.save(article);
+        const vietnameseTranslation = this.getVietnameseTranslation(article);
         await this.recordArticleLog(manager, article, currentUser, {
           action: 'article.updated',
-          title: viTranslation.title ?? `Bài viết #${article.id}`,
+          title: vietnameseTranslation.title ?? `Bài viết #${article.id}`,
           description: `Đã cập nhật bài viết #${article.id}.`,
           changes: {
             fields: Object.keys(dto),
@@ -704,6 +757,226 @@ export class ArticlesService {
     if (existing) throw new ConflictException(DUPLICATE_SLUG);
   }
 
+  private prepareCreateTranslations(
+    dto: CreateArticleDto,
+  ): TranslationValues[] {
+    const inputs = [...(dto.translations ?? [])];
+    const hasLegacyVietnameseInput = [
+      'title',
+      'slug',
+      'summary',
+      'contentHtml',
+      'seoTitle',
+      'seoDescription',
+      'thumbnailAltText',
+    ].some((field) => Object.prototype.hasOwnProperty.call(dto, field));
+
+    if (
+      hasLegacyVietnameseInput &&
+      !inputs.some((input) => input.locale === LocaleCode.Vietnamese)
+    ) {
+      inputs.push({
+        locale: LocaleCode.Vietnamese,
+        title: dto.title,
+        slug: dto.slug,
+        summary: dto.summary,
+        contentHtml: dto.contentHtml,
+        seoTitle: dto.seoTitle,
+        seoDescription: dto.seoDescription,
+        thumbnailAltText: dto.thumbnailAltText,
+      });
+    }
+
+    this.assertUniqueTranslationLocales(inputs);
+
+    return ARTICLE_LOCALES.map((locale) => {
+      const input = inputs.find((item) => item.locale === locale);
+      const values = this.toTranslationValues(locale, input);
+      this.validateTranslationValues(values);
+      return values;
+    });
+  }
+
+  private getUpdateTranslationInputs(
+    dto: UpdateArticleDto,
+  ): ArticleTranslationInputDto[] {
+    const inputs = [...(dto.translations ?? [])];
+    const legacyFields = [
+      'title',
+      'slug',
+      'summary',
+      'contentHtml',
+      'seoTitle',
+      'seoDescription',
+      'thumbnailAltText',
+    ] as const;
+    const hasLegacyVietnameseInput = legacyFields.some((field) =>
+      Object.prototype.hasOwnProperty.call(dto, field),
+    );
+
+    if (
+      hasLegacyVietnameseInput &&
+      !inputs.some((input) => input.locale === LocaleCode.Vietnamese)
+    ) {
+      inputs.push({
+        locale: LocaleCode.Vietnamese,
+        title: dto.title,
+        slug: dto.slug,
+        summary: dto.summary,
+        contentHtml: dto.contentHtml,
+        seoTitle: dto.seoTitle,
+        seoDescription: dto.seoDescription,
+        thumbnailAltText: dto.thumbnailAltText,
+      });
+    }
+
+    this.assertUniqueTranslationLocales(inputs);
+    return inputs;
+  }
+
+  private assertUniqueTranslationLocales(
+    inputs: ArticleTranslationInputDto[],
+  ): void {
+    const locales = inputs.map((input) => input.locale);
+    if (new Set(locales).size !== locales.length) {
+      throw new BadRequestException(
+        'Mỗi ngôn ngữ chỉ được xuất hiện một lần trong translations.',
+      );
+    }
+  }
+
+  private toTranslationValues(
+    locale: LocaleCode,
+    input?: ArticleTranslationInputDto,
+  ): TranslationValues {
+    return {
+      locale,
+      title: input?.title ?? null,
+      slug: input?.slug ?? null,
+      summary: input?.summary ?? null,
+      contentHtml: input?.contentHtml
+        ? this.sanitizeArticleHtml(input.contentHtml)
+        : null,
+      seoTitle: input?.seoTitle ?? null,
+      seoDescription: input?.seoDescription ?? null,
+      thumbnailAltText: input?.thumbnailAltText ?? null,
+    };
+  }
+
+  private mergeTranslationValues(
+    entity: NewsArticleTranslationEntity,
+    input: ArticleTranslationInputDto,
+  ): TranslationValues {
+    return {
+      locale: entity.locale,
+      title: input.title !== undefined ? input.title : entity.title,
+      slug: input.slug !== undefined ? input.slug : entity.slug,
+      summary: input.summary !== undefined ? input.summary : entity.summary,
+      contentHtml:
+        input.contentHtml !== undefined
+          ? input.contentHtml
+            ? this.sanitizeArticleHtml(input.contentHtml)
+            : null
+          : entity.contentHtml,
+      seoTitle: input.seoTitle !== undefined ? input.seoTitle : entity.seoTitle,
+      seoDescription:
+        input.seoDescription !== undefined
+          ? input.seoDescription
+          : entity.seoDescription,
+      thumbnailAltText:
+        input.thumbnailAltText !== undefined
+          ? input.thumbnailAltText
+          : entity.thumbnailAltText,
+    };
+  }
+
+  private validateTranslationValues(values: TranslationValues): void {
+    const requiresCompleteContent =
+      values.locale === LocaleCode.Vietnamese ||
+      this.hasTranslationContent(values);
+    if (!requiresCompleteContent) return;
+
+    if (
+      !values.title?.trim() ||
+      !values.slug?.trim() ||
+      !values.summary?.trim() ||
+      !values.contentHtml?.trim()
+    ) {
+      throw new BadRequestException(
+        `Bản ${values.locale} phải có đủ title, slug, summary và contentHtml.`,
+      );
+    }
+  }
+
+  private hasTranslationContent(
+    translation: TranslationValues | NewsArticleTranslationEntity,
+  ): boolean {
+    return [
+      translation.title,
+      translation.slug,
+      translation.summary,
+      translation.contentHtml,
+      translation.seoTitle,
+      translation.seoDescription,
+      translation.thumbnailAltText,
+    ].some((value) => Boolean(value?.trim()));
+  }
+
+  private translationValuesChanged(
+    entity: NewsArticleTranslationEntity,
+    values: TranslationValues,
+  ): boolean {
+    return [
+      'title',
+      'slug',
+      'summary',
+      'contentHtml',
+      'seoTitle',
+      'seoDescription',
+      'thumbnailAltText',
+    ].some(
+      (field) =>
+        entity[field as keyof NewsArticleTranslationEntity] !==
+        values[field as keyof TranslationValues],
+    );
+  }
+
+  private ensureTranslationEntities(
+    manager: EntityManager,
+    article: NewsArticleEntity,
+  ): void {
+    for (const locale of ARTICLE_LOCALES) {
+      if (
+        article.translations.some(
+          (translation) => translation.locale === locale,
+        )
+      ) {
+        continue;
+      }
+
+      article.translations.push(
+        manager.create(NewsArticleTranslationEntity, {
+          articleId: article.id,
+          locale,
+          sourceVersion: article.sourceVersion,
+          title: null,
+          slug: null,
+          summary: null,
+          contentHtml: null,
+          seoTitle: null,
+          seoDescription: null,
+          thumbnailAltText: null,
+          translationStatus:
+            locale === LocaleCode.Vietnamese
+              ? TranslationStatus.Original
+              : TranslationStatus.Queued,
+          translationError: null,
+          translatedAt: null,
+        }),
+      );
+    }
+  }
+
   private sanitizeArticleHtml(content: string): string {
     const sanitized = sanitizeHtml(content, {
       allowedTags: [
@@ -751,18 +1024,6 @@ export class ArticlesService {
       );
     }
     return sanitized;
-  }
-
-  private hasVietnameseContentChange(dto: UpdateArticleDto): boolean {
-    return [
-      'title',
-      'slug',
-      'summary',
-      'contentHtml',
-      'seoTitle',
-      'seoDescription',
-      'thumbnailAltText',
-    ].some((field) => Object.prototype.hasOwnProperty.call(dto, field));
   }
 
   private validatePublishable(translation: NewsArticleTranslationEntity): void {
@@ -823,12 +1084,19 @@ export class ArticlesService {
   private selectAdminTranslation(
     article: NewsArticleEntity,
     requestedLocale: LocaleCode,
-  ): NewsArticleTranslationEntity {
+  ): NewsArticleTranslationEntity | null {
     const requested = article.translations.find(
       (translation) =>
         translation.locale === requestedLocale && translation.title,
     );
-    return requested ?? this.getVietnameseTranslation(article);
+    const vietnamese = article.translations.find(
+      (translation) =>
+        translation.locale === LocaleCode.Vietnamese && translation.title,
+    );
+    const firstAvailable = article.translations.find(
+      (translation) => translation.title,
+    );
+    return requested ?? vietnamese ?? firstAvailable ?? null;
   }
 
   private toPublicResponse(
@@ -883,13 +1151,16 @@ export class ArticlesService {
       isFeatured: article.isFeatured,
       sourceVersion: article.sourceVersion,
       sourceUrl: article.sourceUrl,
-      title: translation.title,
-      summary: translation.summary,
-      locale: translation.locale,
-      category: this.toCategoryResponse(article.category, translation.locale),
+      title: translation?.title ?? null,
+      summary: translation?.summary ?? null,
+      locale: translation?.locale ?? requestedLocale,
+      category: this.toCategoryResponse(
+        article.category,
+        translation?.locale ?? requestedLocale,
+      ),
       thumbnail: this.toThumbnailResponse(
         article.thumbnail,
-        translation.thumbnailAltText,
+        translation?.thumbnailAltText ?? null,
       ),
       createdBy: this.toSafeUser(
         article.createdByUser,

@@ -26,6 +26,9 @@ const EMPLOYEE_EMAIL = 'articles.employee-fixture@example.com';
 const EMPLOYEE_PASSWORD = 'Employee@123';
 const ADMIN_SLUG = 'e2e-articles-admin-draft';
 const EMPLOYEE_SLUG = 'e2e-articles-employee-draft';
+const MANUAL_EN_SLUG = 'e2e-articles-manual-en';
+const MANUAL_ZH_SLUG = 'e2e-articles-manual-zh';
+const REVIEWED_EN_SLUG = 'e2e-articles-employee-en';
 const INCOMPLETE_SLUG = 'e2e-articles-incomplete';
 const TEST_SLUG_PREFIX = 'e2e-articles-';
 
@@ -241,6 +244,83 @@ describe('Articles API (e2e)', () => {
     employeeArticleId = body.id as number;
     articleIds.push(employeeArticleId);
     expect(asRecord(body.createdBy).id).toBe(employeeId);
+    const translations = asArray(body.translations).map(asRecord);
+    expect(translations).toHaveLength(3);
+    expect(
+      translations
+        .filter((item) => item.locale !== LocaleCode.Vietnamese)
+        .every((item) => item.translationStatus === TranslationStatus.Queued),
+    ).toBe(true);
+  });
+
+  it('marks manually supplied English as reviewed on create', async () => {
+    const response = await request(app.getHttpServer())
+      .post('/api/v1/admin/articles')
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send({
+        categoryId,
+        translations: [
+          {
+            locale: LocaleCode.Vietnamese,
+            title: 'Bài viết có bản tiếng Anh',
+            slug: 'e2e-articles-manual-en-vi',
+            summary: 'Tóm tắt tiếng Việt.',
+            contentHtml: '<p>Nội dung tiếng Việt.</p>',
+          },
+          {
+            locale: LocaleCode.English,
+            title: 'Article with English',
+            slug: MANUAL_EN_SLUG,
+            summary: 'English summary.',
+            contentHtml: '<p>English content.</p>',
+          },
+        ],
+      })
+      .expect(201);
+    const body = asRecord(response.body as unknown);
+    articleIds.push(body.id as number);
+    const translations = asArray(body.translations).map(asRecord);
+    expect(
+      translations.find((item) => item.locale === LocaleCode.English)
+        ?.translationStatus,
+    ).toBe(TranslationStatus.Reviewed);
+    expect(
+      translations.find((item) => item.locale === LocaleCode.Chinese)
+        ?.translationStatus,
+    ).toBe(TranslationStatus.Queued);
+  });
+
+  it('marks manually supplied Chinese as reviewed on create', async () => {
+    const response = await request(app.getHttpServer())
+      .post('/api/v1/admin/articles')
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send({
+        categoryId,
+        translations: [
+          {
+            locale: LocaleCode.Vietnamese,
+            title: 'Bài viết có bản tiếng Trung',
+            slug: 'e2e-articles-manual-zh-vi',
+            summary: 'Tóm tắt tiếng Việt.',
+            contentHtml: '<p>Nội dung tiếng Việt.</p>',
+          },
+          {
+            locale: LocaleCode.Chinese,
+            title: '中文文章',
+            slug: MANUAL_ZH_SLUG,
+            summary: '中文摘要。',
+            contentHtml: '<p>中文内容。</p>',
+          },
+        ],
+      })
+      .expect(201);
+    const body = asRecord(response.body as unknown);
+    articleIds.push(body.id as number);
+    const translations = asArray(body.translations).map(asRecord);
+    expect(
+      translations.find((item) => item.locale === LocaleCode.Chinese)
+        ?.translationStatus,
+    ).toBe(TranslationStatus.Reviewed);
   });
 
   it('rejects actor fields supplied by a client', () => {
@@ -292,7 +372,7 @@ describe('Articles API (e2e)', () => {
     expect(asRecord(response.body as unknown).sourceVersion).toBe(2);
   });
 
-  it('marks translations outdated when Vietnamese content changes', async () => {
+  it('keeps empty translations queued when Vietnamese content changes', async () => {
     const response = await request(app.getHttpServer())
       .patch(`/api/v1/admin/articles/${employeeArticleId}`)
       .set('Authorization', `Bearer ${employeeToken}`)
@@ -304,8 +384,58 @@ describe('Articles API (e2e)', () => {
     expect(
       translations
         .filter((item) => item.locale !== LocaleCode.Vietnamese)
-        .every((item) => item.translationStatus === TranslationStatus.Outdated),
+        .every((item) => item.translationStatus === TranslationStatus.Queued),
     ).toBe(true);
+  });
+
+  it('marks a manually updated English translation as reviewed', async () => {
+    const response = await request(app.getHttpServer())
+      .patch(`/api/v1/admin/articles/${employeeArticleId}`)
+      .set('Authorization', `Bearer ${employeeToken}`)
+      .send({
+        translations: [
+          {
+            locale: LocaleCode.English,
+            title: 'Employee article',
+            slug: REVIEWED_EN_SLUG,
+            summary: 'Employee article summary.',
+            contentHtml: '<p>Reviewed English content.</p>',
+          },
+        ],
+      })
+      .expect(200);
+    const body = asRecord(response.body as unknown);
+    const translations = asArray(body.translations).map(asRecord);
+    const english = translations.find(
+      (item) => item.locale === LocaleCode.English,
+    );
+    expect(english?.translationStatus).toBe(TranslationStatus.Reviewed);
+    expect(english?.sourceVersion).toBe(body.sourceVersion);
+  });
+
+  it('marks populated translations outdated when Vietnamese changes', async () => {
+    const response = await request(app.getHttpServer())
+      .patch(`/api/v1/admin/articles/${employeeArticleId}`)
+      .set('Authorization', `Bearer ${employeeToken}`)
+      .send({
+        translations: [
+          {
+            locale: LocaleCode.Vietnamese,
+            contentHtml: '<p>Nội dung employee phiên bản mới.</p>',
+          },
+        ],
+      })
+      .expect(200);
+    const body = asRecord(response.body as unknown);
+    const translations = asArray(body.translations).map(asRecord);
+    expect(
+      translations.find((item) => item.locale === LocaleCode.English)
+        ?.translationStatus,
+    ).toBe(TranslationStatus.Outdated);
+    expect(
+      translations.find((item) => item.locale === LocaleCode.Chinese)
+        ?.translationStatus,
+    ).toBe(TranslationStatus.Queued);
   });
 
   it('returns 409 for a duplicate Vietnamese slug', () => {
@@ -394,7 +524,37 @@ describe('Articles API (e2e)', () => {
       expect.objectContaining({
         id: employeeArticleId,
         locale: LocaleCode.Vietnamese,
-        contentHtml: '<p>Nội dung employee đã cập nhật.</p>',
+        contentHtml: '<p>Nội dung employee phiên bản mới.</p>',
+      }),
+    );
+  });
+
+  it('returns reviewed English publicly', async () => {
+    await request(app.getHttpServer())
+      .patch(`/api/v1/admin/articles/${employeeArticleId}`)
+      .set('Authorization', `Bearer ${employeeToken}`)
+      .send({
+        translations: [
+          {
+            locale: LocaleCode.English,
+            title: 'Reviewed employee article',
+            slug: REVIEWED_EN_SLUG,
+            summary: 'Reviewed employee summary.',
+            contentHtml: '<p>Reviewed employee content.</p>',
+          },
+        ],
+      })
+      .expect(200);
+
+    const response = await request(app.getHttpServer())
+      .get(`/api/v1/news/${REVIEWED_EN_SLUG}`)
+      .query({ locale: LocaleCode.English })
+      .expect(200);
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        id: employeeArticleId,
+        locale: LocaleCode.English,
+        title: 'Reviewed employee article',
       }),
     );
   });

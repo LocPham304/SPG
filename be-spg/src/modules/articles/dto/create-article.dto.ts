@@ -1,8 +1,10 @@
 import { Transform, Type, type TransformFnParams } from 'class-transformer';
 import {
+  ArrayMaxSize,
   IsBoolean,
   IsIn,
   IsInt,
+  IsArray,
   IsOptional,
   IsString,
   IsUrl,
@@ -10,8 +12,10 @@ import {
   MaxLength,
   Min,
   MinLength,
+  ValidateNested,
 } from 'class-validator';
 
+import { ArticleTranslationInputDto } from './article-translation-input.dto';
 import { ArticleStatus } from '../enums/article-status.enum';
 
 function trimString({ value }: TransformFnParams): unknown {
@@ -34,12 +38,14 @@ export class CreateArticleDto {
   @Min(1)
   thumbnailId?: number;
 
+  @IsOptional()
   @Transform(trimString)
   @IsString()
   @MinLength(1)
   @MaxLength(500)
-  title!: string;
+  title?: string;
 
+  @IsOptional()
   @Transform(normalizeSlug)
   @IsString()
   @MinLength(1)
@@ -47,16 +53,18 @@ export class CreateArticleDto {
   @Matches(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, {
     message: 'slug chỉ được chứa chữ thường, số và dấu gạch ngang.',
   })
-  slug!: string;
+  slug?: string;
 
+  @IsOptional()
   @Transform(trimString)
   @IsString()
   @MinLength(1)
-  summary!: string;
+  summary?: string;
 
+  @IsOptional()
   @IsString()
   @MinLength(1)
-  contentHtml!: string;
+  contentHtml?: string;
 
   @IsOptional()
   @Transform(trimString)
@@ -88,4 +96,11 @@ export class CreateArticleDto {
   @IsUrl({ require_protocol: true })
   @MaxLength(1000)
   sourceUrl?: string;
+
+  @IsOptional()
+  @IsArray()
+  @ArrayMaxSize(3)
+  @ValidateNested({ each: true })
+  @Type(() => ArticleTranslationInputDto)
+  translations?: ArticleTranslationInputDto[];
 }

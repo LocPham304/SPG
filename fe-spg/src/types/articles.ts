@@ -7,6 +7,7 @@ export type TranslationStatus =
   | "queued"
   | "translating"
   | "auto_translated"
+  | "reviewed"
   | "outdated"
   | "failed";
 
@@ -77,6 +78,17 @@ export type ArticleDetail = ArticleListItem & {
   translations: ArticleTranslation[];
 };
 
+export type ArticleTranslationInput = {
+  contentHtml: string;
+  locale: LocaleCode;
+  seoDescription: string;
+  seoTitle: string;
+  slug: string;
+  summary: string;
+  thumbnailAltText: string;
+  title: string;
+};
+
 export type ArticlesListResponse = {
   data: ArticleListItem[];
   meta: {
@@ -100,28 +112,16 @@ export type GetAdminArticlesParams = {
 
 export type CreateArticleData = {
   categoryId: number;
-  contentHtml: string;
   isFeatured?: boolean;
-  seoDescription?: string;
-  seoTitle?: string;
-  slug: string;
   sourceUrl?: string;
   status: "draft" | "published";
-  summary: string;
-  thumbnailAltText?: string;
   thumbnailId?: number;
-  title: string;
+  translations: ArticleTranslationInput[];
 };
 
 export type UpdateArticleData = {
   categoryId?: number;
-  contentHtml?: string;
-  seoDescription?: string | null;
-  seoTitle?: string | null;
-  slug?: string;
   sourceUrl?: string | null;
-  summary?: string;
-  thumbnailAltText?: string | null;
   thumbnailId?: number | null;
-  title?: string;
+  translations?: ArticleTranslationInput[];
 };

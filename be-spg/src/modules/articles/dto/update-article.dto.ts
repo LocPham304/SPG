@@ -1,5 +1,7 @@
 import { Transform, Type, type TransformFnParams } from 'class-transformer';
 import {
+  ArrayMaxSize,
+  IsArray,
   IsInt,
   IsOptional,
   IsString,
@@ -9,8 +11,10 @@ import {
   Min,
   MinLength,
   ValidateIf,
+  ValidateNested,
 } from 'class-validator';
 
+import { ArticleTranslationInputDto } from './article-translation-input.dto';
 function trimNullableString({ value }: TransformFnParams): unknown {
   return typeof value === 'string' ? value.trim() : value;
 }
@@ -87,4 +91,11 @@ export class UpdateArticleDto {
   @IsUrl({ require_protocol: true })
   @MaxLength(1000)
   sourceUrl?: string | null;
+
+  @IsOptional()
+  @IsArray()
+  @ArrayMaxSize(3)
+  @ValidateNested({ each: true })
+  @Type(() => ArticleTranslationInputDto)
+  translations?: ArticleTranslationInputDto[];
 }
