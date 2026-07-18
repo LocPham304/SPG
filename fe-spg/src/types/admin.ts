@@ -12,6 +12,11 @@ export type AdminUser = {
   role: AdminRole;
 };
 
+export type AuthenticatedAdminUser = AdminUser & {
+  id: number;
+  mustChangePassword: boolean;
+};
+
 export type ArticleStatus =
   | "draft"
   | "published"

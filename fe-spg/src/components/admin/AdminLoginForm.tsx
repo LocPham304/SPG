@@ -5,11 +5,9 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
 
-import {
-  getAdminUser,
-  loginAdmin,
-  saveAdminUser,
-} from "@/lib/admin-auth";
+import { ApiError } from "@/lib/api";
+
+import { useAuth } from "./AdminAuthContext";
 
 type LoginFormErrors = {
   email?: string;
@@ -39,22 +37,36 @@ function validateLoginForm(email: string, password: string): LoginFormErrors {
 
 export function AdminLoginForm() {
   const router = useRouter();
+  const {
+    currentUser,
+    isAuthenticated,
+    isLoading: isCheckingAuth,
+    login,
+  } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [remember, setRemember] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
+  const [passwordChanged, setPasswordChanged] = useState(false);
   const [errors, setErrors] = useState<LoginFormErrors>({});
 
   useEffect(() => {
-    if (getAdminUser()) {
-      router.replace("/admin/dashboard");
-      return;
-    }
+    setPasswordChanged(
+      new URLSearchParams(window.location.search).get("passwordChanged") ===
+        "1",
+    );
+  }, []);
 
-    setIsCheckingAuth(false);
-  }, [router]);
+  useEffect(() => {
+    if (!isCheckingAuth && isAuthenticated && currentUser) {
+      router.replace(
+        currentUser.mustChangePassword
+          ? "/admin/change-password"
+          : "/admin/dashboard",
+      );
+    }
+  }, [currentUser, isAuthenticated, isCheckingAuth, router]);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -69,15 +81,19 @@ export function AdminLoginForm() {
     setIsLoading(true);
 
     try {
-      const user = await loginAdmin(email, password);
-
-      if (!user) {
-        setErrors({ form: "Email hoặc mật khẩu không đúng" });
-        return;
-      }
-
-      saveAdminUser(user, remember);
-      router.replace("/admin/dashboard");
+      const user = await login(email, password, remember);
+      router.replace(
+        user.mustChangePassword
+          ? "/admin/change-password"
+          : "/admin/dashboard",
+      );
+    } catch (error: unknown) {
+      setErrors({
+        form:
+          error instanceof ApiError && error.status === 401
+            ? "Email hoặc mật khẩu không đúng"
+            : "Không thể đăng nhập. Vui lòng thử lại.",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -115,6 +131,15 @@ export function AdminLoginForm() {
           Vui lòng đăng nhập để quản lý nội dung website
         </p>
       </header>
+
+      {passwordChanged ? (
+        <p
+          className="mb-5 rounded-lg bg-emerald-50 px-3.5 py-2.5 text-sm text-emerald-700"
+          role="status"
+        >
+          Đổi mật khẩu thành công, vui lòng đăng nhập lại.
+        </p>
+      ) : null}
 
       <form noValidate onSubmit={handleSubmit}>
         <div>

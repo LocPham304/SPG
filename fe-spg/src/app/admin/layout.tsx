@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Be_Vietnam_Pro } from "next/font/google";
 import type { ReactNode } from "react";
 
+import { AdminAuthProvider } from "@/components/admin/AdminAuthContext";
+
 import "../tailwind.css";
 import "./admin.css";
 
@@ -31,7 +33,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
       lang="vi"
     >
       <body className="admin-body antialiased">
-        {children}
+        <AdminAuthProvider>{children}</AdminAuthProvider>
       </body>
     </html>
   );

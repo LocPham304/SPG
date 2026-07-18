@@ -1,10 +1,12 @@
 "use client";
 
 import { LogOut, Menu } from "lucide-react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 
-import { clearAdminUser, getAdminRoleLabel } from "@/lib/admin-auth";
+import { getAdminRoleLabel } from "@/lib/admin-auth";
 import type { AdminUser } from "@/types/admin";
+
+import { useAuth } from "./AdminAuthContext";
 
 type AdminHeaderProps = {
   onOpenMenu: () => void;
@@ -29,17 +31,13 @@ function getPageTitle(pathname: string) {
   }
   if (pathname === "/admin/users/create") return "Tạo nhân viên";
   if (pathname.startsWith("/admin/users")) return "Quản lý nhân viên";
+  if (pathname === "/admin/change-password") return "Đổi mật khẩu";
   return "Trang quản trị";
 }
 
 export function AdminHeader({ onOpenMenu, user }: AdminHeaderProps) {
   const pathname = usePathname();
-  const router = useRouter();
-
-  function handleLogout() {
-    clearAdminUser();
-    router.replace("/admin/login");
-  }
+  const { logout } = useAuth();
 
   return (
     <header className="sticky top-0 z-30 flex min-h-18 items-center justify-between gap-4 border-b border-slate-200 bg-white px-4 py-3 sm:px-6 lg:px-8">
@@ -67,7 +65,7 @@ export function AdminHeader({ onOpenMenu, user }: AdminHeaderProps) {
         <button
           aria-label="Đăng xuất"
           className="flex size-10 items-center justify-center rounded-lg border border-slate-200 bg-white p-0 text-slate-600 hover:bg-slate-50 hover:text-slate-900"
-          onClick={handleLogout}
+          onClick={() => void logout()}
           title="Đăng xuất"
           type="button"
         >

@@ -11,10 +11,11 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 
-import { clearAdminUser } from "@/lib/admin-auth";
 import type { AdminRole } from "@/types/admin";
+
+import { useAuth } from "./AdminAuthContext";
 
 type AdminSidebarProps = {
   isMobileOpen: boolean;
@@ -62,15 +63,10 @@ export function AdminSidebar({
   role,
 }: AdminSidebarProps) {
   const pathname = usePathname();
-  const router = useRouter();
+  const { logout } = useAuth();
   const visibleItems = navigationItems.filter((item) =>
     item.roles.includes(role),
   );
-
-  function handleLogout() {
-    clearAdminUser();
-    router.replace("/admin/login");
-  }
 
   return (
     <>
@@ -145,7 +141,7 @@ export function AdminSidebar({
         <div className="border-t border-slate-200 p-4">
           <button
             className="flex w-full items-center gap-3 rounded-lg border-0 bg-transparent px-3 py-2.5 text-sm font-semibold text-slate-600 hover:bg-slate-100 hover:text-slate-900"
-            onClick={handleLogout}
+            onClick={() => void logout()}
             type="button"
           >
             <LogOut aria-hidden="true" size={19} />
