@@ -36,7 +36,7 @@ export function NewsPageHero({
   pageTitle,
 }: NewsPageHeroProps) {
   const items = Object.entries(newsRoutes).map(([key, href]) => ({
-    href,
+    href: `${href}?page=1`,
     label: navigationLabels[key as keyof NewsNavigationLabels],
   }));
 

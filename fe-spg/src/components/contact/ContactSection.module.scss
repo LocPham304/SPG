@@ -189,6 +189,18 @@
   box-shadow: 0 0 0 3px rgb(22 132 199 / 12%);
 }
 
+.formField input[aria-invalid="true"],
+.formField textarea[aria-invalid="true"] {
+  border-color: #dc2626;
+}
+
+.fieldError {
+  color: #b91c1c;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
 .messageField {
   grid-column: 1 / -1;
 }
@@ -217,6 +229,49 @@
 .submitButton:focus-visible {
   background: #fff;
   color: #1684c7;
+}
+
+.submitButton:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.contactToast {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  z-index: 1000;
+  width: min(420px, calc(100vw - 32px));
+  padding: 16px 18px;
+  border: 1px solid;
+  background: #fff;
+  box-shadow: 0 16px 40px rgb(15 23 42 / 18%);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.55;
+  animation: contact-toast-enter 180ms ease-out;
+}
+
+.contactToastSuccess {
+  border-color: #86efac;
+  color: #166534;
+}
+
+.contactToastError {
+  border-color: #fca5a5;
+  color: #b91c1c;
+}
+
+@keyframes contact-toast-enter {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .networkGrid {
@@ -332,6 +387,11 @@
 }
 
 @media (width <= 480px) {
+  .contactToast {
+    top: 16px;
+    right: 16px;
+  }
+
   .inner {
     gap: 30px;
     padding-block: 30px 44px;

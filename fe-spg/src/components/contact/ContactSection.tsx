@@ -6,6 +6,7 @@ import type {
   ContactContent,
   ContactDetails,
 } from "@/content/contact/contact";
+import type { AppLocale } from "@/i18n/routing";
 
 import { ContactInquiryForm } from "./ContactInquiryForm.client";
 import styles from "./ContactSection.module.scss";
@@ -13,7 +14,9 @@ import styles from "./ContactSection.module.scss";
 type ContactSectionProps = Pick<
   ContactContent,
   "form" | "labels" | "marketingTitle" | "network" | "pageTitle" | "primary"
->;
+> & {
+  locale: AppLocale;
+};
 
 type DetailItem = {
   className?: string;
@@ -90,6 +93,7 @@ function NetworkCard({
 export function ContactSection({
   form,
   labels,
+  locale,
   marketingTitle,
   network,
   pageTitle,
@@ -149,10 +153,7 @@ export function ContactSection({
             </h2>
           </ScrollReveal>
           <ScrollReveal threshold={0.15}>
-            <ContactInquiryForm
-              content={form}
-              recipient={primary.mailbox ?? "zbjt@spe.cn"}
-            />
+            <ContactInquiryForm content={form} locale={locale} />
           </ScrollReveal>
         </section>
 

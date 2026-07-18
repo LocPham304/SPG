@@ -22,7 +22,9 @@ export function NewsSubNavigation({
     <nav aria-label={ariaLabel} className={styles.navigation}>
       <ul>
         {items.map((item) => {
-          const isCurrent = item.href === currentHref;
+          const itemPath = item.href.split("?")[0];
+          const currentPath = currentHref.split("?")[0];
+          const isCurrent = itemPath === currentPath;
 
           return (
             <li data-current={isCurrent} key={item.href}>

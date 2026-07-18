@@ -1,3 +1,5 @@
+import type { ContactStatus } from "@/types/contacts";
+
 export type AdminRole = "admin" | "employee";
 
 export type AdminPermission =
@@ -38,13 +40,7 @@ export type AdminArticle = {
   title: string;
 };
 
-export type ContactStatus =
-  | "new"
-  | "in_progress"
-  | "waiting_customer"
-  | "resolved"
-  | "archived"
-  | "spam";
+export type { ContactStatus } from "@/types/contacts";
 
 export type AdminContactMessage = {
   assignee?: string;

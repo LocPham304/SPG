@@ -1,6 +1,7 @@
 import { AboutSubNavigation } from "@/components/about/AboutSubNavigation";
 import { PageHero } from "@/components/common/PageHero";
 import type { ContactContent } from "@/content/contact/contact";
+import type { AppLocale } from "@/i18n/routing";
 
 import { ContactSection } from "./ContactSection";
 import { ScrollToSection } from "./ScrollToSection.client";
@@ -10,6 +11,7 @@ type ContactPageViewProps = {
   breadcrumbLabel: string;
   content: ContactContent;
   homeLabel: string;
+  locale: AppLocale;
 };
 
 export function ContactPageView({
@@ -17,6 +19,7 @@ export function ContactPageView({
   breadcrumbLabel,
   content,
   homeLabel,
+  locale,
 }: ContactPageViewProps) {
   const isMarketingNetwork = activeHref === "/contact/marketing-network";
 
@@ -53,6 +56,7 @@ export function ContactPageView({
       <ContactSection
         form={content.form}
         labels={content.labels}
+        locale={locale}
         marketingTitle={content.marketingTitle}
         network={content.network}
         pageTitle={content.pageTitle}

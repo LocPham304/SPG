@@ -84,6 +84,13 @@
   transition: transform 280ms ease;
 }
 
+.imageFallback {
+  position: absolute;
+  inset: 0;
+  display: block;
+  background: #edf3f7;
+}
+
 .cardDate {
   display: block;
   margin-bottom: 7px;

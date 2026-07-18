@@ -1,36 +1,34 @@
+import type { ReactNode } from "react";
+
 import { Container } from "@/components/common/Container";
-import { ImageWithSkeleton } from "@/components/news/ImageWithSkeleton";
 import { LocalizedLink } from "@/components/common/LocalizedLink";
+import { ImageWithSkeleton } from "@/components/news/ImageWithSkeleton";
 import { ScrollReveal } from "@/components/news/ScrollReveal";
 import { getStaggerDelay } from "@/components/news/animation";
-import type { ProductDeliveryContent } from "@/content/news/product-delivery";
-import { getNewsDetailPath } from "@/content/news/routes";
+import type { AppLocale } from "@/i18n/routing";
+import { formatNewsDate } from "@/lib/news-date";
+import {
+  getPublicNewsDetailPath,
+  type PublicNewsItem,
+} from "@/types/public-news";
 
 import styles from "./ProductDeliverySection.module.scss";
 
-type ProductDeliverySectionProps = ProductDeliveryContent & {
-  nextLabel: string;
-  pageLabel: string;
-  previousLabel: string;
+type ProductDeliverySectionProps = {
+  articles: readonly PublicNewsItem[];
+  locale: AppLocale;
+  pagination?: ReactNode;
   readMoreLabel: string;
   title: string;
 };
 
 export function ProductDeliverySection({
   articles,
-  nextLabel,
-  pageCount,
-  pageLabel,
-  previousLabel,
+  locale,
+  pagination,
   readMoreLabel,
-  sourcePageUrl,
   title,
 }: ProductDeliverySectionProps) {
-  const followingPages = Array.from(
-    { length: Math.max(0, pageCount - 1) },
-    (_, index) => index + 2,
-  );
-
   return (
     <Container as="section" className={styles.section}>
       <ScrollReveal threshold={0.15}>
@@ -38,73 +36,63 @@ export function ProductDeliverySection({
       </ScrollReveal>
 
       <ul className={styles.newsGrid}>
-        {articles.map((article, index) => (
-          <li key={article.id}>
-            <ScrollReveal delay={getStaggerDelay(index)} threshold={0.15}>
-            <article className={styles.newsCard}>
-              <LocalizedLink
-                aria-label={article.title}
-                className={styles.cardImage}
-                href={getNewsDetailPath("product-delivery", article.id)}
-              >
-                <ImageWithSkeleton
-                  alt={article.title}
-                  fill
-                  imageClassName={styles.newsImage}
-                  sizes="(max-width: 767px) 1px, 28vw"
-                  src={article.image}
-                />
-              </LocalizedLink>
-              <time className={styles.cardDate} dateTime={article.date}>
-                {article.date}
-              </time>
-              <h3 className={styles.cardTitle}>
-                <LocalizedLink
-                  href={getNewsDetailPath("product-delivery", article.id)}
-                >
-                  {article.title}
-                </LocalizedLink>
-              </h3>
-              {article.description ? (
-                <p className={styles.cardDescription}>{article.description}</p>
-              ) : null}
-              <LocalizedLink
-                className={styles.cardLink}
-                href={getNewsDetailPath("product-delivery", article.id)}
-              >
-                {readMoreLabel} <span aria-hidden="true">⟶</span>
-              </LocalizedLink>
-            </article>
-            </ScrollReveal>
-          </li>
-        ))}
-      </ul>
+        {articles.map((article, index) => {
+          const articleHref = getPublicNewsDetailPath(
+            "product-delivery",
+            article.slug,
+          );
 
-      <nav aria-label={pageLabel} className={styles.pagination}>
-        <span aria-disabled="true" aria-label={previousLabel}>
-          «
-        </span>
-        <span aria-current="page">1</span>
-        {followingPages.map((page) => (
-          <a
-            aria-label={`${pageLabel} ${page}`}
-            href={sourcePageUrl(page)}
-            key={page}
-            rel="noreferrer"
-            target="_blank"
-          >
-            {page}
-          </a>
-        ))}
-        <a
-          aria-label={nextLabel}
-          href={sourcePageUrl(2)}
-          rel="noreferrer"
-          target="_blank"
-        >
-          »
-        </a>
-      </nav>
+          return (
+            <li key={article.id}>
+              <ScrollReveal delay={getStaggerDelay(index)} threshold={0.15}>
+                <article className={styles.newsCard}>
+                  <LocalizedLink
+                    aria-label={article.title}
+                    className={styles.cardImage}
+                    href={articleHref}
+                  >
+                    {article.thumbnail ? (
+                      <ImageWithSkeleton
+                        alt={article.thumbnail.altText ?? article.title}
+                        fill
+                        imageClassName={styles.newsImage}
+                        sizes="(max-width: 767px) 1px, 28vw"
+                        src={article.thumbnail.publicUrl}
+                      />
+                    ) : (
+                      <span
+                        aria-hidden="true"
+                        className={styles.imageFallback}
+                      />
+                    )}
+                  </LocalizedLink>
+                  <time
+                    className={styles.cardDate}
+                    dateTime={article.publishedAt}
+                  >
+                    {formatNewsDate(article.publishedAt, locale).full}
+                  </time>
+                  <h3 className={styles.cardTitle}>
+                    <LocalizedLink href={articleHref}>
+                      {article.title}
+                    </LocalizedLink>
+                  </h3>
+                  {article.summary ? (
+                    <p className={styles.cardDescription}>{article.summary}</p>
+                  ) : null}
+                  <LocalizedLink
+                    className={styles.cardLink}
+                    href={articleHref}
+                  >
+                    {readMoreLabel} <span aria-hidden="true">→</span>
+                  </LocalizedLink>
+                </article>
+              </ScrollReveal>
+            </li>
+          );
+        })}
+      </ul>
+      {pagination}
     </Container>
   );
 }

@@ -34,6 +34,7 @@ export default async function ContactPage({ params }: PageProps) {
       breadcrumbLabel={t("common.breadcrumb")}
       content={getContactContent(activeLocale)}
       homeLabel={t("common.home")}
+      locale={activeLocale}
     />
   );
 }
