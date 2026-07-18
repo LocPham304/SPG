@@ -84,8 +84,16 @@
     clamp(22px, 1.58vw, 30px);
   border-inline-start: 1px solid rgb(8 92 151 / 25%);
   color: #ffffff;
+  text-decoration: none;
   transition: background-color 220ms var(--ease-brand);
   cursor: pointer;
+}
+
+.baseContent {
+  display: flex;
+  min-height: 0;
+  flex: 1;
+  flex-direction: column;
 }
 
 .baseTitle {

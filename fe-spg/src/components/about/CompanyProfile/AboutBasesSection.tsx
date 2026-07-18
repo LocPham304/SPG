@@ -35,6 +35,16 @@ const baseIllustrations: Partial<Record<HomeBaseId, BaseIllustration>> = {
     width: 166,
     height: 186,
   },
+  haiyang: {
+    src: "/images/public/files/image/4db16f8d079d5bafd8adcd34d31f1390.png",
+    width: 180,
+    height: 180,
+  },
+  huaihai: {
+    src: "/images/public/files/image/956173de41fa8f47b98dac300038bb1b.png",
+    width: 174,
+    height: 179,
+  },
 };
 
 export async function AboutBasesSection({ locale }: AboutBasesSectionProps) {

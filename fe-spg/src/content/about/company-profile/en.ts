@@ -54,6 +54,18 @@ export const companyProfileEn = {
       ],
     },
   ],
+  serviceAudienceHighlights: [
+    "port users",
+    "shipping users",
+    "shipyard users",
+    "hydraulic dredging users",
+    "aquaculture users",
+    "municipal engineering users",
+    "inland logistics users",
+    "grain storage users",
+    "users in the petrochemical industry",
+    "users in mining, electric power, cement, metallurgy, papermaking, chemical",
+  ],
   advantages: [
     "Shandong Port Equipment Group has six core advantages.",
     'First, the advantage of the scene, the equipment group has the best understanding of user needs for the "Shangang Equipment" solution formed by the seven application scenarios.',

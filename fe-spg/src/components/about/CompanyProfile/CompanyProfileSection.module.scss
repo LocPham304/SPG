@@ -85,6 +85,14 @@
   overflow-wrap: anywhere;
 }
 
+.highlightedAudience {
+  color: inherit;
+  font-weight: 700;
+  text-decoration-line: underline;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 2px;
+}
+
 .media {
   align-self: stretch;
   width: 100%;

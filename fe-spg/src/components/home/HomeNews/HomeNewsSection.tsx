@@ -36,14 +36,21 @@ export async function HomeNewsSection({ locale, qaState }: HomeNewsSectionProps)
       throw new Error("Deterministic News error state for visual QA");
     }
     const repository = createNewsRepository();
-    const [categories, result] = await Promise.all([
-      repository.getNewsCategories(locale),
-      repository.getNews({ locale, limit: 12 }),
-    ]);
+    const categories = await repository.getNewsCategories(locale);
+    const categoryResults = await Promise.all(
+      categories.map((category) =>
+        repository.getNews({
+          locale,
+          category: category.key,
+          featuredOnly: true,
+          limit: 3,
+        }),
+      ),
+    );
     const articles =
       process.env.NODE_ENV === "development" && qaState === "empty"
         ? []
-        : result.items;
+        : categoryResults.flatMap((result) => result.items);
     const labeledCategories = categories.map((category) => ({
       ...category,
       label: t(`categories.${category.key}`),
@@ -57,7 +64,9 @@ export async function HomeNewsSection({ locale, qaState }: HomeNewsSectionProps)
         copy={copy}
       />
     );
-  } catch {
+  } catch (error) {
+    console.error("Unable to load homepage featured news", error);
+
     return (
       <section
         className={styles.section}

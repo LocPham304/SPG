@@ -77,7 +77,7 @@ export function AboutBasesSlider({
         breakpoints={{
           640: { slidesPerView: 1.6, spaceBetween: 24 },
           900: { slidesPerView: 2.3, spaceBetween: 30 },
-          1200: { slidesPerView: 3.15, spaceBetween: 40 },
+          1200: { slidesPerView: 3.3, spaceBetween: 36 },
         }}
         className={styles.slider}
         keyboard={{ enabled: true, onlyInViewport: true }}

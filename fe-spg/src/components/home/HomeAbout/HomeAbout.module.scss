@@ -72,6 +72,14 @@
   font-weight: 400;
 }
 
+.highlightedTerm {
+  color: inherit;
+  font-weight: 700;
+  text-decoration-line: underline;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 2px;
+}
+
 .learnMore {
   display: inline-flex;
   width: clamp(151px, 10.46vw, 200px);

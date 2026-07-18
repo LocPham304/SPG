@@ -36,7 +36,9 @@ import type {
 } from "@/types/users";
 
 import { AccessDenied } from "./AccessDenied";
+import { useAdminConfirm } from "./AdminConfirmDialog";
 import { AdminPageHeader } from "./AdminPageHeader";
+import { AdminToast } from "./AdminToast";
 import { StatusBadge } from "./StatusBadge";
 import { useAdminUser } from "./AdminAuthContext";
 
@@ -84,6 +86,7 @@ function UsersTableSkeleton() {
 
 export function AdminUsers() {
   const currentUser = useAdminUser();
+  const { confirmAction, confirmDialog } = useAdminConfirm();
   const [response, setResponse] = useState<UsersListResponse | null>(
     null,
   );
@@ -184,11 +187,13 @@ export function AdminUsers() {
   async function handleStatusChange(user: AdminUser) {
     const nextIsActive = !user.isActive;
 
-    if (
-      !nextIsActive &&
-      !window.confirm("Bạn có chắc muốn khóa tài khoản này?")
-    ) {
-      return;
+    if (!nextIsActive) {
+      const confirmed = await confirmAction({
+        confirmLabel: "Khóa tài khoản",
+        description: `Tài khoản ${user.fullName} sẽ không thể đăng nhập cho đến khi được mở khóa.`,
+        title: "Khóa tài khoản?",
+      });
+      if (!confirmed) return;
     }
 
     setPendingAction(`status-${user.id}`);
@@ -278,13 +283,12 @@ export function AdminUsers() {
   }
 
   async function handleRevokeSessions(user: AdminUser) {
-    if (
-      !window.confirm(
-        "Bạn có chắc muốn thu hồi toàn bộ phiên đăng nhập của tài khoản này?",
-      )
-    ) {
-      return;
-    }
+    const confirmed = await confirmAction({
+      confirmLabel: "Thu hồi phiên",
+      description: `Tài khoản ${user.fullName} sẽ bị đăng xuất khỏi tất cả thiết bị đang sử dụng.`,
+      title: "Thu hồi toàn bộ phiên đăng nhập?",
+    });
+    if (!confirmed) return;
 
     setPendingAction(`sessions-${user.id}`);
     setNotice(null);
@@ -307,6 +311,7 @@ export function AdminUsers() {
 
   return (
     <>
+      {confirmDialog}
       <AdminPageHeader
         actions={
           <Link
@@ -322,16 +327,11 @@ export function AdminUsers() {
       />
 
       {notice ? (
-        <p
-          className={`mb-4 rounded-lg border px-4 py-3 text-sm ${
-            notice.tone === "success"
-              ? "border-emerald-100 bg-emerald-50 text-emerald-700"
-              : "border-red-100 bg-red-50 text-red-700"
-          }`}
-          role={notice.tone === "error" ? "alert" : "status"}
-        >
-          {notice.text}
-        </p>
+        <AdminToast
+          message={notice.text}
+          onDismiss={() => setNotice(null)}
+          tone={notice.tone}
+        />
       ) : null}
 
       <section className="rounded-xl border border-slate-200 bg-white shadow-sm">

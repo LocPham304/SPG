@@ -29,6 +29,18 @@ function asString(value: unknown): string | null {
   return typeof value === "string" && value.trim() ? value : null;
 }
 
+function asIdentifier(value: unknown): string | null {
+  if (typeof value === "number" && Number.isSafeInteger(value) && value > 0) {
+    return String(value);
+  }
+
+  return asString(value);
+}
+
+function isSupportedImageSource(value: string) {
+  return value.startsWith("/") || /^https?:\/\//i.test(value);
+}
+
 function readItems(payload: unknown): unknown[] {
   if (Array.isArray(payload)) return payload;
   if (!isRecord(payload)) return [];
@@ -40,22 +52,22 @@ function readItems(payload: unknown): unknown[] {
   return [];
 }
 
-function parseArticle(value: unknown, requestedLocale: AppLocale): PublicNewsArticle | null {
+function parseArticle(value: unknown): PublicNewsArticle | null {
   if (!isRecord(value)) return null;
   const status = asString(value.status)?.toLowerCase();
   const locale = asString(value.locale);
-  const categoryKey = value.categoryKey;
-  const id = asString(value.id);
+  const category = isRecord(value.category) ? value.category : null;
+  const categoryKey = value.categoryKey ?? category?.code;
+  const id = asIdentifier(value.id);
   const slug = asString(value.slug);
   const title = asString(value.title);
   const summary = asString(value.summary);
   const publishedAt = asString(value.publishedAt);
 
   if (
-    status !== "published" ||
+    (status !== undefined && status !== "published") ||
     !locale ||
     !isAppLocale(locale) ||
-    locale !== requestedLocale ||
     !isCategoryKey(categoryKey) ||
     !id ||
     !slug ||
@@ -66,9 +78,13 @@ function parseArticle(value: unknown, requestedLocale: AppLocale): PublicNewsArt
     return null;
   }
 
-  const media = isRecord(value.media) ? value.media : {};
-  const apiImage = asString(media.src);
-  const safeImage = apiImage?.startsWith("/") ? apiImage : homeNewsAssets.fallbackMedia;
+  const media = isRecord(value.media) ? value.media : null;
+  const thumbnail = isRecord(value.thumbnail) ? value.thumbnail : null;
+  const apiImage = asString(media?.src) ?? asString(thumbnail?.publicUrl);
+  const safeImage =
+    apiImage && isSupportedImageSource(apiImage)
+      ? apiImage
+      : homeNewsAssets.fallbackMedia;
 
   return {
     id,
@@ -82,15 +98,18 @@ function parseArticle(value: unknown, requestedLocale: AppLocale): PublicNewsArt
     isFeatured: value.isFeatured === true,
     media: {
       src: safeImage,
-      alt: asString(media.alt) ?? title,
+      alt:
+        asString(media?.alt) ??
+        asString(thumbnail?.altText) ??
+        title,
     },
   };
 }
 
 function parseCategory(value: unknown): NewsCategory | null {
   if (!isRecord(value)) return null;
-  const id = asString(value.id);
-  const key = value.key;
+  const id = asIdentifier(value.id);
+  const key = value.key ?? value.code;
   const slug = asString(value.slug);
   return id && isCategoryKey(key) && slug ? { id, key, slug } : null;
 }
@@ -120,7 +139,6 @@ export class ApiNewsRepository implements NewsRepository {
   async getNews(query: NewsQuery): Promise<NewsResult> {
     const params = new URLSearchParams({
       locale: query.locale,
-      status: "published",
     });
     if (query.category) params.set("category", query.category);
     if (query.featuredOnly) params.set("featured", "true");
@@ -128,7 +146,7 @@ export class ApiNewsRepository implements NewsRepository {
 
     const payload = await this.request("news", params);
     const items = readItems(payload)
-      .map((item) => parseArticle(item, query.locale))
+      .map(parseArticle)
       .filter((item): item is PublicNewsArticle => item !== null);
 
     return { items, total: items.length };
@@ -142,7 +160,7 @@ export class ApiNewsRepository implements NewsRepository {
   async getNewsCategories(locale: AppLocale): Promise<NewsCategory[]> {
     const payload = await this.request(
       "news/categories",
-      new URLSearchParams({ locale, published: "true" }),
+      new URLSearchParams({ locale, showOnHome: "true" }),
     );
     return readItems(payload)
       .map(parseCategory)

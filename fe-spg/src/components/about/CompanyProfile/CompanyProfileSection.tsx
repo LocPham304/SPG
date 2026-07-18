@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+
 import { Container } from "@/components/common/Container";
 import { ImageWithSkeleton } from "@/components/news/ImageWithSkeleton";
 import { ScrollReveal } from "@/components/news/ScrollReveal";
@@ -8,6 +10,43 @@ import styles from "./CompanyProfileSection.module.scss";
 type CompanyProfileSectionProps = {
   content: CompanyProfileContent;
 };
+
+function highlightServiceAudiences(
+  paragraph: string,
+  terms: readonly string[],
+): ReactNode[] {
+  const matches = terms
+    .map((term) => {
+      const start = paragraph.indexOf(term);
+      return { end: start + term.length, start, term };
+    })
+    .filter((match) => match.start >= 0)
+    .sort((left, right) => left.start - right.start);
+  const parts: ReactNode[] = [];
+  let cursor = 0;
+
+  for (const match of matches) {
+    if (match.start < cursor) continue;
+    if (match.start > cursor) {
+      parts.push(paragraph.slice(cursor, match.start));
+    }
+    parts.push(
+      <strong
+        className={styles.highlightedAudience}
+        key={`${match.start}-${match.term}`}
+      >
+        {match.term}
+      </strong>,
+    );
+    cursor = match.end;
+  }
+
+  if (cursor < paragraph.length) {
+    parts.push(paragraph.slice(cursor));
+  }
+
+  return parts;
+}
 
 export function CompanyProfileSection({ content }: CompanyProfileSectionProps) {
   return (
@@ -60,7 +99,12 @@ export function CompanyProfileSection({ content }: CompanyProfileSectionProps) {
                 duration="0.75s"
               >
                 {block.paragraphs.map((paragraph) => (
-                  <p key={paragraph}>{paragraph}</p>
+                  <p key={paragraph}>
+                    {highlightServiceAudiences(
+                      paragraph,
+                      content.serviceAudienceHighlights,
+                    )}
+                  </p>
                 ))}
               </ScrollReveal>
             );

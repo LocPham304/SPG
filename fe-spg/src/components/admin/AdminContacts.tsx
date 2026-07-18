@@ -30,7 +30,9 @@ import type {
 } from "@/types/contacts";
 
 import { AccessDenied } from "./AccessDenied";
+import { useAdminConfirm } from "./AdminConfirmDialog";
 import { AdminPageHeader } from "./AdminPageHeader";
+import { AdminToast } from "./AdminToast";
 import { useAdminUser } from "./AdminAuthContext";
 import { StatusBadge } from "./StatusBadge";
 
@@ -86,6 +88,7 @@ function ContactsLoading() {
 
 export function AdminContacts() {
   const currentUser = useAdminUser();
+  const { confirmAction, confirmDialog } = useAdminConfirm();
   const isAdmin = currentUser.role === "admin";
   const [response, setResponse] =
     useState<ContactListResponse | null>(null);
@@ -204,7 +207,13 @@ export function AdminContacts() {
   }
 
   async function handleDelete(contact: ContactMessage) {
-    if (!window.confirm("Bạn có chắc muốn xóa liên hệ này?")) return;
+    const confirmed = await confirmAction({
+      confirmLabel: "Xóa liên hệ",
+      description:
+        "Liên hệ và thông tin xử lý liên quan sẽ bị xóa. Bạn có chắc muốn tiếp tục?",
+      title: "Xóa liên hệ?",
+    });
+    if (!confirmed) return;
 
     await runContactAction(
       contact,
@@ -221,22 +230,18 @@ export function AdminContacts() {
 
   return (
     <>
+      {confirmDialog}
       <AdminPageHeader
         description="Theo dõi và cập nhật các yêu cầu liên hệ từ khách hàng."
         title="Quản lý liên hệ"
       />
 
       {notice ? (
-        <p
-          className={`mb-4 rounded-lg border px-4 py-3 text-sm ${
-            notice.tone === "success"
-              ? "border-emerald-100 bg-emerald-50 text-emerald-700"
-              : "border-red-100 bg-red-50 text-red-700"
-          }`}
-          role={notice.tone === "error" ? "alert" : "status"}
-        >
-          {notice.text}
-        </p>
+        <AdminToast
+          message={notice.text}
+          onDismiss={() => setNotice(null)}
+          tone={notice.tone}
+        />
       ) : null}
 
       <section className="rounded-xl border border-slate-200 bg-white shadow-sm">

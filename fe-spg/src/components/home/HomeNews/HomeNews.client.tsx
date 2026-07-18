@@ -1,7 +1,18 @@
 "use client";
 
 import Image from "next/image";
-import { useMemo, useRef, useState, type KeyboardEvent } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type FocusEvent,
+  type KeyboardEvent,
+} from "react";
+import { A11y, Keyboard } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
+import type { Swiper as SwiperInstance } from "swiper/types";
 
 import { LocalizedLink } from "@/components/common/LocalizedLink";
 import { ImageWithSkeleton } from "@/components/news/ImageWithSkeleton";
@@ -12,6 +23,7 @@ import type { AppLocale } from "@/i18n/routing";
 import { formatNewsDate } from "@/lib/news-date";
 import type { NewsCategory, PublicNewsArticle } from "@/types/news";
 
+import "swiper/css";
 import styles from "./HomeNews.module.scss";
 import { NewsEmptyState } from "./NewsStates";
 
@@ -47,6 +59,172 @@ function ArrowIcon() {
   );
 }
 
+type HomeNewsPanelProps = {
+  articles: PublicNewsArticle[];
+  copy: HomeNewsCopy;
+  locale: AppLocale;
+};
+
+function HomeNewsPanel({ articles, copy, locale }: HomeNewsPanelProps) {
+  const swiperRef = useRef<SwiperInstance | null>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [isListActive, setIsListActive] = useState(false);
+  const sliderArticles = articles.slice(0, 3);
+
+  useEffect(() => {
+    if (sliderArticles.length < 2 || isListActive) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const intervalId = window.setInterval(() => {
+      swiperRef.current?.slideNext();
+    }, 6000);
+
+    return () => window.clearInterval(intervalId);
+  }, [isListActive, sliderArticles.length]);
+
+  const showArticle = useCallback(
+    (index: number) => {
+      const swiper = swiperRef.current;
+      setActiveIndex(index);
+      setIsListActive(true);
+
+      if (!swiper || swiper.realIndex === index) return;
+      if (sliderArticles.length > 1) {
+        swiper.slideToLoop(index, 500);
+      } else {
+        swiper.slideTo(index, 500);
+      }
+    },
+    [sliderArticles.length],
+  );
+
+  const handleListBlur = useCallback(
+    (event: FocusEvent<HTMLUListElement>) => {
+      if (!event.currentTarget.contains(event.relatedTarget)) {
+        setIsListActive(false);
+      }
+    },
+    [],
+  );
+
+  if (sliderArticles.length === 0) {
+    return (
+      <NewsEmptyState
+        title={copy.emptyTitle}
+        description={copy.emptyDescription}
+      />
+    );
+  }
+
+  return (
+    <div className={styles.newsGrid}>
+      <ScrollReveal
+        animation="animate__fadeInUp"
+        className={styles.featuredReveal}
+        duration="0.75s"
+      >
+        <Swiper
+          a11y={{ enabled: true }}
+          allowTouchMove={sliderArticles.length > 1}
+          className={styles.featuredSlider}
+          keyboard={{ enabled: true, onlyInViewport: true }}
+          loop={sliderArticles.length > 1}
+          modules={[A11y, Keyboard]}
+          onRealIndexChange={(swiper) => setActiveIndex(swiper.realIndex)}
+          onSwiper={(swiper) => {
+            swiperRef.current = swiper;
+            setActiveIndex(swiper.realIndex);
+          }}
+          slidesPerView={1}
+          speed={500}
+        >
+          {sliderArticles.map((article) => {
+            const date = formatNewsDate(article.publishedAt, locale);
+
+            return (
+              <SwiperSlide className={styles.featuredSlide} key={article.id}>
+                <article className={styles.featured}>
+                  <LocalizedLink href="/news" className={styles.featuredLink}>
+                    <ImageWithSkeleton
+                      aspectRatio="auto"
+                      className={styles.featuredImageFrame}
+                      imageClassName={styles.featuredImage}
+                      src={article.media.src}
+                      alt={article.media.alt}
+                      fill
+                      sizes="(max-width: 767px) 92vw, (max-width: 1199px) 54vw, 52vw"
+                      priority={false}
+                    />
+                    <span
+                      className={styles.featuredShade}
+                      aria-hidden="true"
+                    />
+                    <time
+                      className={styles.dateBadge}
+                      dateTime={article.publishedAt}
+                    >
+                      <strong>{date.dayMonth}</strong>
+                      <span>{date.year}</span>
+                    </time>
+                    <div className={styles.featuredContent}>
+                      <h3>{article.title}</h3>
+                      <p>{article.summary}</p>
+                      <span className={styles.readMore}>
+                        {copy.readMore}
+                        <ArrowIcon />
+                      </span>
+                    </div>
+                  </LocalizedLink>
+                </article>
+              </SwiperSlide>
+            );
+          })}
+        </Swiper>
+      </ScrollReveal>
+
+      <ScrollReveal
+        animation="animate__fadeInUp"
+        className={styles.secondaryColumn}
+        delay="0.1s"
+      >
+        <ul
+          className={styles.secondaryList}
+          onBlur={handleListBlur}
+          onFocus={() => setIsListActive(true)}
+          onMouseLeave={() => setIsListActive(false)}
+        >
+          {sliderArticles.map((article, index) => (
+            <li
+              className={styles.secondaryItem}
+              data-active={index === activeIndex}
+              key={article.id}
+            >
+              <ScrollReveal delay={getStaggerDelay(index)}>
+                <LocalizedLink
+                  href="/news"
+                  className={styles.secondaryLink}
+                  onFocus={() => showArticle(index)}
+                  onMouseEnter={() => showArticle(index)}
+                >
+                  <time dateTime={article.publishedAt}>
+                    {formatNewsDate(article.publishedAt, locale).full}
+                  </time>
+                  <h3>{article.title}</h3>
+                  <ArrowIcon />
+                </LocalizedLink>
+              </ScrollReveal>
+            </li>
+          ))}
+        </ul>
+        <LocalizedLink href="/news" className={styles.viewMore}>
+          {copy.viewMore}
+          <ArrowIcon />
+        </LocalizedLink>
+      </ScrollReveal>
+    </div>
+  );
+}
+
 export function HomeNewsClient({
   locale,
   categories,
@@ -62,9 +240,6 @@ export function HomeNewsClient({
     () => articles.filter((article) => article.categoryKey === activeCategory),
     [activeCategory, articles],
   );
-  const featured =
-    activeArticles.find((article) => article.isFeatured) ?? activeArticles[0];
-  const secondary = activeArticles.slice(0, 3);
 
   const selectTab = (index: number) => {
     const category = categories[index];
@@ -151,84 +326,11 @@ export function HomeNewsClient({
           }
           key={activeCategory}
         >
-          {featured ? (
-            <div className={styles.newsGrid}>
-              <ScrollReveal
-                animation="animate__fadeInUp"
-                className={styles.featuredReveal}
-                duration="0.75s"
-              >
-                <article className={styles.featured}>
-                  <LocalizedLink href="/news" className={styles.featuredLink}>
-                  <ImageWithSkeleton
-                    aspectRatio="auto"
-                    className={styles.featuredImageFrame}
-                    imageClassName={styles.featuredImage}
-                    src={featured.media.src}
-                    alt={featured.media.alt}
-                    fill
-                    sizes="(max-width: 767px) 92vw, (max-width: 1199px) 54vw, 52vw"
-                    priority={false}
-                  />
-                    <span className={styles.featuredShade} aria-hidden="true" />
-                  <time
-                    className={styles.dateBadge}
-                    dateTime={featured.publishedAt}
-                  >
-                    <strong>
-                      {formatNewsDate(featured.publishedAt, locale).dayMonth}
-                    </strong>
-                    <span>
-                      {formatNewsDate(featured.publishedAt, locale).year}
-                    </span>
-                  </time>
-                  <div className={styles.featuredContent}>
-                    <h3>{featured.title}</h3>
-                    <p>{featured.summary}</p>
-                    <span className={styles.readMore}>
-                      {copy.readMore}
-                      <ArrowIcon />
-                    </span>
-                  </div>
-                  </LocalizedLink>
-                </article>
-              </ScrollReveal>
-
-              <ScrollReveal
-                animation="animate__fadeInUp"
-                className={styles.secondaryColumn}
-                delay="0.1s"
-              >
-                <ul className={styles.secondaryList}>
-                  {secondary.map((article, index) => (
-                    <li key={article.id} className={styles.secondaryItem}>
-                      <ScrollReveal delay={getStaggerDelay(index)}>
-                        <LocalizedLink
-                          href="/news"
-                          className={styles.secondaryLink}
-                        >
-                          <time dateTime={article.publishedAt}>
-                            {formatNewsDate(article.publishedAt, locale).full}
-                          </time>
-                          <h3>{article.title}</h3>
-                          <ArrowIcon />
-                        </LocalizedLink>
-                      </ScrollReveal>
-                    </li>
-                  ))}
-                </ul>
-                <LocalizedLink href="/news" className={styles.viewMore}>
-                  {copy.viewMore}
-                  <ArrowIcon />
-                </LocalizedLink>
-              </ScrollReveal>
-            </div>
-          ) : (
-            <NewsEmptyState
-              title={copy.emptyTitle}
-              description={copy.emptyDescription}
-            />
-          )}
+          <HomeNewsPanel
+            articles={activeArticles}
+            copy={copy}
+            locale={locale}
+          />
         </div>
       </div>
 

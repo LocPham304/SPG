@@ -2,19 +2,32 @@
   overflow: hidden;
   padding-block: clamp(72px, 5.7vw, 110px) clamp(92px, 7.3vw, 140px);
   background: #fff;
+  scroll-margin-top: var(--header-height);
+}
+
+.container {
+  padding-inline: 0;
 }
 
 .heading {
   margin: 0 0 clamp(34px, 2.4vw, 46px);
+  padding-inline: clamp(20px, 1.8vw, 35px);
   color: #147bc1;
   font-size: clamp(28px, 1.8vw, 35px);
   font-weight: 700;
   line-height: 1.2;
 }
 
-.sliderShell,
-.slider {
+.sliderShell {
   overflow: visible;
+}
+
+.slider.slider {
+  --card-shadow-space: clamp(16px, 1.25vw, 24px);
+
+  overflow: visible;
+  margin-block: calc(var(--card-shadow-space) * -1);
+  padding-block: var(--card-shadow-space);
 }
 
 .slide {
@@ -24,17 +37,19 @@
 .card {
   position: relative;
   height: 100%;
-  min-height: clamp(310px, 18.2vw, 350px);
+  min-height: clamp(300px, 15.9vw, 322px);
   overflow: hidden;
-  padding: clamp(36px, 2.6vw, 50px);
+  padding: clamp(36px, 2.6vw, 50px) clamp(42px, 3.8vw, 74px);
   background: #fff;
-  box-shadow: 0 5px 24px rgb(31 55 73 / 10%);
+  box-shadow:
+    0 4px 12px rgb(31 55 73 / 7%),
+    0 10px 30px rgb(31 55 73 / 12%);
 }
 
 .cardTitle {
   position: relative;
   z-index: 1;
-  margin: 0 0 clamp(32px, 2.25vw, 44px);
+  margin: 0 0 clamp(30px, 2.05vw, 40px);
   color: #147bc1;
   font-size: clamp(20px, 1.25vw, 24px);
   font-weight: 700;
@@ -45,24 +60,24 @@
   position: relative;
   z-index: 1;
   display: grid;
-  max-width: 83%;
-  gap: 8px;
+  max-width: 86%;
+  gap: 6px;
   color: #666;
-  font-size: clamp(14px, 0.94vw, 18px);
+  font-size: clamp(13px, 0.78vw, 15px);
   font-weight: 600;
-  line-height: 1.75;
+  line-height: 1.55;
 }
 
 .cardDescriptions p {
   margin: 0;
-  font-size: clamp(13px, 0.83vw, 16px);
+  font-size: inherit;
 }
 
 .learnMore {
   position: absolute;
   z-index: 2;
   bottom: clamp(38px, 2.5vw, 48px);
-  left: clamp(36px, 2.6vw, 50px);
+  left: clamp(42px, 3.8vw, 74px);
   display: inline-flex;
   align-items: center;
   gap: 14px;
@@ -105,8 +120,8 @@
   position: absolute;
   right: 0;
   bottom: 0;
-  width: auto;
-  max-width: 42%;
+  width: clamp(108px, 6.5vw, 126px);
+  max-width: 30%;
   height: auto;
   object-fit: contain;
 }
@@ -116,7 +131,7 @@
   justify-content: flex-end;
   gap: 14px;
   margin-top: 34px;
-  padding-right: 2.2vw;
+  padding-right: 9.1%;
 }
 
 .controlButton {
@@ -339,8 +354,13 @@
     padding-block: 56px 76px;
   }
 
+  .container {
+    padding-inline: 16px;
+  }
+
   .heading {
     margin-bottom: 28px;
+    padding-inline: 0;
     font-size: 26px;
   }
 
@@ -367,7 +387,8 @@
   }
 
   .illustration {
-    max-width: 43%;
+    width: auto;
+    max-width: 38%;
   }
 
   .controls {

@@ -54,6 +54,18 @@ export const companyProfileVi = {
       ],
     },
   ],
+  serviceAudienceHighlights: [
+    "các khách hàng tại cảng",
+    "các khách hàng trong ngành vận tải biển",
+    "các khách hàng xưởng đóng tàu",
+    "các khách hàng trong lĩnh vực nạo vét thủy lực",
+    "các khách hàng trong lĩnh vực nuôi trồng thủy sản",
+    "các khách hàng trong lĩnh vực kỹ thuật đô thị",
+    "các khách hàng logistics nội địa",
+    "các khách hàng trong lĩnh vực lưu trữ ngũ cốc",
+    "các khách hàng trong ngành hóa dầu",
+    "các khách hàng trong ngành khai khoáng, điện lực, xi măng, luyện kim, sản xuất giấy, hóa chất",
+  ],
   advantages: [
     "Tập đoàn Thiết bị Cảng Sơn Đông sở hữu sáu lợi thế cốt lõi.",
     'Thứ nhất, lợi thế về kịch bản ứng dụng: Tập đoàn thiết bị thấu hiểu sâu sắc nhất nhu cầu của người dùng đối với các giải pháp "Thiết bị Sơn Cảng" được hình thành từ bảy kịch bản ứng dụng thực tế.',

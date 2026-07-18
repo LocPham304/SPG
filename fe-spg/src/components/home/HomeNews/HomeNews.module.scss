@@ -102,6 +102,15 @@
   min-width: 0;
 }
 
+.featuredSlider {
+  width: 100%;
+  overflow: hidden;
+}
+
+.featuredSlide {
+  height: auto;
+}
+
 .featuredImageFrame {
   position: absolute;
   inset: 0;
@@ -139,27 +148,28 @@
 
 .dateBadge {
   position: absolute;
-  top: 0;
-  left: 0;
+  top: 18px;
+  left: 18px;
   display: grid;
-  min-width: 96px;
-  min-height: 88px;
+  width: 64px;
+  height: 60px;
   align-content: center;
-  padding: 12px 18px;
-  background: var(--color-news-accent);
+  padding: 7px 6px;
+  background: #c2942c;
   color: #fff;
-  line-height: 1.15;
+  line-height: 1;
   text-align: center;
 }
 
 .dateBadge strong {
-  font-size: 22px;
+  font-size: 16px;
   font-weight: 700;
 }
 
 .dateBadge span {
-  margin-top: 4px;
-  font-size: 14px;
+  margin-top: 6px;
+  font-size: 16px;
+  font-weight: 700;
 }
 
 .featuredContent {
@@ -232,6 +242,7 @@
 
 .secondaryItem {
   border-bottom: 1px solid #d8e0e7;
+  transition: border-color 300ms ease;
 }
 
 .secondaryLink {
@@ -262,8 +273,17 @@
   -webkit-line-clamp: 2;
 }
 
-.secondaryLink:hover h3 {
+.secondaryLink:hover h3,
+.secondaryItem[data-active="true"] .secondaryLink h3 {
   color: var(--color-news-accent);
+}
+
+.secondaryItem[data-active="true"] {
+  border-bottom-color: var(--color-news-accent);
+}
+
+.secondaryItem[data-active="true"] .arrow {
+  transform: translateX(5px);
 }
 
 .viewMore {
@@ -506,13 +526,20 @@
   }
 
   .dateBadge {
-    min-width: 82px;
-    min-height: 74px;
-    padding: 10px 14px;
+    top: 12px;
+    left: 12px;
+    width: 60px;
+    height: 56px;
+    padding: 6px 5px;
   }
 
   .dateBadge strong {
-    font-size: 18px;
+    font-size: 15px;
+  }
+
+  .dateBadge span {
+    margin-top: 5px;
+    font-size: 15px;
   }
 
   .featuredContent {

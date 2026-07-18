@@ -39,7 +39,9 @@ import {
 } from "@/types/categories";
 
 import { AccessDenied } from "./AccessDenied";
+import { useAdminConfirm } from "./AdminConfirmDialog";
 import { AdminPageHeader } from "./AdminPageHeader";
+import { AdminToast } from "./AdminToast";
 import { StatusBadge } from "./StatusBadge";
 import { useAdminUser } from "./AdminAuthContext";
 
@@ -92,6 +94,7 @@ function ArticlesLoading() {
 
 export function AdminArticles() {
   const currentUser = useAdminUser();
+  const { confirmAction, confirmDialog } = useAdminConfirm();
   const isAdmin = currentUser.role === "admin";
   const [response, setResponse] =
     useState<ArticlesListResponse | null>(null);
@@ -252,7 +255,13 @@ export function AdminArticles() {
   }
 
   async function handleDelete(article: ArticleListItem) {
-    if (!window.confirm("Bạn có chắc muốn xóa bài viết này?")) return;
+    const confirmed = await confirmAction({
+      confirmLabel: "Xóa bài viết",
+      description:
+        "Bài viết sẽ bị xóa khỏi hệ thống. Bạn có chắc muốn tiếp tục?",
+      title: "Xóa bài viết?",
+    });
+    if (!confirmed) return;
 
     await runArticleAction(
       article,
@@ -270,6 +279,7 @@ export function AdminArticles() {
 
   return (
     <>
+      {confirmDialog}
       <AdminPageHeader
         actions={
           <Link
@@ -285,16 +295,11 @@ export function AdminArticles() {
       />
 
       {notice ? (
-        <p
-          className={`mb-4 rounded-lg border px-4 py-3 text-sm ${
-            notice.tone === "success"
-              ? "border-emerald-100 bg-emerald-50 text-emerald-700"
-              : "border-red-100 bg-red-50 text-red-700"
-          }`}
-          role={notice.tone === "error" ? "alert" : "status"}
-        >
-          {notice.text}
-        </p>
+        <AdminToast
+          message={notice.text}
+          onDismiss={() => setNotice(null)}
+          tone={notice.tone}
+        />
       ) : null}
 
       <section className="rounded-xl border border-slate-200 bg-white shadow-sm">

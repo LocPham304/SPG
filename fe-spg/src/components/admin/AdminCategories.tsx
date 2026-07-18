@@ -26,6 +26,7 @@ import type {
 import { FIXED_CATEGORY_CODES } from "@/types/categories";
 
 import { AccessDenied } from "./AccessDenied";
+import { useAdminConfirm } from "./AdminConfirmDialog";
 import { AdminPageHeader } from "./AdminPageHeader";
 import { useAdminUser } from "./AdminAuthContext";
 
@@ -79,6 +80,7 @@ function CategoriesLoading() {
 
 export function AdminCategories() {
   const currentUser = useAdminUser();
+  const { confirmAction, confirmDialog } = useAdminConfirm();
   const isAdmin = currentUser.role === "admin";
   const [response, setResponse] =
     useState<CategoriesListResponse | null>(null);
@@ -187,11 +189,14 @@ export function AdminCategories() {
   async function handleStatusChange(category: NewsCategory) {
     const nextIsActive = !category.isActive;
 
-    if (
-      !nextIsActive &&
-      !window.confirm("Bạn có chắc muốn ẩn danh mục này?")
-    ) {
-      return;
+    if (!nextIsActive) {
+      const confirmed = await confirmAction({
+        confirmLabel: "Ẩn danh mục",
+        description:
+          "Danh mục sẽ không còn hiển thị ở các khu vực đang sử dụng danh mục hoạt động.",
+        title: "Ẩn danh mục?",
+      });
+      if (!confirmed) return;
     }
 
     setPendingAction(category.id);
@@ -222,6 +227,7 @@ export function AdminCategories() {
 
   return (
     <>
+      {confirmDialog}
       <AdminPageHeader
         description={
           isAdmin

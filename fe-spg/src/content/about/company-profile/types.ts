@@ -14,5 +14,6 @@ export type CompanyProfileContent = {
   heading: string;
   introduction: readonly string[];
   blocks: readonly CompanyProfileBlock[];
+  serviceAudienceHighlights: readonly string[];
   advantages: readonly string[];
 };

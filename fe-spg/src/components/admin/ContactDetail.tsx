@@ -23,7 +23,9 @@ import type {
 } from "@/types/contacts";
 
 import { AccessDenied } from "./AccessDenied";
+import { useAdminConfirm } from "./AdminConfirmDialog";
 import { AdminPageHeader } from "./AdminPageHeader";
+import { AdminToast } from "./AdminToast";
 import { useAdminUser } from "./AdminAuthContext";
 import { StatusBadge } from "./StatusBadge";
 
@@ -88,6 +90,7 @@ function ContactDetailLoading() {
 export function ContactDetail({ contactId }: ContactDetailProps) {
   const router = useRouter();
   const currentUser = useAdminUser();
+  const { confirmAction, confirmDialog } = useAdminConfirm();
   const isAdmin = currentUser.role === "admin";
   const [contact, setContact] = useState<ContactMessage | null>(null);
   const [status, setStatus] = useState<ContactStatus>("new");
@@ -169,9 +172,14 @@ export function ContactDetail({ contactId }: ContactDetailProps) {
   }
 
   async function handleDelete() {
-    if (!contact || !window.confirm("Bạn có chắc muốn xóa liên hệ này?")) {
-      return;
-    }
+    if (!contact) return;
+    const confirmed = await confirmAction({
+      confirmLabel: "Xóa liên hệ",
+      description:
+        "Liên hệ và thông tin xử lý liên quan sẽ bị xóa. Bạn có chắc muốn tiếp tục?",
+      title: "Xóa liên hệ?",
+    });
+    if (!confirmed) return;
 
     setPendingAction("delete");
     setNotice(null);
@@ -189,6 +197,7 @@ export function ContactDetail({ contactId }: ContactDetailProps) {
 
   return (
     <>
+      {confirmDialog}
       <AdminPageHeader
         actions={
           <div className="flex flex-wrap gap-2">
@@ -215,16 +224,11 @@ export function ContactDetail({ contactId }: ContactDetailProps) {
       />
 
       {notice ? (
-        <p
-          className={`mb-5 rounded-lg border px-4 py-3 text-sm ${
-            notice.tone === "success"
-              ? "border-emerald-100 bg-emerald-50 text-emerald-700"
-              : "border-red-100 bg-red-50 text-red-700"
-          }`}
-          role={notice.tone === "error" ? "alert" : "status"}
-        >
-          {notice.text}
-        </p>
+        <AdminToast
+          message={notice.text}
+          onDismiss={() => setNotice(null)}
+          tone={notice.tone}
+        />
       ) : null}
 
       {isLoading ? <ContactDetailLoading /> : null}

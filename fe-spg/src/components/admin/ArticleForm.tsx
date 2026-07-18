@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
-import { Check, ImageIcon, Languages, Search, X } from "lucide-react";
+import { ImageIcon, Languages } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -20,7 +20,7 @@ import {
   updateArticle,
 } from "@/services/articles.service";
 import { getAdminCategories } from "@/services/categories.service";
-import { getMedia } from "@/services/media.service";
+import { uploadMedia } from "@/services/media.service";
 import type {
   ArticleDetail,
   ArticleTranslationInput,
@@ -33,10 +33,15 @@ import {
   type LocaleCode,
   type NewsCategory,
 } from "@/types/categories";
-import type { MediaFile } from "@/types/media";
+import {
+  MEDIA_MIME_TYPES,
+  type MediaFile,
+} from "@/types/media";
 
 import { AccessDenied } from "./AccessDenied";
+import { useAdminConfirm } from "./AdminConfirmDialog";
 import { AdminPageHeader } from "./AdminPageHeader";
+import { AdminToast } from "./AdminToast";
 import { RichTextEditor } from "./RichTextEditor";
 import { StatusBadge } from "./StatusBadge";
 import { useAdminUser } from "./AdminAuthContext";
@@ -72,6 +77,11 @@ type ThumbnailChoice = {
   width: number;
 };
 
+type PendingThumbnail = {
+  file: File;
+  previewUrl: string;
+};
+
 const inputClassName =
   "h-11 w-full rounded-lg border border-slate-300 bg-white px-3.5 text-sm outline-none focus:border-[#1d2088] focus:ring-2 focus:ring-[#1d2088]/15 disabled:bg-slate-100 disabled:text-slate-500";
 const textareaClassName =
@@ -81,6 +91,7 @@ const dateFormatter = new Intl.DateTimeFormat("vi-VN", {
   timeStyle: "short",
 });
 const ARTICLE_LOCALES = ["vi", "en", "zh"] as const;
+const MAX_THUMBNAIL_SIZE_BYTES = 5 * 1024 * 1024;
 const localeLabels: Record<LocaleCode, string> = {
   vi: "Tiếng Việt",
   en: "English",
@@ -200,6 +211,7 @@ function ArticleFormLoading() {
 export function ArticleForm({ articleId }: ArticleFormProps) {
   const router = useRouter();
   const user = useAdminUser();
+  const { confirmAction, confirmDialog } = useAdminConfirm();
   const isEditing = articleId !== undefined;
   const isAdmin = user.role === "admin";
   const slugWasEditedRef = useRef<Record<LocaleCode, boolean>>({
@@ -207,9 +219,9 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
     en: isEditing,
     zh: isEditing,
   });
+  const pendingThumbnailUrlRef = useRef<string | null>(null);
   const [article, setArticle] = useState<ArticleDetail | null>(null);
   const [categories, setCategories] = useState<NewsCategory[]>([]);
-  const [mediaFiles, setMediaFiles] = useState<MediaFile[]>([]);
   const [categoryId, setCategoryId] = useState("");
   const [sourceUrl, setSourceUrl] = useState("");
   const [isFeatured, setIsFeatured] = useState(false);
@@ -219,7 +231,9 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
   );
   const [selectedThumbnail, setSelectedThumbnail] =
     useState<ThumbnailChoice | null>(null);
-  const [isThumbnailPickerOpen, setIsThumbnailPickerOpen] = useState(false);
+  const [pendingThumbnail, setPendingThumbnail] =
+    useState<PendingThumbnail | null>(null);
+  const [thumbnailError, setThumbnailError] = useState("");
   const [commonErrors, setCommonErrors] = useState<CommonFormErrors>({});
   const [translationErrors, setTranslationErrors] = useState<TranslationErrors>(
     createEmptyTranslationErrors,
@@ -242,15 +256,13 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
     setHasError(false);
     setApiError("");
     try {
-      const [categoriesResponse, mediaResponse, articleResponse] =
-        await Promise.all([
+      const [categoriesResponse, articleResponse] = await Promise.all([
           getAdminCategories({
             isActive: true,
             limit: 100,
             locale: "vi",
             page: 1,
           }),
-          getMedia({ limit: 100, page: 1 }),
           articleId !== undefined
             ? getAdminArticleById(articleId)
             : Promise.resolve(null),
@@ -261,7 +273,6 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
           (category) => category.isActive && fixedCodes.has(category.code),
         ),
       );
-      setMediaFiles(mediaResponse.data);
 
       if (articleResponse) {
         const nextTranslations = toTranslationFormState(articleResponse);
@@ -277,21 +288,14 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
         setIsFeatured(articleResponse.isFeatured);
 
         if (articleResponse.thumbnail) {
-          const mediaMatch = mediaResponse.data.find(
-            (media) => media.id === articleResponse.thumbnail?.id,
-          );
-          setSelectedThumbnail(
-            mediaMatch
-              ? toThumbnailChoice(mediaMatch)
-              : {
-                  altText: articleResponse.thumbnail.altText,
-                  height: articleResponse.thumbnail.height,
-                  id: articleResponse.thumbnail.id,
-                  name: "Ảnh đại diện hiện tại",
-                  publicUrl: articleResponse.thumbnail.publicUrl,
-                  width: articleResponse.thumbnail.width,
-                },
-          );
+          setSelectedThumbnail({
+            altText: articleResponse.thumbnail.altText,
+            height: articleResponse.thumbnail.height,
+            id: articleResponse.thumbnail.id,
+            name: "Ảnh đại diện hiện tại",
+            publicUrl: articleResponse.thumbnail.publicUrl,
+            width: articleResponse.thumbnail.width,
+          });
         }
       }
     } catch (error: unknown) {
@@ -308,6 +312,48 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
   useEffect(() => {
     void loadFormData();
   }, [loadFormData]);
+
+  useEffect(
+    () => () => {
+      if (pendingThumbnailUrlRef.current) {
+        URL.revokeObjectURL(pendingThumbnailUrlRef.current);
+      }
+    },
+    [],
+  );
+
+  function clearPendingThumbnail() {
+    if (pendingThumbnailUrlRef.current) {
+      URL.revokeObjectURL(pendingThumbnailUrlRef.current);
+      pendingThumbnailUrlRef.current = null;
+    }
+    setPendingThumbnail(null);
+  }
+
+  function handleThumbnailFile(file: File | undefined) {
+    if (!file) return;
+
+    if (
+      !MEDIA_MIME_TYPES.includes(
+        file.type as (typeof MEDIA_MIME_TYPES)[number],
+      )
+    ) {
+      setThumbnailError("Chỉ hỗ trợ ảnh JPG, JPEG, PNG hoặc WebP.");
+      return;
+    }
+
+    if (file.size > MAX_THUMBNAIL_SIZE_BYTES) {
+      setThumbnailError("Ảnh đại diện không được vượt quá 5MB.");
+      return;
+    }
+
+    clearPendingThumbnail();
+    const previewUrl = URL.createObjectURL(file);
+    pendingThumbnailUrlRef.current = previewUrl;
+    setPendingThumbnail({ file, previewUrl });
+    setSelectedThumbnail(null);
+    setThumbnailError("");
+  }
 
   function updateTranslation(
     locale: LocaleCode,
@@ -407,9 +453,13 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
 
   async function handleAutoTranslate() {
     if (articleId === undefined || isSaving || isTranslating) return;
-    const confirmed = window.confirm(
-      "Hệ thống sẽ dịch nội dung tiếng Việt sang English và 中文. Tiếp tục?",
-    );
+    const confirmed = await confirmAction({
+      confirmLabel: "Dịch tự động",
+      description:
+        "Hệ thống sẽ dịch nội dung tiếng Việt sang English và 中文.",
+      title: "Tiếp tục dịch tự động?",
+      tone: "primary",
+    });
     if (!confirmed) return;
 
     setIsTranslating(true);
@@ -488,13 +538,26 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
       submitter?.value === "published" ? "published" : "draft";
     setIsSaving(true);
     setApiError("");
+    setTranslationNotice(null);
 
     try {
+      let thumbnail = selectedThumbnail;
+
+      if (pendingThumbnail) {
+        const uploadedMedia = await uploadMedia(
+          pendingThumbnail.file,
+          translations.vi.thumbnailAltText,
+        );
+        thumbnail = toThumbnailChoice(uploadedMedia);
+        setSelectedThumbnail(thumbnail);
+        clearPendingThumbnail();
+      }
+
       if (articleId !== undefined) {
         const payload: UpdateArticleData = {
           categoryId: Number(categoryId),
           sourceUrl: sourceUrl.trim() || null,
-          thumbnailId: selectedThumbnail?.id ?? null,
+          thumbnailId: thumbnail?.id ?? null,
           translations: buildTranslationPayload(),
         };
         await updateArticle(articleId, payload);
@@ -505,7 +568,7 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
           ...(isAdmin ? { isFeatured } : {}),
           ...(sourceUrl.trim() ? { sourceUrl: sourceUrl.trim() } : {}),
           status: requestedStatus,
-          ...(selectedThumbnail ? { thumbnailId: selectedThumbnail.id } : {}),
+          ...(thumbnail ? { thumbnailId: thumbnail.id } : {}),
           translations: buildTranslationPayload(),
         };
         await createArticle(payload);
@@ -539,6 +602,7 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
 
   return (
     <>
+      {confirmDialog}
       <AdminPageHeader
         actions={
           <Link
@@ -598,24 +662,17 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
             ) : null}
           </section>
           {apiError ? (
-            <p
-              className="mb-5 rounded-lg border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-700"
-              role="alert"
-            >
-              {apiError}
-            </p>
-          ) : null}
-          {translationNotice ? (
-            <p
-              className={`mb-5 rounded-lg border px-4 py-3 text-sm ${
-                translationNotice.kind === "success"
-                  ? "border-emerald-200 bg-emerald-50 text-emerald-700"
-                  : "border-amber-200 bg-amber-50 text-amber-800"
-              }`}
-              role="status"
-            >
-              {translationNotice.text}
-            </p>
+            <AdminToast
+              message={apiError}
+              onDismiss={() => setApiError("")}
+              tone="error"
+            />
+          ) : translationNotice ? (
+            <AdminToast
+              message={translationNotice.text}
+              onDismiss={() => setTranslationNotice(null)}
+              tone={translationNotice.kind}
+            />
           ) : null}
           <form
             className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6"
@@ -655,40 +712,70 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
                       Ảnh đại diện
                     </span>
                     <div className="flex flex-wrap gap-2">
-                      <button
-                        className="h-11 rounded-lg border border-slate-300 bg-white px-4 text-sm font-semibold text-slate-700 hover:bg-slate-50"
-                        disabled={isSaving}
-                        onClick={() => setIsThumbnailPickerOpen(true)}
-                        type="button"
-                      >
-                        Chọn từ thư viện ảnh
-                      </button>
-                      {selectedThumbnail ? (
+                      <label className="inline-flex h-11 cursor-pointer items-center gap-2 rounded-lg border border-slate-300 bg-white px-4 text-sm font-semibold text-slate-700 hover:bg-slate-50">
+                        <ImageIcon aria-hidden="true" size={18} />
+                        Chọn ảnh từ thiết bị
+                        <input
+                          accept={MEDIA_MIME_TYPES.join(",")}
+                          className="sr-only"
+                          onChange={(event) => {
+                            handleThumbnailFile(event.target.files?.[0]);
+                            event.target.value = "";
+                          }}
+                          type="file"
+                        />
+                      </label>
+                      {selectedThumbnail || pendingThumbnail ? (
                         <button
                           className="h-11 rounded-lg border border-red-200 px-4 text-sm font-semibold text-red-600 hover:bg-red-50"
                           disabled={isSaving}
-                          onClick={() => setSelectedThumbnail(null)}
+                          onClick={() => {
+                            clearPendingThumbnail();
+                            setSelectedThumbnail(null);
+                            setThumbnailError("");
+                          }}
                           type="button"
                         >
                           Bỏ chọn ảnh
                         </button>
                       ) : null}
                     </div>
+                    {thumbnailError ? (
+                      <p className="mt-1.5 text-sm text-red-600" role="alert">
+                        {thumbnailError}
+                      </p>
+                    ) : (
+                      <p className="mt-1.5 text-xs text-slate-500">
+                        Hỗ trợ JPG, JPEG, PNG, WebP; tối đa 5MB.
+                      </p>
+                    )}
                   </div>
                 </div>
-                {selectedThumbnail ? (
+                {pendingThumbnail || selectedThumbnail ? (
                   <div className="flex max-w-xl items-center gap-4 rounded-xl border border-slate-200 bg-slate-50 p-3">
                     <img
-                      alt={selectedThumbnail.altText || selectedThumbnail.name}
+                      alt={
+                        pendingThumbnail
+                          ? translations.vi.thumbnailAltText ||
+                            pendingThumbnail.file.name
+                          : selectedThumbnail?.altText ||
+                            selectedThumbnail?.name ||
+                            "Ảnh đại diện"
+                      }
                       className="h-24 w-32 shrink-0 rounded-lg object-cover"
-                      src={selectedThumbnail.publicUrl}
+                      src={
+                        pendingThumbnail?.previewUrl ??
+                        selectedThumbnail?.publicUrl
+                      }
                     />
                     <div className="min-w-0">
                       <p className="truncate text-sm font-semibold text-slate-800">
-                        {selectedThumbnail.name}
+                        {pendingThumbnail?.file.name ?? selectedThumbnail?.name}
                       </p>
                       <p className="mt-1 text-xs text-slate-500">
-                        {selectedThumbnail.width} × {selectedThumbnail.height}px
+                        {pendingThumbnail
+                          ? "Sẽ tải lên khi lưu bài viết"
+                          : `${selectedThumbnail?.width} × ${selectedThumbnail?.height}px`}
                       </p>
                     </div>
                   </div>
@@ -1000,20 +1087,6 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
           </form>
         </>
       ) : null}
-      {isThumbnailPickerOpen ? (
-        <ThumbnailPicker
-          mediaFiles={mediaFiles}
-          onClose={() => setIsThumbnailPickerOpen(false)}
-          onSelect={(thumbnail) => {
-            setSelectedThumbnail(thumbnail);
-            if (!translations.vi.thumbnailAltText.trim() && thumbnail.altText) {
-              updateTranslation("vi", "thumbnailAltText", thumbnail.altText);
-            }
-            setIsThumbnailPickerOpen(false);
-          }}
-          selectedId={selectedThumbnail?.id ?? null}
-        />
-      ) : null}
     </>
   );
 }
@@ -1030,145 +1103,5 @@ function FieldError({ id, message }: FieldErrorProps) {
     <span className="mt-1.5 block text-sm text-red-600" id={id}>
       {message}
     </span>
-  );
-}
-
-type ThumbnailPickerProps = {
-  mediaFiles: MediaFile[];
-  onClose: () => void;
-  onSelect: (thumbnail: ThumbnailChoice) => void;
-  selectedId: number | null;
-};
-
-function ThumbnailPicker({
-  mediaFiles,
-  onClose,
-  onSelect,
-  selectedId,
-}: ThumbnailPickerProps) {
-  const [search, setSearch] = useState("");
-  const normalizedSearch = search.trim().toLocaleLowerCase("vi");
-  const filteredMedia = mediaFiles.filter(
-    (media) =>
-      !normalizedSearch ||
-      media.originalName.toLocaleLowerCase("vi").includes(normalizedSearch) ||
-      media.altText?.toLocaleLowerCase("vi").includes(normalizedSearch),
-  );
-
-  return (
-    <div
-      aria-labelledby="thumbnail-picker-title"
-      aria-modal="true"
-      className="fixed inset-0 z-[70] flex items-center justify-center bg-slate-950/55 p-4"
-      role="dialog"
-    >
-      <div className="flex max-h-[90vh] w-full max-w-5xl flex-col overflow-hidden rounded-xl bg-white shadow-xl">
-        <div className="flex items-start justify-between gap-4 border-b border-slate-200 p-5">
-          <div>
-            <h2
-              className="text-lg font-bold text-slate-900"
-              id="thumbnail-picker-title"
-            >
-              Chọn ảnh từ thư viện
-            </h2>
-            <p className="mt-1 text-sm text-slate-500">
-              Chọn một ảnh đã được tải lên hệ thống.
-            </p>
-          </div>
-          <button
-            aria-label="Đóng"
-            className="flex size-9 items-center justify-center rounded-lg text-slate-500 hover:bg-slate-100"
-            onClick={onClose}
-            type="button"
-          >
-            <X aria-hidden="true" size={19} />
-          </button>
-        </div>
-
-        <div className="flex flex-col gap-3 border-b border-slate-200 p-4 sm:flex-row">
-          <label className="relative flex-1">
-            <Search
-              aria-hidden="true"
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
-              size={17}
-            />
-            <span className="sr-only">Tìm ảnh</span>
-            <input
-              className={`${inputClassName} pl-9`}
-              onChange={(event) => setSearch(event.target.value)}
-              placeholder="Tìm theo tên file hoặc mô tả..."
-              type="search"
-              value={search}
-            />
-          </label>
-          <Link
-            className="inline-flex h-11 items-center justify-center rounded-lg border border-slate-300 px-4 text-sm font-semibold text-slate-700 hover:bg-slate-50"
-            href="/admin/media"
-          >
-            Mở thư viện ảnh
-          </Link>
-        </div>
-
-        <div className="overflow-y-auto p-4">
-          {filteredMedia.length === 0 ? (
-            <div className="py-14 text-center">
-              <ImageIcon
-                aria-hidden="true"
-                className="mx-auto text-slate-300"
-                size={42}
-              />
-              <p className="mt-3 font-semibold text-slate-700">
-                Chưa có ảnh nào
-              </p>
-            </div>
-          ) : (
-            <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
-              {filteredMedia.map((media) => {
-                const isSelected = media.id === selectedId;
-
-                return (
-                  <button
-                    aria-pressed={isSelected}
-                    className={`overflow-hidden rounded-xl border bg-white text-left ${
-                      isSelected
-                        ? "border-[#1d2088] ring-2 ring-[#1d2088]/20"
-                        : "border-slate-200 hover:border-slate-400"
-                    }`}
-                    key={media.id}
-                    onClick={() => onSelect(toThumbnailChoice(media))}
-                    type="button"
-                  >
-                    <div className="relative aspect-[4/3] bg-slate-100">
-                      <img
-                        alt={media.altText || media.originalName}
-                        className="h-full w-full object-cover"
-                        loading="lazy"
-                        src={media.publicUrl}
-                      />
-                      {isSelected ? (
-                        <span className="absolute right-2 top-2 flex size-7 items-center justify-center rounded-full bg-[#1d2088] text-white">
-                          <Check aria-hidden="true" size={16} />
-                        </span>
-                      ) : null}
-                    </div>
-                    <div className="p-3">
-                      <p
-                        className="truncate text-sm font-semibold text-slate-800"
-                        title={media.originalName}
-                      >
-                        {media.originalName}
-                      </p>
-                      <p className="mt-1 text-xs text-slate-500">
-                        {media.width} × {media.height}px
-                      </p>
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
   );
 }

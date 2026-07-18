@@ -38,7 +38,13 @@ export async function HomeAboutSection({ locale }: HomeAboutSectionProps) {
         <p className={styles.companyName}>{aboutT("companyName")}</p>
         <div className={styles.bodyCopy}>
           <p>{aboutT("paragraphs.introduction")}</p>
-          <p>{aboutT("paragraphs.business")}</p>
+          <p>
+            {aboutT.rich("paragraphs.business", {
+              highlight: (chunks) => (
+                <strong className={styles.highlightedTerm}>{chunks}</strong>
+              ),
+            })}
+          </p>
         </div>
         <LocalizedLink
           className={styles.learnMore}

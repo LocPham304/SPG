@@ -1,6 +1,7 @@
 import { Wrench } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 
+import { LocalizedLink } from "@/components/common/LocalizedLink";
 import { ScrollReveal } from "@/components/news/ScrollReveal";
 import { getStaggerDelay } from "@/components/news/animation";
 import { homeBaseItems } from "@/data/home-bases";
@@ -33,7 +34,8 @@ export async function HomeBasesSection({ locale }: HomeBasesSectionProps) {
           </div>
 
           {homeBaseItems.map((base, index) => (
-            <article
+            <LocalizedLink
+              href="/about/company-profile#about-bases"
               key={base.id}
               className={`${styles.baseItem} ${
                 base.status === "available"
@@ -44,6 +46,7 @@ export async function HomeBasesSection({ locale }: HomeBasesSectionProps) {
             >
               <ScrollReveal
                 animation="animate__fadeInUp"
+                className={styles.baseContent}
                 delay={getStaggerDelay(index)}
                 duration="0.7s"
               >
@@ -70,7 +73,7 @@ export async function HomeBasesSection({ locale }: HomeBasesSectionProps) {
                   />
                 )}
               </ScrollReveal>
-            </article>
+            </LocalizedLink>
           ))}
         </div>
       </div>
