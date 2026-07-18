@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
-import { Check, ImageIcon, Search, X } from "lucide-react";
+import { Check, ImageIcon, Languages, Search, X } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -16,6 +16,7 @@ import { ApiError } from "@/lib/api";
 import {
   createArticle,
   getAdminArticleById,
+  translateArticle,
   updateArticle,
 } from "@/services/articles.service";
 import { getAdminCategories } from "@/services/categories.service";
@@ -54,6 +55,7 @@ type TranslationFieldErrors = Partial<
 >;
 
 type TranslationFormValue = Omit<ArticleTranslationInput, "locale"> & {
+  translationError?: string | null;
   translationStatus?: TranslationStatus;
 };
 
@@ -84,9 +86,7 @@ const localeLabels: Record<LocaleCode, string> = {
   en: "English",
   zh: "中文",
 };
-const translationStatusLabels: Partial<
-  Record<TranslationStatus, string>
-> = {
+const translationStatusLabels: Partial<Record<TranslationStatus, string>> = {
   queued: "Chờ dịch",
   auto_translated: "Dịch tự động",
   reviewed: "Đã chỉnh sửa",
@@ -116,6 +116,26 @@ function createEmptyTranslations(): TranslationFormState {
 
 function createEmptyTranslationErrors(): TranslationErrors {
   return { vi: {}, en: {}, zh: {} };
+}
+
+function toTranslationFormState(article: ArticleDetail): TranslationFormState {
+  const nextTranslations = createEmptyTranslations();
+
+  for (const translation of article.translations) {
+    nextTranslations[translation.locale] = {
+      contentHtml: translation.contentHtml ?? "",
+      seoDescription: translation.seoDescription ?? "",
+      seoTitle: translation.seoTitle ?? "",
+      slug: translation.slug ?? "",
+      summary: translation.summary ?? "",
+      thumbnailAltText: translation.thumbnailAltText ?? "",
+      title: translation.title ?? "",
+      translationError: translation.translationError,
+      translationStatus: translation.translationStatus,
+    };
+  }
+
+  return nextTranslations;
 }
 
 function formatDate(value: string) {
@@ -198,14 +218,21 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
   );
   const [selectedThumbnail, setSelectedThumbnail] =
     useState<ThumbnailChoice | null>(null);
-  const [isThumbnailPickerOpen, setIsThumbnailPickerOpen] =
-    useState(false);
+  const [isThumbnailPickerOpen, setIsThumbnailPickerOpen] = useState(false);
   const [commonErrors, setCommonErrors] = useState<CommonFormErrors>({});
-  const [translationErrors, setTranslationErrors] =
-    useState<TranslationErrors>(createEmptyTranslationErrors);
+  const [translationErrors, setTranslationErrors] = useState<TranslationErrors>(
+    createEmptyTranslationErrors,
+  );
   const [apiError, setApiError] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
+  const [isTranslating, setIsTranslating] = useState(false);
+  const [overwriteTranslations, setOverwriteTranslations] = useState(false);
+  const [editorRevision, setEditorRevision] = useState(0);
+  const [translationNotice, setTranslationNotice] = useState<{
+    kind: "success" | "warning";
+    text: string;
+  } | null>(null);
   const [hasError, setHasError] = useState(false);
   const [isForbidden, setIsForbidden] = useState(false);
 
@@ -230,25 +257,14 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
       const fixedCodes = new Set<string>(FIXED_CATEGORY_CODES);
       setCategories(
         categoriesResponse.data.filter(
-          (category) =>
-            category.isActive && fixedCodes.has(category.code),
+          (category) => category.isActive && fixedCodes.has(category.code),
         ),
       );
       setMediaFiles(mediaResponse.data);
 
       if (articleResponse) {
-        const nextTranslations = createEmptyTranslations();
+        const nextTranslations = toTranslationFormState(articleResponse);
         for (const translation of articleResponse.translations) {
-          nextTranslations[translation.locale] = {
-            contentHtml: translation.contentHtml ?? "",
-            seoDescription: translation.seoDescription ?? "",
-            seoTitle: translation.seoTitle ?? "",
-            slug: translation.slug ?? "",
-            summary: translation.summary ?? "",
-            thumbnailAltText: translation.thumbnailAltText ?? "",
-            title: translation.title ?? "",
-            translationStatus: translation.translationStatus,
-          };
           slugWasEditedRef.current[translation.locale] = Boolean(
             translation.slug,
           );
@@ -342,25 +358,20 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
 
     for (const locale of ARTICLE_LOCALES) {
       const value = translations[locale];
-      const isRequired =
-        locale === "vi" || hasAnyTranslationContent(value);
+      const isRequired = locale === "vi" || hasAnyTranslationContent(value);
       if (!isRequired) continue;
 
       if (!value.title.trim()) {
-        nextTranslationErrors[locale].title =
-          "Vui lòng nhập tiêu đề bài viết.";
+        nextTranslationErrors[locale].title = "Vui lòng nhập tiêu đề bài viết.";
       }
       if (!value.slug.trim()) {
         nextTranslationErrors[locale].slug = "Vui lòng nhập slug.";
-      } else if (
-        !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(value.slug.trim())
-      ) {
+      } else if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(value.slug.trim())) {
         nextTranslationErrors[locale].slug =
           "Slug chỉ được chứa chữ thường, số và dấu gạch ngang.";
       }
       if (!value.summary.trim()) {
-        nextTranslationErrors[locale].summary =
-          "Vui lòng nhập mô tả ngắn.";
+        nextTranslationErrors[locale].summary = "Vui lòng nhập mô tả ngắn.";
       }
       if (isContentEmpty(value.contentHtml)) {
         nextTranslationErrors[locale].contentHtml =
@@ -377,10 +388,7 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
     setCommonErrors(nextCommonErrors);
     setTranslationErrors(nextTranslationErrors);
     if (firstInvalidLocale) setActiveLocale(firstInvalidLocale);
-    return (
-      Object.keys(nextCommonErrors).length === 0 &&
-      !firstInvalidLocale
-    );
+    return Object.keys(nextCommonErrors).length === 0 && !firstInvalidLocale;
   }
 
   function buildTranslationPayload(): ArticleTranslationInput[] {
@@ -394,6 +402,80 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
       thumbnailAltText: translations[locale].thumbnailAltText,
       title: translations[locale].title,
     }));
+  }
+
+  async function handleAutoTranslate() {
+    if (articleId === undefined || isSaving || isTranslating) return;
+    const confirmed = window.confirm(
+      "Hệ thống sẽ dịch nội dung tiếng Việt sang English và 中文. Tiếp tục?",
+    );
+    if (!confirmed) return;
+
+    setIsTranslating(true);
+    setApiError("");
+    setTranslationNotice(null);
+
+    try {
+      const response = await translateArticle(articleId, {
+        overwrite: overwriteTranslations,
+        targets: ["en", "zh"],
+      });
+      setTranslations((current) => {
+        const next = { ...current };
+        for (const result of response.results) {
+          next[result.locale] = {
+            contentHtml: result.contentHtml ?? "",
+            seoDescription: result.seoDescription ?? "",
+            seoTitle: result.seoTitle ?? "",
+            slug: result.slug ?? "",
+            summary: result.summary ?? "",
+            thumbnailAltText: result.thumbnailAltText ?? "",
+            title: result.title ?? "",
+            translationError: result.translationError,
+            translationStatus: result.status,
+          };
+          slugWasEditedRef.current[result.locale] = Boolean(result.slug);
+        }
+        return next;
+      });
+      setEditorRevision((current) => current + 1);
+
+      const firstTranslated = response.results.find(
+        (result) => !result.skipped,
+      );
+      if (firstTranslated) setActiveLocale(firstTranslated.locale);
+
+      if (response.results.some((result) => result.skipped)) {
+        setTranslationNotice({
+          kind: "warning",
+          text: "Một số bản dịch đã được chỉnh sửa thủ công nên không bị ghi đè",
+        });
+      } else {
+        setTranslationNotice({
+          kind: "success",
+          text: "Dịch tự động thành công",
+        });
+      }
+    } catch (error: unknown) {
+      if (error instanceof ApiError && error.status === 403) {
+        setIsForbidden(true);
+      } else if (error instanceof ApiError) {
+        setApiError(error.message);
+      } else {
+        setApiError("Đã có lỗi xảy ra. Vui lòng thử lại.");
+      }
+
+      try {
+        const latestArticle = await getAdminArticleById(articleId);
+        setArticle(latestArticle);
+        setTranslations(toTranslationFormState(latestArticle));
+        setEditorRevision((current) => current + 1);
+      } catch {
+        // Giữ nguyên lỗi dịch ban đầu nếu không thể tải lại chi tiết.
+      }
+    } finally {
+      setIsTranslating(false);
+    }
   }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -422,9 +504,7 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
           ...(isAdmin ? { isFeatured } : {}),
           ...(sourceUrl.trim() ? { sourceUrl: sourceUrl.trim() } : {}),
           status: requestedStatus,
-          ...(selectedThumbnail
-            ? { thumbnailId: selectedThumbnail.id }
-            : {}),
+          ...(selectedThumbnail ? { thumbnailId: selectedThumbnail.id } : {}),
           translations: buildTranslationPayload(),
         };
         await createArticle(payload);
@@ -451,7 +531,10 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
   const statusLabel =
     activeLocale === "vi"
       ? null
-      : translationStatusLabels[activeTranslation.translationStatus ?? "queued"];
+      : translationStatusLabels[
+          activeTranslation.translationStatus ?? "queued"
+        ];
+  const isBusy = isSaving || isTranslating;
 
   return (
     <>
@@ -521,261 +604,349 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
               {apiError}
             </p>
           ) : null}
+          {translationNotice ? (
+            <p
+              className={`mb-5 rounded-lg border px-4 py-3 text-sm ${
+                translationNotice.kind === "success"
+                  ? "border-emerald-200 bg-emerald-50 text-emerald-700"
+                  : "border-amber-200 bg-amber-50 text-amber-800"
+              }`}
+              role="status"
+            >
+              {translationNotice.text}
+            </p>
+          ) : null}
           <form
             className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6"
             noValidate
             onSubmit={handleSubmit}
           >
-            <section className="grid gap-5">
-              <div className="grid gap-5 md:grid-cols-2">
-                <label>
-                  <span className="mb-2 block text-sm font-semibold text-slate-700">
-                    Danh mục <span className="text-red-600">*</span>
-                  </span>
-                  <select
-                    className={inputClassName}
-                    disabled={isSaving}
-                    onChange={(event) => {
-                      setCategoryId(event.target.value);
-                      setCommonErrors((current) => ({
-                        ...current,
-                        categoryId: undefined,
-                      }));
-                    }}
-                    value={categoryId}
-                  >
-                    <option value="">Chọn danh mục</option>
-                    {categories.map((category) => (
-                      <option key={category.id} value={category.id}>
-                        {getCategoryName(category)}
-                      </option>
-                    ))}
-                  </select>
-                  <FieldError message={commonErrors.categoryId} />
-                </label>
-                <div>
-                  <span className="mb-2 block text-sm font-semibold text-slate-700">
-                    Ảnh đại diện
-                  </span>
-                  <div className="flex flex-wrap gap-2">
-                    <button
-                      className="h-11 rounded-lg border border-slate-300 bg-white px-4 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+            <fieldset className="contents" disabled={isBusy}>
+              <section className="grid gap-5">
+                <div className="grid gap-5 md:grid-cols-2">
+                  <label>
+                    <span className="mb-2 block text-sm font-semibold text-slate-700">
+                      Danh mục <span className="text-red-600">*</span>
+                    </span>
+                    <select
+                      className={inputClassName}
                       disabled={isSaving}
-                      onClick={() => setIsThumbnailPickerOpen(true)}
-                      type="button"
+                      onChange={(event) => {
+                        setCategoryId(event.target.value);
+                        setCommonErrors((current) => ({
+                          ...current,
+                          categoryId: undefined,
+                        }));
+                      }}
+                      value={categoryId}
                     >
-                      Chọn từ thư viện ảnh
-                    </button>
-                    {selectedThumbnail ? (
+                      <option value="">Chọn danh mục</option>
+                      {categories.map((category) => (
+                        <option key={category.id} value={category.id}>
+                          {getCategoryName(category)}
+                        </option>
+                      ))}
+                    </select>
+                    <FieldError message={commonErrors.categoryId} />
+                  </label>
+                  <div>
+                    <span className="mb-2 block text-sm font-semibold text-slate-700">
+                      Ảnh đại diện
+                    </span>
+                    <div className="flex flex-wrap gap-2">
                       <button
-                        className="h-11 rounded-lg border border-red-200 px-4 text-sm font-semibold text-red-600 hover:bg-red-50"
+                        className="h-11 rounded-lg border border-slate-300 bg-white px-4 text-sm font-semibold text-slate-700 hover:bg-slate-50"
                         disabled={isSaving}
-                        onClick={() => setSelectedThumbnail(null)}
+                        onClick={() => setIsThumbnailPickerOpen(true)}
                         type="button"
                       >
-                        Bỏ chọn ảnh
+                        Chọn từ thư viện ảnh
                       </button>
-                    ) : null}
+                      {selectedThumbnail ? (
+                        <button
+                          className="h-11 rounded-lg border border-red-200 px-4 text-sm font-semibold text-red-600 hover:bg-red-50"
+                          disabled={isSaving}
+                          onClick={() => setSelectedThumbnail(null)}
+                          type="button"
+                        >
+                          Bỏ chọn ảnh
+                        </button>
+                      ) : null}
+                    </div>
                   </div>
                 </div>
-              </div>
-              {selectedThumbnail ? (
-                <div className="flex max-w-xl items-center gap-4 rounded-xl border border-slate-200 bg-slate-50 p-3">
-                  <img
-                    alt={selectedThumbnail.altText || selectedThumbnail.name}
-                    className="h-24 w-32 shrink-0 rounded-lg object-cover"
-                    src={selectedThumbnail.publicUrl}
-                  />
-                  <div className="min-w-0">
-                    <p className="truncate text-sm font-semibold text-slate-800">
-                      {selectedThumbnail.name}
-                    </p>
-                    <p className="mt-1 text-xs text-slate-500">
-                      {selectedThumbnail.width} × {selectedThumbnail.height}px
-                    </p>
-                  </div>
-                </div>
-              ) : null}
-              <label>
-                <span className="mb-2 block text-sm font-semibold text-slate-700">
-                  Source URL
-                  <span className="ml-1 font-normal text-slate-400">
-                    (không bắt buộc)
-                  </span>
-                </span>
-                <input
-                  className={inputClassName}
-                  disabled={isSaving}
-                  maxLength={1000}
-                  onChange={(event) => {
-                    setSourceUrl(event.target.value);
-                    setCommonErrors((current) => ({
-                      ...current,
-                      sourceUrl: undefined,
-                    }));
-                  }}
-                  placeholder="https://..."
-                  type="url"
-                  value={sourceUrl}
-                />
-                <FieldError message={commonErrors.sourceUrl} />
-              </label>
-              {!isEditing && isAdmin ? (
-                <label className="flex items-center gap-2 text-sm font-semibold text-slate-700">
-                  <input
-                    checked={isFeatured}
-                    className="size-4 accent-[#1d2088]"
-                    disabled={isSaving}
-                    onChange={(event) => setIsFeatured(event.target.checked)}
-                    type="checkbox"
-                  />
-                  Đặt bài viết làm nổi bật
-                </label>
-              ) : null}
-            </section>
-
-            <section className="mt-7 border-t border-slate-200 pt-6">
-              <div className="flex gap-1 overflow-x-auto border-b border-slate-200">
-                {ARTICLE_LOCALES.map((locale) => (
-                  <button
-                    aria-selected={activeLocale === locale}
-                    className={`whitespace-nowrap border-b-2 px-4 py-3 text-sm font-semibold ${
-                      activeLocale === locale
-                        ? "border-[#1d2088] text-[#1d2088]"
-                        : "border-transparent text-slate-500 hover:text-slate-800"
-                    }`}
-                    key={locale}
-                    onClick={() => setActiveLocale(locale)}
-                    role="tab"
-                    type="button"
-                  >
-                    {localeLabels[locale]}
-                    {locale === "vi" ? (
-                      <span className="ml-1 text-red-600">*</span>
-                    ) : null}
-                  </button>
-                ))}
-              </div>
-
-              <div className="grid gap-5 pt-5" role="tabpanel">
-                {statusLabel ? (
-                  <div className="flex flex-wrap items-center gap-3">
-                    <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-700">
-                      {statusLabel}
-                    </span>
-                    {activeTranslation.translationStatus === "outdated" ? (
-                      <p className="text-sm text-amber-700">
-                        Bản dịch này có thể đã cũ vì nội dung tiếng Việt đã thay đổi.
+                {selectedThumbnail ? (
+                  <div className="flex max-w-xl items-center gap-4 rounded-xl border border-slate-200 bg-slate-50 p-3">
+                    <img
+                      alt={selectedThumbnail.altText || selectedThumbnail.name}
+                      className="h-24 w-32 shrink-0 rounded-lg object-cover"
+                      src={selectedThumbnail.publicUrl}
+                    />
+                    <div className="min-w-0">
+                      <p className="truncate text-sm font-semibold text-slate-800">
+                        {selectedThumbnail.name}
                       </p>
-                    ) : null}
+                      <p className="mt-1 text-xs text-slate-500">
+                        {selectedThumbnail.width} × {selectedThumbnail.height}px
+                      </p>
+                    </div>
                   </div>
                 ) : null}
                 <label>
                   <span className="mb-2 block text-sm font-semibold text-slate-700">
-                    Tiêu đề
-                    {activeLocale === "vi" ? (
-                      <span className="ml-1 text-red-600">*</span>
-                    ) : null}
+                    Source URL
+                    <span className="ml-1 font-normal text-slate-400">
+                      (không bắt buộc)
+                    </span>
                   </span>
                   <input
                     className={inputClassName}
                     disabled={isSaving}
-                    maxLength={500}
+                    maxLength={1000}
                     onChange={(event) => {
-                      const nextTitle = event.target.value;
-                      updateTranslation(activeLocale, "title", nextTitle);
-                      if (!slugWasEditedRef.current[activeLocale]) {
+                      setSourceUrl(event.target.value);
+                      setCommonErrors((current) => ({
+                        ...current,
+                        sourceUrl: undefined,
+                      }));
+                    }}
+                    placeholder="https://..."
+                    type="url"
+                    value={sourceUrl}
+                  />
+                  <FieldError message={commonErrors.sourceUrl} />
+                </label>
+                {!isEditing && isAdmin ? (
+                  <label className="flex items-center gap-2 text-sm font-semibold text-slate-700">
+                    <input
+                      checked={isFeatured}
+                      className="size-4 accent-[#1d2088]"
+                      disabled={isSaving}
+                      onChange={(event) => setIsFeatured(event.target.checked)}
+                      type="checkbox"
+                    />
+                    Đặt bài viết làm nổi bật
+                  </label>
+                ) : null}
+              </section>
+
+              <section className="mt-7 border-t border-slate-200 pt-6">
+                <div className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-lg bg-slate-50 p-3">
+                  {isEditing ? (
+                    <>
+                      <button
+                        className="inline-flex h-10 items-center gap-2 rounded-lg bg-[#1d2088] px-4 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-50"
+                        disabled={isBusy}
+                        onClick={() => void handleAutoTranslate()}
+                        type="button"
+                      >
+                        <Languages aria-hidden="true" className="size-4" />
+                        {isTranslating ? "Đang dịch..." : "Dịch tự động"}
+                      </button>
+                      <label className="flex items-center gap-2 text-sm font-medium text-slate-700">
+                        <input
+                          checked={overwriteTranslations}
+                          className="size-4 accent-[#1d2088]"
+                          disabled={isBusy}
+                          onChange={(event) =>
+                            setOverwriteTranslations(event.target.checked)
+                          }
+                          type="checkbox"
+                        />
+                        Ghi đè bản dịch hiện có
+                      </label>
+                    </>
+                  ) : (
+                    <p className="text-sm text-slate-600">
+                      Vui lòng lưu bài viết trước khi dịch tự động
+                    </p>
+                  )}
+                </div>
+                <div className="flex gap-1 overflow-x-auto border-b border-slate-200">
+                  {ARTICLE_LOCALES.map((locale) => (
+                    <button
+                      aria-selected={activeLocale === locale}
+                      className={`whitespace-nowrap border-b-2 px-4 py-3 text-sm font-semibold ${
+                        activeLocale === locale
+                          ? "border-[#1d2088] text-[#1d2088]"
+                          : "border-transparent text-slate-500 hover:text-slate-800"
+                      }`}
+                      key={locale}
+                      onClick={() => setActiveLocale(locale)}
+                      role="tab"
+                      type="button"
+                    >
+                      {localeLabels[locale]}
+                      {locale === "vi" ? (
+                        <span className="ml-1 text-red-600">*</span>
+                      ) : null}
+                    </button>
+                  ))}
+                </div>
+
+                <div className="grid gap-5 pt-5" role="tabpanel">
+                  {statusLabel ? (
+                    <div className="flex flex-wrap items-center gap-3">
+                      <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-700">
+                        {statusLabel}
+                      </span>
+                      {activeTranslation.translationStatus === "outdated" ? (
+                        <p className="text-sm text-amber-700">
+                          Bản dịch này có thể đã cũ vì nội dung tiếng Việt đã
+                          thay đổi.
+                        </p>
+                      ) : null}
+                      {activeTranslation.translationStatus === "failed" &&
+                      activeTranslation.translationError ? (
+                        <p className="text-sm text-red-700">
+                          {activeTranslation.translationError}
+                        </p>
+                      ) : null}
+                    </div>
+                  ) : null}
+                  <label>
+                    <span className="mb-2 block text-sm font-semibold text-slate-700">
+                      Tiêu đề
+                      {activeLocale === "vi" ? (
+                        <span className="ml-1 text-red-600">*</span>
+                      ) : null}
+                    </span>
+                    <input
+                      className={inputClassName}
+                      disabled={isSaving}
+                      maxLength={500}
+                      onChange={(event) => {
+                        const nextTitle = event.target.value;
+                        updateTranslation(activeLocale, "title", nextTitle);
+                        if (!slugWasEditedRef.current[activeLocale]) {
+                          updateTranslation(
+                            activeLocale,
+                            "slug",
+                            normalizeSlug(nextTitle),
+                          );
+                        }
+                      }}
+                      value={activeTranslation.title}
+                    />
+                    <FieldError message={activeErrors.title} />
+                  </label>
+                  <label>
+                    <span className="mb-2 block text-sm font-semibold text-slate-700">
+                      Slug
+                      {activeLocale === "vi" ? (
+                        <span className="ml-1 text-red-600">*</span>
+                      ) : null}
+                    </span>
+                    <input
+                      autoCapitalize="none"
+                      className={inputClassName}
+                      disabled={isSaving}
+                      maxLength={500}
+                      onChange={(event) => {
+                        slugWasEditedRef.current[activeLocale] = true;
                         updateTranslation(
                           activeLocale,
                           "slug",
-                          normalizeSlug(nextTitle),
+                          event.target.value.toLowerCase(),
                         );
-                      }
-                    }}
-                    value={activeTranslation.title}
-                  />
-                  <FieldError message={activeErrors.title} />
-                </label>
-                <label>
-                  <span className="mb-2 block text-sm font-semibold text-slate-700">
-                    Slug
-                    {activeLocale === "vi" ? (
-                      <span className="ml-1 text-red-600">*</span>
-                    ) : null}
-                  </span>
-                  <input
-                    autoCapitalize="none"
-                    className={inputClassName}
-                    disabled={isSaving}
-                    maxLength={500}
-                    onChange={(event) => {
-                      slugWasEditedRef.current[activeLocale] = true;
-                      updateTranslation(
-                        activeLocale,
-                        "slug",
-                        event.target.value.toLowerCase(),
-                      );
-                    }}
-                    spellCheck={false}
-                    value={activeTranslation.slug}
-                  />
-                  <FieldError message={activeErrors.slug} />
-                </label>
-                <label>
-                  <span className="mb-2 block text-sm font-semibold text-slate-700">
-                    Mô tả ngắn
-                    {activeLocale === "vi" ? (
-                      <span className="ml-1 text-red-600">*</span>
-                    ) : null}
-                  </span>
-                  <textarea
-                    className={textareaClassName}
-                    disabled={isSaving}
-                    onChange={(event) =>
-                      updateTranslation(
-                        activeLocale,
-                        "summary",
-                        event.target.value,
-                      )
-                    }
-                    rows={3}
-                    value={activeTranslation.summary}
-                  />
-                  <FieldError message={activeErrors.summary} />
-                </label>
-                <div>
-                  <span
-                    className="mb-2 block text-sm font-semibold text-slate-700"
-                    id={`article-content-label-${activeLocale}`}
-                  >
-                    Nội dung
-                    {activeLocale === "vi" ? (
-                      <span className="ml-1 text-red-600">*</span>
-                    ) : null}
-                  </span>
-                  <RichTextEditor
-                    error={Boolean(activeErrors.contentHtml)}
-                    errorId={
-                      activeErrors.contentHtml
-                        ? `article-content-error-${activeLocale}`
-                        : undefined
-                    }
-                    key={activeLocale}
-                    labelId={`article-content-label-${activeLocale}`}
-                    onChange={(html) =>
-                      updateTranslation(activeLocale, "contentHtml", html)
-                    }
-                    value={activeTranslation.contentHtml}
-                  />
-                  <FieldError
-                    id={`article-content-error-${activeLocale}`}
-                    message={activeErrors.contentHtml}
-                  />
-                </div>
-                <div className="grid gap-5 md:grid-cols-2">
+                      }}
+                      spellCheck={false}
+                      value={activeTranslation.slug}
+                    />
+                    <FieldError message={activeErrors.slug} />
+                  </label>
                   <label>
                     <span className="mb-2 block text-sm font-semibold text-slate-700">
-                      SEO title
+                      Mô tả ngắn
+                      {activeLocale === "vi" ? (
+                        <span className="ml-1 text-red-600">*</span>
+                      ) : null}
+                    </span>
+                    <textarea
+                      className={textareaClassName}
+                      disabled={isSaving}
+                      onChange={(event) =>
+                        updateTranslation(
+                          activeLocale,
+                          "summary",
+                          event.target.value,
+                        )
+                      }
+                      rows={3}
+                      value={activeTranslation.summary}
+                    />
+                    <FieldError message={activeErrors.summary} />
+                  </label>
+                  <div>
+                    <span
+                      className="mb-2 block text-sm font-semibold text-slate-700"
+                      id={`article-content-label-${activeLocale}`}
+                    >
+                      Nội dung
+                      {activeLocale === "vi" ? (
+                        <span className="ml-1 text-red-600">*</span>
+                      ) : null}
+                    </span>
+                    <RichTextEditor
+                      error={Boolean(activeErrors.contentHtml)}
+                      errorId={
+                        activeErrors.contentHtml
+                          ? `article-content-error-${activeLocale}`
+                          : undefined
+                      }
+                      key={`${activeLocale}-${editorRevision}`}
+                      labelId={`article-content-label-${activeLocale}`}
+                      onChange={(html) =>
+                        updateTranslation(activeLocale, "contentHtml", html)
+                      }
+                      value={activeTranslation.contentHtml}
+                    />
+                    <FieldError
+                      id={`article-content-error-${activeLocale}`}
+                      message={activeErrors.contentHtml}
+                    />
+                  </div>
+                  <div className="grid gap-5 md:grid-cols-2">
+                    <label>
+                      <span className="mb-2 block text-sm font-semibold text-slate-700">
+                        SEO title
+                      </span>
+                      <input
+                        className={inputClassName}
+                        disabled={isSaving}
+                        maxLength={500}
+                        onChange={(event) =>
+                          updateTranslation(
+                            activeLocale,
+                            "seoTitle",
+                            event.target.value,
+                          )
+                        }
+                        value={activeTranslation.seoTitle}
+                      />
+                    </label>
+                    <label>
+                      <span className="mb-2 block text-sm font-semibold text-slate-700">
+                        SEO description
+                      </span>
+                      <textarea
+                        className={textareaClassName}
+                        disabled={isSaving}
+                        onChange={(event) =>
+                          updateTranslation(
+                            activeLocale,
+                            "seoDescription",
+                            event.target.value,
+                          )
+                        }
+                        rows={3}
+                        value={activeTranslation.seoDescription}
+                      />
+                    </label>
+                  </div>
+                  <label>
+                    <span className="mb-2 block text-sm font-semibold text-slate-700">
+                      Thumbnail alt text
                     </span>
                     <input
                       className={inputClassName}
@@ -784,83 +955,47 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
                       onChange={(event) =>
                         updateTranslation(
                           activeLocale,
-                          "seoTitle",
+                          "thumbnailAltText",
                           event.target.value,
                         )
                       }
-                      value={activeTranslation.seoTitle}
-                    />
-                  </label>
-                  <label>
-                    <span className="mb-2 block text-sm font-semibold text-slate-700">
-                      SEO description
-                    </span>
-                    <textarea
-                      className={textareaClassName}
-                      disabled={isSaving}
-                      onChange={(event) =>
-                        updateTranslation(
-                          activeLocale,
-                          "seoDescription",
-                          event.target.value,
-                        )
-                      }
-                      rows={3}
-                      value={activeTranslation.seoDescription}
+                      value={activeTranslation.thumbnailAltText}
                     />
                   </label>
                 </div>
-                <label>
-                  <span className="mb-2 block text-sm font-semibold text-slate-700">
-                    Thumbnail alt text
-                  </span>
-                  <input
-                    className={inputClassName}
-                    disabled={isSaving}
-                    maxLength={500}
-                    onChange={(event) =>
-                      updateTranslation(
-                        activeLocale,
-                        "thumbnailAltText",
-                        event.target.value,
-                      )
-                    }
-                    value={activeTranslation.thumbnailAltText}
-                  />
-                </label>
-              </div>
-            </section>
+              </section>
 
-            <div className="mt-7 flex flex-wrap justify-end gap-3 border-t border-slate-200 pt-5">
-              {isEditing ? (
-                <button
-                  className="h-10 rounded-lg bg-[#1d2088] px-5 text-sm font-semibold text-white disabled:opacity-60"
-                  disabled={isSaving}
-                  type="submit"
-                >
-                  {isSaving ? "Đang lưu..." : "Lưu thay đổi"}
-                </button>
-              ) : (
-                <>
+              <div className="mt-7 flex flex-wrap justify-end gap-3 border-t border-slate-200 pt-5">
+                {isEditing ? (
                   <button
-                    className="h-10 rounded-lg border border-slate-300 px-4 text-sm font-semibold text-slate-700 disabled:opacity-60"
+                    className="h-10 rounded-lg bg-[#1d2088] px-5 text-sm font-semibold text-white disabled:opacity-60"
                     disabled={isSaving}
                     type="submit"
-                    value="draft"
                   >
-                    {isSaving ? "Đang lưu..." : "Lưu nháp"}
+                    {isSaving ? "Đang lưu..." : "Lưu thay đổi"}
                   </button>
-                  <button
-                    className="h-10 rounded-lg bg-[#1d2088] px-4 text-sm font-semibold text-white disabled:opacity-60"
-                    disabled={isSaving}
-                    type="submit"
-                    value="published"
-                  >
-                    {isSaving ? "Đang đăng..." : "Đăng bài"}
-                  </button>
-                </>
-              )}
-            </div>
+                ) : (
+                  <>
+                    <button
+                      className="h-10 rounded-lg border border-slate-300 px-4 text-sm font-semibold text-slate-700 disabled:opacity-60"
+                      disabled={isSaving}
+                      type="submit"
+                      value="draft"
+                    >
+                      {isSaving ? "Đang lưu..." : "Lưu nháp"}
+                    </button>
+                    <button
+                      className="h-10 rounded-lg bg-[#1d2088] px-4 text-sm font-semibold text-white disabled:opacity-60"
+                      disabled={isSaving}
+                      type="submit"
+                      value="published"
+                    >
+                      {isSaving ? "Đang đăng..." : "Đăng bài"}
+                    </button>
+                  </>
+                )}
+              </div>
+            </fieldset>
           </form>
         </>
       ) : null}

@@ -8,6 +8,8 @@ import {
 } from '@nestjs/common';
 import type { Request, Response } from 'express';
 
+import { SafeHttpException } from '../exceptions/safe-http.exception';
+
 type ErrorResponse = {
   message?: string | string[];
 };
@@ -43,7 +45,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     exception: unknown,
     statusCode: number,
   ): string | string[] {
-    if (statusCode >= 500) {
+    if (statusCode >= 500 && !(exception instanceof SafeHttpException)) {
       return 'Internal server error';
     }
 

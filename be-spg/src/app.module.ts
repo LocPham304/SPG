@@ -20,6 +20,7 @@ import { ContactsModule } from './modules/contacts/contacts.module';
 import { DashboardModule } from './modules/dashboard/dashboard.module';
 import { HealthModule } from './modules/health/health.module';
 import { MediaModule } from './modules/media/media.module';
+import { TranslationsModule } from './modules/translations/translations.module';
 import { UsersModule } from './modules/users/users.module';
 
 @Module({
@@ -53,6 +54,7 @@ import { UsersModule } from './modules/users/users.module';
     DashboardModule,
     HealthModule,
     MediaModule,
+    TranslationsModule,
     UsersModule,
   ],
   providers: [

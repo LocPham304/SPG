@@ -78,6 +78,10 @@ class EnvironmentVariables {
 
   @IsOptional()
   @IsString()
+  TRANSLATION_ENDPOINT?: string;
+
+  @IsOptional()
+  @IsString()
   TRANSLATION_API_KEY?: string;
 }
 

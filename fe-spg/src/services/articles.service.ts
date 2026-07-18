@@ -4,6 +4,8 @@ import type {
   ArticlesListResponse,
   CreateArticleData,
   GetAdminArticlesParams,
+  TranslateArticleData,
+  TranslateArticleResponse,
   UpdateArticleData,
 } from "@/types/articles";
 
@@ -43,9 +45,7 @@ function buildArticlesQuery(params: GetAdminArticlesParams) {
   return queryString ? `?${queryString}` : "";
 }
 
-export function getAdminArticles(
-  params: GetAdminArticlesParams = {},
-) {
+export function getAdminArticles(params: GetAdminArticlesParams = {}) {
   return apiRequest<ArticlesListResponse>(
     `/admin/articles${buildArticlesQuery(params)}`,
   );
@@ -87,10 +87,7 @@ export function moveArticleToDraft(id: number) {
   });
 }
 
-export function setArticleFeatured(
-  id: number,
-  isFeatured: boolean,
-) {
+export function setArticleFeatured(id: number, isFeatured: boolean) {
   return apiRequest<ArticleDetail>(`/admin/articles/${id}/featured`, {
     body: JSON.stringify({ isFeatured }),
     method: "PATCH",
@@ -107,4 +104,14 @@ export function restoreArticle(id: number) {
   return apiRequest<ArticleDetail>(`/admin/articles/${id}/restore`, {
     method: "POST",
   });
+}
+
+export function translateArticle(id: number, data: TranslateArticleData = {}) {
+  return apiRequest<TranslateArticleResponse>(
+    `/admin/articles/${id}/translate`,
+    {
+      body: JSON.stringify(data),
+      method: "POST",
+    },
+  );
 }

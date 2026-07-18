@@ -19,6 +19,7 @@ export const ACTIVITY_LOG_ACTIONS = [
   'article.unfeatured',
   'article.deleted',
   'article.restored',
+  'article.auto_translated',
   'media.uploaded',
   'media.updated',
   'media.deleted',

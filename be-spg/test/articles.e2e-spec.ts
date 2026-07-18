@@ -17,6 +17,11 @@ import { LocaleCode } from '../src/modules/categories/enums/locale-code.enum';
 import { CmsUserEntity } from '../src/modules/users/entities/cms-user.entity';
 import { UserRole } from '../src/modules/users/enums/user-role.enum';
 import { UsersService } from '../src/modules/users/users.service';
+import {
+  ARTICLE_TRANSLATION_PROVIDER,
+  type TranslationProvider,
+  TranslationProviderError,
+} from '../src/modules/translations/providers/translation-provider.interface';
 
 jest.setTimeout(45_000);
 
@@ -66,8 +71,32 @@ describe('Articles API (e2e)', () => {
   let adminArticleId: number;
   let employeeArticleId: number;
   let incompleteArticleId: number;
+  let adminEnglishAutoSlug: string;
+  let translationProviderConfigured = true;
+  let translationProviderShouldFail = false;
   const articleIds: number[] = [];
   const testStartedAt = new Date();
+  const translationProviderMock: TranslationProvider = {
+    isConfigured: jest.fn(() => translationProviderConfigured),
+    translateTexts: jest.fn((texts, target, textType) => {
+      if (translationProviderShouldFail) {
+        return Promise.reject(
+          new TranslationProviderError(
+            'DeepL API không thể xử lý yêu cầu (HTTP 429).',
+            429,
+          ),
+        );
+      }
+
+      return Promise.resolve(
+        texts.map((text) =>
+          textType === 'html'
+            ? `<p>AUTO ${target.toUpperCase()}</p>${text}<script>secret-key-marker</script>`
+            : `AUTO ${target.toUpperCase()} ${text}`,
+        ),
+      );
+    }),
+  };
 
   async function login(email: string, password: string): Promise<string> {
     const response = await request(app.getHttpServer())
@@ -102,7 +131,10 @@ describe('Articles API (e2e)', () => {
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
+    })
+      .overrideProvider(ARTICLE_TRANSLATION_PROVIDER)
+      .useValue(translationProviderMock)
+      .compile();
 
     app = moduleFixture.createNestApplication();
     app.setGlobalPrefix('api/v1');
@@ -220,6 +252,72 @@ describe('Articles API (e2e)', () => {
     expect(JSON.stringify(body)).not.toContain('passwordHash');
   });
 
+  it('allows an admin to auto translate English and Chinese safely', async () => {
+    const response = await request(app.getHttpServer())
+      .post(`/api/v1/admin/articles/${adminArticleId}/translate`)
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send({})
+      .expect(200);
+    const body = asRecord(response.body as unknown);
+    const results = asArray(body.results).map(asRecord);
+
+    expect(body).toEqual(
+      expect.objectContaining({
+        articleId: adminArticleId,
+        sourceLocale: LocaleCode.Vietnamese,
+      }),
+    );
+    expect(results).toHaveLength(2);
+    expect(
+      results.every(
+        (result) =>
+          result.status === TranslationStatus.AutoTranslated &&
+          result.skipped === false,
+      ),
+    ).toBe(true);
+    adminEnglishAutoSlug = results.find(
+      (result) => result.locale === LocaleCode.English,
+    )?.slug as string;
+    expect(adminEnglishAutoSlug).toBeTruthy();
+    expect(JSON.stringify(response.body)).not.toContain('secret-key-marker');
+    expect(JSON.stringify(response.body)).not.toContain('TRANSLATION_API_KEY');
+  });
+
+  it('forbids an employee from translating another author article', () => {
+    return request(app.getHttpServer())
+      .post(`/api/v1/admin/articles/${adminArticleId}/translate`)
+      .set('Authorization', `Bearer ${employeeToken}`)
+      .send({ targets: [LocaleCode.English] })
+      .expect(403);
+  });
+
+  it('adds a numeric suffix when an auto translated slug already exists', async () => {
+    const createResponse = await request(app.getHttpServer())
+      .post('/api/v1/admin/articles')
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send({
+        categoryId,
+        title: 'Bài viết admin E2E',
+        slug: 'e2e-articles-auto-slug-collision',
+        summary: 'Một bài viết khác có cùng tiêu đề.',
+        contentHtml: '<p>Nội dung kiểm tra slug tự động.</p>',
+      })
+      .expect(201);
+    const collisionArticleId = asRecord(createResponse.body as unknown)
+      .id as number;
+    articleIds.push(collisionArticleId);
+
+    const translateResponse = await request(app.getHttpServer())
+      .post(`/api/v1/admin/articles/${collisionArticleId}/translate`)
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send({ targets: [LocaleCode.English] })
+      .expect(200);
+    const [english] = asArray(
+      asRecord(translateResponse.body as unknown).results,
+    ).map(asRecord);
+    expect(english.slug).toBe(`${adminEnglishAutoSlug}-2`);
+  });
+
   it('does not expose draft articles publicly', async () => {
     const response = await request(app.getHttpServer())
       .get('/api/v1/news')
@@ -251,6 +349,86 @@ describe('Articles API (e2e)', () => {
         .filter((item) => item.locale !== LocaleCode.Vietnamese)
         .every((item) => item.translationStatus === TranslationStatus.Queued),
     ).toBe(true);
+  });
+
+  it('allows an employee to auto translate their own article', async () => {
+    const createResponse = await request(app.getHttpServer())
+      .post('/api/v1/admin/articles')
+      .set('Authorization', `Bearer ${employeeToken}`)
+      .send({
+        categoryId,
+        title: 'Bài viết employee dành cho auto translate',
+        slug: 'e2e-articles-employee-auto-translate',
+        summary: 'Tóm tắt đầy đủ để dịch tự động.',
+        contentHtml: '<p>Nội dung đầy đủ để dịch tự động.</p>',
+      })
+      .expect(201);
+    const translatedArticleId = asRecord(createResponse.body as unknown)
+      .id as number;
+    articleIds.push(translatedArticleId);
+
+    const response = await request(app.getHttpServer())
+      .post(`/api/v1/admin/articles/${translatedArticleId}/translate`)
+      .set('Authorization', `Bearer ${employeeToken}`)
+      .send({ targets: [LocaleCode.English, LocaleCode.Chinese] })
+      .expect(200);
+    const results = asArray(asRecord(response.body as unknown).results).map(
+      asRecord,
+    );
+    expect(results).toHaveLength(2);
+    expect(
+      results.every(
+        (result) =>
+          result.status === TranslationStatus.AutoTranslated &&
+          result.skipped === false,
+      ),
+    ).toBe(true);
+  });
+
+  it('returns 503 when the translation provider is not configured', async () => {
+    translationProviderConfigured = false;
+    try {
+      const response = await request(app.getHttpServer())
+        .post(`/api/v1/admin/articles/${employeeArticleId}/translate`)
+        .set('Authorization', `Bearer ${employeeToken}`)
+        .send({ targets: [LocaleCode.English] })
+        .expect(503);
+      expect(asRecord(response.body as unknown).message).toBe(
+        'Dịch tự động chưa được cấu hình',
+      );
+    } finally {
+      translationProviderConfigured = true;
+    }
+  });
+
+  it('stores a safe failed status when the translation provider rejects', async () => {
+    translationProviderShouldFail = true;
+    try {
+      const response = await request(app.getHttpServer())
+        .post(`/api/v1/admin/articles/${employeeArticleId}/translate`)
+        .set('Authorization', `Bearer ${employeeToken}`)
+        .send({ targets: [LocaleCode.Chinese] })
+        .expect(502);
+      const responseBody = JSON.stringify(response.body);
+      expect(responseBody).toContain('HTTP 429');
+      expect(responseBody).not.toContain('TRANSLATION_API_KEY');
+      expect(responseBody).not.toContain('secret-key-marker');
+
+      const failedTranslation = await dataSource
+        .getRepository(NewsArticleTranslationEntity)
+        .findOneByOrFail({
+          articleId: employeeArticleId,
+          locale: LocaleCode.Chinese,
+        });
+      expect(failedTranslation.translationStatus).toBe(
+        TranslationStatus.Failed,
+      );
+      expect(failedTranslation.translationError).toBe(
+        'DeepL API không thể xử lý yêu cầu (HTTP 429).',
+      );
+    } finally {
+      translationProviderShouldFail = false;
+    }
   });
 
   it('marks manually supplied English as reviewed on create', async () => {
@@ -413,6 +591,44 @@ describe('Articles API (e2e)', () => {
     expect(english?.sourceVersion).toBe(body.sourceVersion);
   });
 
+  it('skips a reviewed translation when overwrite is false', async () => {
+    const response = await request(app.getHttpServer())
+      .post(`/api/v1/admin/articles/${employeeArticleId}/translate`)
+      .set('Authorization', `Bearer ${employeeToken}`)
+      .send({ targets: [LocaleCode.English], overwrite: false })
+      .expect(200);
+    const [english] = asArray(asRecord(response.body as unknown).results).map(
+      asRecord,
+    );
+    expect(english).toEqual(
+      expect.objectContaining({
+        locale: LocaleCode.English,
+        status: TranslationStatus.Reviewed,
+        skipped: true,
+        title: 'Employee article',
+      }),
+    );
+  });
+
+  it('overwrites a reviewed translation when overwrite is true', async () => {
+    const response = await request(app.getHttpServer())
+      .post(`/api/v1/admin/articles/${employeeArticleId}/translate`)
+      .set('Authorization', `Bearer ${employeeToken}`)
+      .send({ targets: [LocaleCode.English], overwrite: true })
+      .expect(200);
+    const [english] = asArray(asRecord(response.body as unknown).results).map(
+      asRecord,
+    );
+    expect(english).toEqual(
+      expect.objectContaining({
+        locale: LocaleCode.English,
+        status: TranslationStatus.AutoTranslated,
+        skipped: false,
+      }),
+    );
+    expect(english.title).not.toBe('Employee article');
+  });
+
   it('marks populated translations outdated when Vietnamese changes', async () => {
     const response = await request(app.getHttpServer())
       .patch(`/api/v1/admin/articles/${employeeArticleId}`)
@@ -489,6 +705,17 @@ describe('Articles API (e2e)', () => {
       .post(`/api/v1/admin/articles/${incompleteArticleId}/publish`)
       .set('Authorization', `Bearer ${employeeToken}`)
       .expect(400);
+  });
+
+  it('returns 400 when Vietnamese content is incomplete for translation', async () => {
+    const response = await request(app.getHttpServer())
+      .post(`/api/v1/admin/articles/${incompleteArticleId}/translate`)
+      .set('Authorization', `Bearer ${employeeToken}`)
+      .send({})
+      .expect(400);
+    expect(asRecord(response.body as unknown).message).toBe(
+      'Bài viết tiếng Việt chưa đủ nội dung để dịch',
+    );
   });
 
   it('publishes a valid employee article', async () => {
@@ -635,6 +862,7 @@ describe('Articles API (e2e)', () => {
         'article.featured',
         'article.deleted',
         'article.restored',
+        'article.auto_translated',
       ]),
     );
     expect(JSON.stringify(response.body)).not.toContain('passwordHash');

@@ -9,6 +9,7 @@ export type ArticleManagementAction =
   | 'publish'
   | 'hide'
   | 'draft'
+  | 'translate'
   | 'delete'
   | 'restore'
   | 'featured';
@@ -62,7 +63,7 @@ export class ArticlePolicyService {
             ? this.canPublishArticle(user, article)
             : action === 'hide' || action === 'draft'
               ? this.canHideArticle(user, article)
-              : action === 'update'
+              : action === 'update' || action === 'translate'
                 ? this.canUpdateArticle(user, article)
                 : this.canReadAdminArticle(user, article);
 

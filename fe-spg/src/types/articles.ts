@@ -125,3 +125,28 @@ export type UpdateArticleData = {
   thumbnailId?: number | null;
   translations?: ArticleTranslationInput[];
 };
+
+export type TranslateArticleData = {
+  overwrite?: boolean;
+  targets?: Array<Extract<LocaleCode, "en" | "zh">>;
+};
+
+export type TranslateArticleResult = {
+  contentHtml: string | null;
+  locale: Extract<LocaleCode, "en" | "zh">;
+  seoDescription: string | null;
+  seoTitle: string | null;
+  skipped: boolean;
+  slug: string | null;
+  status: TranslationStatus;
+  summary: string | null;
+  thumbnailAltText: string | null;
+  title: string | null;
+  translationError: string | null;
+};
+
+export type TranslateArticleResponse = {
+  articleId: number;
+  results: TranslateArticleResult[];
+  sourceLocale: "vi";
+};

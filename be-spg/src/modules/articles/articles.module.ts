@@ -27,6 +27,6 @@ import { NewsArticleEntity } from './entities/news-article.entity';
   ],
   controllers: [PublicArticlesController, AdminArticlesController],
   providers: [ArticlesService, ArticlePolicyService],
-  exports: [ArticlesService],
+  exports: [ArticlesService, ArticlePolicyService],
 })
 export class ArticlesModule {}
