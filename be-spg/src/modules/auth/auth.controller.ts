@@ -15,6 +15,7 @@ import type { CookieOptions, Request, Response } from 'express';
 
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { Public } from '../../common/decorators/public.decorator';
+import { SkipMustChangePassword } from '../../common/decorators/skip-must-change-password.decorator';
 import type { AuthenticatedUser } from '../../common/types/authenticated-user.type';
 import { AuthService } from './auth.service';
 import { AuthUserResponseDto } from './dto/auth-user-response.dto';
@@ -91,6 +92,7 @@ export class AuthController {
   }
 
   @Post('logout')
+  @SkipMustChangePassword()
   @HttpCode(HttpStatus.OK)
   async logout(
     @CurrentUser() user: AuthenticatedUser,
@@ -115,6 +117,7 @@ export class AuthController {
   }
 
   @Get('me')
+  @SkipMustChangePassword()
   getCurrentUser(
     @CurrentUser() user: AuthenticatedUser,
   ): Promise<AuthUserResponseDto> {
@@ -122,6 +125,7 @@ export class AuthController {
   }
 
   @Patch('change-password')
+  @SkipMustChangePassword()
   async changePassword(
     @CurrentUser() user: AuthenticatedUser,
     @Body() dto: ChangePasswordDto,

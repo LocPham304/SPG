@@ -1,6 +1,8 @@
-import type { AuthenticatedUser } from '../../../common/types/authenticated-user.type';
+import type {
+  AuthenticatedUser,
+  UserRoleName,
+} from '../../../common/types/authenticated-user.type';
 import type { CmsUserEntity } from '../../users/entities/cms-user.entity';
-import { UserRole } from '../../users/enums/user-role.enum';
 
 type AuthUserSource =
   | Pick<
@@ -16,7 +18,7 @@ export class AuthUserResponseDto {
   readonly id: number;
   readonly email: string;
   readonly fullName: string;
-  readonly role: UserRole;
+  readonly role: UserRoleName;
   readonly mustChangePassword: boolean;
 
   constructor(user: AuthUserSource) {

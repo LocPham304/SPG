@@ -1,16 +1,16 @@
-import { UserRole } from '../../modules/users/enums/user-role.enum';
+export type UserRoleName = 'admin' | 'employee';
 
 export type JwtAccessPayload = {
   sub: number;
   sessionId: string;
-  role: UserRole;
+  role: UserRoleName;
 };
 
 export type AuthenticatedUser = {
   id: number;
   email: string;
   fullName: string;
-  role: UserRole;
+  role: UserRoleName;
   mustChangePassword: boolean;
   sessionId: string;
 };
