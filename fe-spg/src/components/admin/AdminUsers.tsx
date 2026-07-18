@@ -6,6 +6,7 @@ import {
   MonitorX,
   Pencil,
   Plus,
+  Trash2,
   Unlock,
   X,
 } from "lucide-react";
@@ -21,6 +22,7 @@ import {
 
 import { ApiError } from "@/lib/api";
 import {
+  deleteUser,
   getUserById,
   getUsers,
   resetUserPassword,
@@ -306,6 +308,43 @@ export function AdminUsers() {
     }
   }
 
+  async function handleDeleteUser(user: AdminUser) {
+    const confirmed = await confirmAction({
+      confirmLabel: "Xóa nhân viên",
+      description: `Tài khoản ${user.fullName} sẽ bị xóa vĩnh viễn. Hành động này không thể hoàn tác.`,
+      title: "Xóa nhân viên?",
+    });
+    if (!confirmed) return;
+
+    setPendingAction(`delete-${user.id}`);
+    setNotice(null);
+
+    try {
+      await deleteUser(user.id);
+      setNotice({
+        text: "Xóa nhân viên thành công",
+        tone: "success",
+      });
+      await loadUsers();
+    } catch (error: unknown) {
+      if (error instanceof ApiError && error.status === 403) {
+        setIsForbidden(true);
+      } else if (
+        error instanceof ApiError &&
+        (error.status === 400 || error.status === 409)
+      ) {
+        setNotice({
+          text: error.message,
+          tone: "error",
+        });
+      } else {
+        handleMutationError(error);
+      }
+    } finally {
+      setPendingAction(null);
+    }
+  }
+
   const users = response?.data ?? [];
   const meta = response?.meta;
 
@@ -513,6 +552,21 @@ export function AdminUsers() {
                             label={`Thu hồi phiên đăng nhập của ${user.fullName}`}
                             onClick={() => void handleRevokeSessions(user)}
                             title="Thu hồi phiên đăng nhập"
+                            tone="danger"
+                          />
+                          <ActionButton
+                            disabled={
+                              pendingAction !== null ||
+                              user.id === currentUser.id
+                            }
+                            icon={Trash2}
+                            label={`Xóa nhân viên ${user.fullName}`}
+                            onClick={() => void handleDeleteUser(user)}
+                            title={
+                              user.id === currentUser.id
+                                ? "Không thể xóa tài khoản đang đăng nhập"
+                                : "Xóa nhân viên"
+                            }
                             tone="danger"
                           />
                         </div>

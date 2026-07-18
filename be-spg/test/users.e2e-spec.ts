@@ -347,6 +347,52 @@ describe('Admin Users API (e2e)', () => {
       .expect(401);
   });
 
+  it('does not allow an admin to delete their own account', () => {
+    return request(app.getHttpServer())
+      .delete(`/api/v1/admin/users/${adminId}`)
+      .set('Authorization', `Bearer ${adminAccessToken}`)
+      .expect(400);
+  });
+
+  it('deletes an employee, their sessions, and records the action', async () => {
+    const response = await request(app.getHttpServer())
+      .delete(`/api/v1/admin/users/${managedUserId}`)
+      .set('Authorization', `Bearer ${adminAccessToken}`)
+      .expect(200);
+
+    expect(response.body).toEqual({
+      message: 'Xóa nhân viên thành công',
+    });
+
+    await request(app.getHttpServer())
+      .get(`/api/v1/admin/users/${managedUserId}`)
+      .set('Authorization', `Bearer ${adminAccessToken}`)
+      .expect(404);
+
+    expect(
+      await dataSource.getRepository(AuthSessionEntity).count({
+        where: { userId: managedUserId },
+      }),
+    ).toBe(0);
+
+    const deletionLog = await dataSource
+      .getRepository(ActivityLogEntity)
+      .findOne({
+        where: {
+          action: 'user.deleted',
+          entityType: 'cms_user',
+          entityId: managedUserId,
+        },
+      });
+
+    expect(deletionLog).toEqual(
+      expect.objectContaining({
+        actorUserId: adminId,
+        title: 'Xóa tài khoản nhân viên',
+      }),
+    );
+  });
+
   afterAll(async () => {
     if (!dataSource || !app) {
       return;
@@ -360,12 +406,18 @@ describe('Admin Users API (e2e)', () => {
       where: { email: In(TEST_EMAILS) },
     });
     const temporaryUserIds = temporaryUsers.map((user) => user.id);
+    const activityEntityIds = Array.from(
+      new Set([...temporaryUserIds, ...(managedUserId ? [managedUserId] : [])]),
+    );
 
-    if (temporaryUserIds.length > 0) {
+    if (activityEntityIds.length > 0) {
       await activityLogsRepository.delete({
         entityType: 'cms_user',
-        entityId: In(temporaryUserIds),
+        entityId: In(activityEntityIds),
       });
+    }
+
+    if (temporaryUserIds.length > 0) {
       await sessionsRepository.delete({ userId: In(temporaryUserIds) });
       await usersRepository.delete({ id: In(temporaryUserIds) });
     }

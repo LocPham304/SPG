@@ -123,6 +123,22 @@ export class UsersController {
     return { message: 'Đã thu hồi toàn bộ phiên đăng nhập' };
   }
 
+  @Delete(':id')
+  @HttpCode(HttpStatus.OK)
+  async delete(
+    @Param('id', ParseIntPipe) id: number,
+    @CurrentUser() currentUser: AuthenticatedUser,
+    @Req() request: Request,
+  ): Promise<{ message: string }> {
+    await this.usersService.deleteUser(
+      id,
+      currentUser.id,
+      this.getActivityMetadata(request),
+    );
+
+    return { message: 'Xóa nhân viên thành công' };
+  }
+
   private getActivityMetadata(request: Request): {
     ipAddress: string | null;
     userAgent: string | null;

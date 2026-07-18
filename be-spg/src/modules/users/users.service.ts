@@ -21,6 +21,7 @@ import { UserRole } from './enums/user-role.enum';
 
 const PASSWORD_SALT_ROUNDS = 12;
 const POSTGRES_UNIQUE_VIOLATION_CODE = '23505';
+const POSTGRES_FOREIGN_KEY_VIOLATION_CODE = '23503';
 const BCRYPT_HASH_PATTERN = /^\$2[aby]\$\d{2}\$.{53}$/;
 
 type ActivityMetadata = {
@@ -384,6 +385,52 @@ export class UsersService {
     });
   }
 
+  async deleteUser(
+    userId: number,
+    currentUserId: number,
+    metadata: ActivityMetadata = {},
+  ): Promise<void> {
+    try {
+      await this.usersRepository.manager.transaction(async (manager) => {
+        const repository = manager.getRepository(CmsUserEntity);
+        const user = await this.findByIdWithManager(manager, userId);
+
+        if (user.id === currentUserId) {
+          throw new BadRequestException(
+            'Admin không thể tự xóa tài khoản của chính mình.',
+          );
+        }
+
+        await this.ensureLastActiveAdminWithManager(manager, user);
+        const deleteResult = await repository.delete({ id: user.id });
+        this.ensureUserWasUpdated(deleteResult.affected, user.id);
+
+        await this.activityLogsService.recordWithManager(manager, {
+          actorUserId: currentUserId,
+          action: 'user.deleted',
+          entityType: 'cms_user',
+          entityId: user.id,
+          title: 'Xóa tài khoản nhân viên',
+          description: `Admin xóa tài khoản ${user.email}`,
+          changes: {
+            email: user.email,
+            fullName: user.fullName,
+            role: user.role,
+          },
+          ...metadata,
+        });
+      });
+    } catch (error: unknown) {
+      if (this.isForeignKeyViolation(error)) {
+        throw new ConflictException(
+          'Không thể xóa nhân viên đã tạo bài viết hoặc tải media. Hãy khóa tài khoản này thay vì xóa.',
+        );
+      }
+
+      throw error;
+    }
+  }
+
   async recordSuccessfulLogin(userId: number): Promise<void> {
     const result = await this.usersRepository.update(
       { id: userId },
@@ -617,6 +664,17 @@ export class UsersService {
     return (
       'code' in error &&
       (error as { code?: unknown }).code === POSTGRES_UNIQUE_VIOLATION_CODE
+    );
+  }
+
+  private isForeignKeyViolation(error: unknown): boolean {
+    if (typeof error !== 'object' || error === null) {
+      return false;
+    }
+
+    return (
+      'code' in error &&
+      (error as { code?: unknown }).code === POSTGRES_FOREIGN_KEY_VIOLATION_CODE
     );
   }
 }

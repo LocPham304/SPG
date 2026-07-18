@@ -224,7 +224,7 @@ export function AdminLoginForm() {
           ) : null}
         </div>
 
-        <div className="mt-5 flex items-center justify-between gap-4 text-sm">
+        <div className="mt-5 text-sm">
           <label className="flex cursor-pointer items-center gap-2 text-slate-600">
             <input
               checked={remember}
@@ -234,12 +234,6 @@ export function AdminLoginForm() {
             />
             Ghi nhớ đăng nhập
           </label>
-          <a
-            className="font-semibold text-[#1d2088] hover:underline"
-            href="#quen-mat-khau"
-          >
-            Quên mật khẩu?
-          </a>
         </div>
 
         {errors.form ? (

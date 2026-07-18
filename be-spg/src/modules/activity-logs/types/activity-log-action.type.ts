@@ -5,6 +5,7 @@ export const ACTIVITY_LOG_ACTIONS = [
   'user.unlocked',
   'user.password_reset',
   'user.sessions_revoked',
+  'user.deleted',
   'category.created',
   'category.updated',
   'category.activated',

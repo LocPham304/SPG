@@ -82,3 +82,9 @@ export function revokeUserSessions(id: number) {
     },
   );
 }
+
+export function deleteUser(id: number) {
+  return apiRequest<{ message: string }>(`/admin/users/${id}`, {
+    method: "DELETE",
+  });
+}
