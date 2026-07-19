@@ -10,6 +10,11 @@ const nextConfig: NextConfig = {
         hostname: "www.spe.cn",
         pathname: "/uploads/allimg/**",
       },
+      {
+        protocol: "https",
+        hostname: "**.supabase.co",
+        pathname: "/storage/v1/object/public/**",
+      },
     ],
   },
 };

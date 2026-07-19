@@ -1,9 +1,9 @@
 "use client";
 
 import gsap from "gsap";
-import { useEffect, useLayoutEffect, useRef } from "react";
+import Image from "next/image";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
-import { ImageWithSkeleton } from "@/components/news/ImageWithSkeleton";
 import { homeHeroMedia } from "@/data/home-hero";
 
 import styles from "./HomeHero.module.scss";
@@ -21,6 +21,7 @@ export function HomeHeroClient({
   const videoRef = useRef<HTMLVideoElement>(null);
   const firstLineRef = useRef<HTMLSpanElement>(null);
   const secondLineRef = useRef<HTMLSpanElement>(null);
+  const [shouldLoadVideo, setShouldLoadVideo] = useState(false);
 
   useLayoutEffect(() => {
     const root = rootRef.current;
@@ -73,52 +74,90 @@ export function HomeHeroClient({
 
   useEffect(() => {
     const root = rootRef.current;
-    const video = videoRef.current;
 
-    if (!root || !video) {
+    if (!root) {
       return;
     }
 
     const heroRoot: HTMLElement = root;
-    const heroVideo: HTMLVideoElement = video;
-
     const reducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     );
+    const desktopViewport = window.matchMedia("(min-width: 768px)");
     const staticMedia =
       new URLSearchParams(window.location.search).get("hero-media") ===
       "poster";
+    let loadTimer: number | undefined;
 
-    function showPoster(reason: "blocked" | "error" | "static") {
-      heroRoot.dataset.mediaMode = "poster";
-      heroRoot.dataset.videoState = reason;
-      heroVideo.pause();
-    }
+    function updateVideoEligibility() {
+      window.clearTimeout(loadTimer);
 
-    function syncPlayback() {
       if (staticMedia) {
-        showPoster("static");
+        heroRoot.dataset.mediaMode = "poster";
+        heroRoot.dataset.videoState = "static";
+        setShouldLoadVideo(false);
         return;
       }
 
       if (reducedMotion.matches) {
         heroRoot.dataset.mediaMode = "poster";
         heroRoot.dataset.videoState = "reduced-motion";
-        heroVideo.pause();
+        setShouldLoadVideo(false);
         return;
       }
 
-      heroRoot.dataset.mediaMode = "video";
+      if (!desktopViewport.matches) {
+        heroRoot.dataset.mediaMode = "poster";
+        heroRoot.dataset.videoState = "mobile-poster";
+        setShouldLoadVideo(false);
+        return;
+      }
 
+      heroRoot.dataset.videoState = "scheduled";
+      loadTimer = window.setTimeout(() => {
+        setShouldLoadVideo(true);
+      }, 1200);
+    }
+
+    reducedMotion.addEventListener("change", updateVideoEligibility);
+    desktopViewport.addEventListener("change", updateVideoEligibility);
+    updateVideoEligibility();
+
+    return () => {
+      window.clearTimeout(loadTimer);
+      reducedMotion.removeEventListener("change", updateVideoEligibility);
+      desktopViewport.removeEventListener("change", updateVideoEligibility);
+    };
+  }, []);
+
+  useEffect(() => {
+    const root = rootRef.current;
+    const video = videoRef.current;
+
+    if (!root || !video || !shouldLoadVideo) {
+      return;
+    }
+
+    const heroRoot: HTMLElement = root;
+    const heroVideo: HTMLVideoElement = video;
+
+    function showPoster(reason: "blocked" | "error" | "paused-hidden") {
+      heroRoot.dataset.mediaMode = "poster";
+      heroRoot.dataset.videoState = reason;
+      heroVideo.pause();
+    }
+
+    function syncPlayback() {
       if (document.hidden) {
-        heroRoot.dataset.videoState = "paused-hidden";
-        heroVideo.pause();
+        showPoster("paused-hidden");
         return;
       }
 
+      heroRoot.dataset.videoState = "loading";
       void heroVideo
         .play()
         .then(() => {
+          heroRoot.dataset.mediaMode = "video";
           heroRoot.dataset.videoState = "playing";
         })
         .catch(() => showPoster("blocked"));
@@ -136,17 +175,16 @@ export function HomeHeroClient({
     heroVideo.addEventListener("playing", handlePlaying);
     heroVideo.addEventListener("error", handleError);
     document.addEventListener("visibilitychange", syncPlayback);
-    reducedMotion.addEventListener("change", syncPlayback);
+    heroVideo.load();
     syncPlayback();
 
     return () => {
       heroVideo.removeEventListener("playing", handlePlaying);
       heroVideo.removeEventListener("error", handleError);
       document.removeEventListener("visibilitychange", syncPlayback);
-      reducedMotion.removeEventListener("change", syncPlayback);
       heroVideo.pause();
     };
-  }, []);
+  }, [shouldLoadVideo]);
 
   return (
     <section
@@ -154,32 +192,32 @@ export function HomeHeroClient({
       className={styles.hero}
       data-animation-state="pending"
       data-hero-index="0"
-      data-media-mode="video"
+      data-media-mode="poster"
       ref={rootRef}
     >
       <div aria-hidden="true" className={styles.media}>
-        <ImageWithSkeleton
+        <Image
           alt=""
-          aspectRatio="auto"
-          className={styles.poster}
-          imageClassName={styles.posterImage}
+          aria-hidden="true"
+          className={`${styles.poster} ${styles.posterImage}`}
           fill
+          fetchPriority="high"
           priority
           sizes="100vw"
           src={homeHeroMedia.poster}
         />
         <video
-          autoPlay
           className={styles.video}
           loop
           muted
           playsInline
-          poster={homeHeroMedia.poster}
-          preload="metadata"
+          preload="none"
           ref={videoRef}
           tabIndex={-1}
         >
-          <source src={homeHeroMedia.video} type="video/mp4" />
+          {shouldLoadVideo ? (
+            <source src={homeHeroMedia.video} type="video/mp4" />
+          ) : null}
         </video>
       </div>
 

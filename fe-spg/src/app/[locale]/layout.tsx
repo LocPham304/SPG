@@ -32,7 +32,7 @@ const beVietnamPro = Be_Vietnam_Pro({
   display: "swap",
   subsets: ["latin", "vietnamese"],
   variable: "--font-be-vietnam-pro",
-  weight: ["400", "500", "600", "700", "800"],
+  weight: ["400", "500", "600", "700"],
 });
 
 export function generateStaticParams() {

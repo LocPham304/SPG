@@ -97,7 +97,7 @@ export function ImageWithSkeleton({
           sizes={sizes}
           src={src}
           style={imageStyle}
-          unoptimized={unoptimized ?? /^https?:\/\//.test(src)}
+          unoptimized={unoptimized}
         />
       ) : (
         <div
