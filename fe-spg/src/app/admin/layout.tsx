@@ -15,6 +15,14 @@ const beVietnamPro = Be_Vietnam_Pro({
 });
 
 export const metadata: Metadata = {
+  robots: {
+    index: false,
+    follow: false,
+    googleBot: {
+      index: false,
+      follow: false,
+    },
+  },
   title: {
     default: "Đăng nhập quản trị",
     template: "%s | Quản trị website",

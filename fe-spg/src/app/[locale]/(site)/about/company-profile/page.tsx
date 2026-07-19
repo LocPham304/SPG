@@ -5,17 +5,21 @@ import { AboutSubNavigation } from "@/components/about/AboutSubNavigation";
 import { AboutBasesSection } from "@/components/about/CompanyProfile/AboutBasesSection";
 import { CompanyHistorySection } from "@/components/about/CompanyProfile/CompanyHistorySection";
 import { CompanyProfileSection } from "@/components/about/CompanyProfile/CompanyProfileSection";
+import { JsonLd } from "@/components/common/JsonLd";
 import { PageHero } from "@/components/common/PageHero";
 import { getCompanyProfileContent } from "@/content/about/company-profile";
 import { getCompanyHistoryContent } from "@/content/about/company-profile/history";
 import { defaultLocale, isAppLocale } from "@/i18n/routing";
-import { getStaticPageMetadata } from "@/lib/seo";
+import {
+  createBreadcrumbJsonLd,
+  getAboutPageMetadata,
+} from "@/lib/seo";
 
 type PageProps = { params: Promise<{ locale: string }> };
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { locale } = await params;
-  return getStaticPageMetadata(locale, "companyProfile", "/about/company-profile");
+  return getAboutPageMetadata(locale);
 }
 
 export default async function CompanyProfilePage({ params }: PageProps) {
@@ -37,6 +41,16 @@ export default async function CompanyProfilePage({ params }: PageProps) {
 
   return (
     <>
+      <JsonLd
+        data={createBreadcrumbJsonLd(activeLocale, [
+          { href: "/", name: t("common.home") },
+          {
+            href: currentHref,
+            name: t("about.companyProfile.groupProfile"),
+          },
+        ])}
+        id="about-breadcrumb-jsonld"
+      />
       <PageHero
         breadcrumbLabel={t("common.breadcrumb")}
         breadcrumbs={[

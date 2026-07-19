@@ -2,9 +2,10 @@ import type { Metadata } from "next";
 import { Be_Vietnam_Pro } from "next/font/google";
 import { notFound } from "next/navigation";
 import { NextIntlClientProvider } from "next-intl";
-import { getTranslations, setRequestLocale } from "next-intl/server";
+import { setRequestLocale } from "next-intl/server";
 import type { ReactNode } from "react";
 
+import { JsonLd } from "@/components/common/JsonLd";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import styles from "@/components/layout/SiteLayout.module.scss";
@@ -13,6 +14,10 @@ import {
   localeLanguageTags,
   locales,
 } from "@/i18n/routing";
+import {
+  createOrganizationJsonLd,
+  getLocaleLayoutMetadata,
+} from "@/lib/seo";
 
 import "animate.css";
 import "../tailwind.css";
@@ -38,20 +43,7 @@ export async function generateMetadata({
   params,
 }: LocaleLayoutProps): Promise<Metadata> {
   const { locale } = await params;
-
-  if (!isAppLocale(locale)) {
-    notFound();
-  }
-
-  const t = await getTranslations({ locale, namespace: "metadata" });
-
-  return {
-    title: {
-      default: t("defaultTitle"),
-      template: `%s | ${t("siteName")}`,
-    },
-    description: t("defaultDescription"),
-  };
+  return getLocaleLayoutMetadata(locale);
 }
 
 export default async function LocaleLayout({
@@ -73,6 +65,7 @@ export default async function LocaleLayout({
       suppressHydrationWarning
     >
       <body suppressHydrationWarning>
+        <JsonLd data={createOrganizationJsonLd()} id="organization-jsonld" />
         <NextIntlClientProvider>
           <div className={styles.site}>
             <SiteHeader />

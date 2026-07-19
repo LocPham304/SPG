@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 import { PublicNewsCategoryPage } from "@/components/news/PublicNewsCategoryPage";
 import { defaultLocale, isAppLocale } from "@/i18n/routing";
-import { getStaticPageMetadata } from "@/lib/seo";
+import { getNewsCategoryMetadata } from "@/lib/seo";
 import { parsePublicNewsPage } from "@/services/public-news.service";
 
 export const dynamic = "force-dynamic";
@@ -14,7 +14,7 @@ type PageProps = {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { locale } = await params;
-  return getStaticPageMetadata(locale, "news", "/news/product-delivery");
+  return getNewsCategoryMetadata(locale, "product-delivery");
 }
 
 export default async function ProductDeliveryPage({

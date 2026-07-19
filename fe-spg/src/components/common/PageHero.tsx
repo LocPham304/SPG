@@ -10,6 +10,7 @@ import styles from "./Common.module.scss";
 
 type PageHeroProps = {
   title: string;
+  titleTag?: "h1" | "p";
   breadcrumbs: readonly BreadcrumbItem[];
   breadcrumbLabel: string;
   breadcrumbSeparator?: string;
@@ -69,6 +70,7 @@ const heroImages: Partial<
 
 export function PageHero({
   title,
+  titleTag = "h1",
   breadcrumbs,
   breadcrumbLabel,
   breadcrumbSeparator,
@@ -102,7 +104,11 @@ export function PageHero({
           duration="0.75s"
           threshold={0.05}
         >
-          <h1 className={styles.pageTitle}>{title}</h1>
+          {titleTag === "h1" ? (
+            <h1 className={styles.pageTitle}>{title}</h1>
+          ) : (
+            <p className={styles.pageTitle}>{title}</p>
+          )}
           <Breadcrumb
             ariaLabel={breadcrumbLabel}
             items={breadcrumbs}

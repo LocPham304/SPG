@@ -1,12 +1,25 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
+import { cache } from "react";
 
+import { JsonLd } from "@/components/common/JsonLd";
 import { NewsArticleDetail } from "@/components/news/NewsArticleDetail";
 import { NewsPageHero } from "@/components/news/NewsPageHero";
 import { PublicNewsStateSection } from "@/components/news/PublicNewsStateSection";
-import { defaultLocale, isAppLocale } from "@/i18n/routing";
 import {
+  defaultLocale,
+  isAppLocale,
+  locales,
+  type AppLocale,
+} from "@/i18n/routing";
+import {
+  createArticleJsonLd,
+  createBreadcrumbJsonLd,
+  createLocalizedMetadata,
+} from "@/lib/seo";
+import {
+  getPublicNews,
   getPublicNewsDetail,
   PublicNewsApiError,
 } from "@/services/public-news.service";
@@ -46,11 +59,58 @@ const detailLabels = {
   },
 } as const;
 
+const getCachedPublicNewsDetail = cache(getPublicNewsDetail);
+
 function isArticleInCategory(
   article: PublicNewsDetail,
   category: PublicNewsCategorySlug,
 ) {
   return !article.category || article.category.slug === category;
+}
+
+async function getArticleLanguagePaths(article: PublicNewsDetail) {
+  const results = await Promise.allSettled(
+    locales.map(async (locale) => {
+      let page = 1;
+      let totalPages = 1;
+
+      do {
+        const response = await getPublicNews({
+          locale,
+          page,
+          limit: 100,
+        });
+        totalPages = response.meta.totalPages;
+        const localizedArticle = response.data.find(
+          (item) => item.id === article.id && item.locale === locale,
+        );
+        const localizedCategory = localizedArticle?.category?.slug;
+
+        if (
+          localizedArticle &&
+          localizedCategory &&
+          isPublicNewsCategorySlug(localizedCategory)
+        ) {
+          return [
+            locale,
+            `/news/${localizedCategory}/${localizedArticle.slug}`,
+          ] as const;
+        }
+
+        page += 1;
+      } while (page <= totalPages);
+
+      return null;
+    }),
+  );
+
+  return Object.fromEntries(
+    results.flatMap((result) =>
+      result.status === "fulfilled" && result.value
+        ? [result.value]
+        : [],
+    ),
+  ) as Partial<Record<AppLocale, string>>;
 }
 
 export async function generateMetadata({
@@ -59,39 +119,51 @@ export async function generateMetadata({
   const { category, locale, slug } = await params;
   const activeLocale = isAppLocale(locale) ? locale : defaultLocale;
 
-  if (!isPublicNewsCategorySlug(category)) return {};
+  if (!isPublicNewsCategorySlug(category)) notFound();
+
+  let article: PublicNewsDetail;
 
   try {
-    const article = await getPublicNewsDetail(slug, activeLocale);
-    if (!isArticleInCategory(article, category)) return {};
-
-    const title = article.seoTitle || article.title;
-    const description = article.seoDescription || article.summary;
-    const images = article.thumbnail?.publicUrl
-      ? [
-          {
-            alt:
-              article.thumbnailAltText ??
-              article.thumbnail.altText ??
-              article.title,
-            url: article.thumbnail.publicUrl,
-          },
-        ]
-      : undefined;
+    article = await getCachedPublicNewsDetail(slug, activeLocale);
+  } catch (error) {
+    if (error instanceof PublicNewsApiError && error.status === 404) {
+      notFound();
+    }
 
     return {
-      title,
-      description,
-      openGraph: {
-        title,
-        description,
-        images,
-        type: "article",
+      robots: {
+        index: false,
+        follow: true,
       },
     };
-  } catch {
-    return {};
   }
+
+  if (!isArticleInCategory(article, category)) notFound();
+
+  const title = article.seoTitle || article.title;
+  const description = article.seoDescription || article.summary;
+  const href = `/news/${category}/${article.slug}`;
+  const languagePaths = await getArticleLanguagePaths(article);
+
+  return createLocalizedMetadata({
+    locale: activeLocale,
+    href,
+    title,
+    description,
+    image: article.thumbnail?.publicUrl
+      ? {
+          alt:
+            article.thumbnailAltText ??
+            article.thumbnail.altText ??
+            article.title,
+          url: article.thumbnail.publicUrl,
+        }
+      : undefined,
+    languagePaths,
+    type: "article",
+    publishedTime: article.publishedAt,
+    modifiedTime: article.updatedAt,
+  });
 }
 
 export default async function NewsArticlePage({ params }: PageProps) {
@@ -104,8 +176,9 @@ export default async function NewsArticlePage({ params }: PageProps) {
   const categoryKey = categoryTranslationKeys[category];
   const categoryTitle = t(`news.${categoryKey}.title`);
   const currentHref = `/news/${category}`;
-  const hero = (
+  const renderHero = (articleTitle?: string) => (
     <NewsPageHero
+      articleTitle={articleTitle}
       breadcrumbLabel={t("common.breadcrumb")}
       currentHref={currentHref}
       homeLabel={t("common.home")}
@@ -124,7 +197,7 @@ export default async function NewsArticlePage({ params }: PageProps) {
   let article: PublicNewsDetail;
 
   try {
-    article = await getPublicNewsDetail(slug, activeLocale);
+    article = await getCachedPublicNewsDetail(slug, activeLocale);
   } catch (error) {
     if (error instanceof PublicNewsApiError && error.status === 404) {
       notFound();
@@ -134,7 +207,7 @@ export default async function NewsArticlePage({ params }: PageProps) {
 
     return (
       <>
-        {hero}
+        {renderHero()}
         <PublicNewsStateSection
           message={detailLabels[activeLocale].error}
           title={categoryTitle}
@@ -145,9 +218,29 @@ export default async function NewsArticlePage({ params }: PageProps) {
 
   if (!isArticleInCategory(article, category)) notFound();
 
+  const articleHref = `/news/${category}/${article.slug}`;
+  const description = article.seoDescription || article.summary;
+  const breadcrumbJsonLd = createBreadcrumbJsonLd(activeLocale, [
+    { href: "/", name: t("common.home") },
+    { href: "/news", name: t("news.title") },
+    { href: currentHref, name: categoryTitle },
+    { href: articleHref, name: article.title },
+  ]);
+  const articleJsonLd = createArticleJsonLd({
+    locale: activeLocale,
+    href: articleHref,
+    headline: article.title,
+    description,
+    image: article.thumbnail?.publicUrl,
+    datePublished: article.publishedAt,
+    dateModified: article.updatedAt,
+  });
+
   return (
     <>
-      {hero}
+      <JsonLd data={breadcrumbJsonLd} id="article-breadcrumb-jsonld" />
+      <JsonLd data={articleJsonLd} id="article-jsonld" />
+      {renderHero(article.title)}
       <NewsArticleDetail
         article={article}
         categoryName={categoryTitle}

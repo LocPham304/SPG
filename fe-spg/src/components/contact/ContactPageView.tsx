@@ -1,7 +1,9 @@
 import { AboutSubNavigation } from "@/components/about/AboutSubNavigation";
+import { JsonLd } from "@/components/common/JsonLd";
 import { PageHero } from "@/components/common/PageHero";
 import type { ContactContent } from "@/content/contact/contact";
 import type { AppLocale } from "@/i18n/routing";
+import { createBreadcrumbJsonLd } from "@/lib/seo";
 
 import { ContactSection } from "./ContactSection";
 import { ScrollToSection } from "./ScrollToSection.client";
@@ -22,17 +24,29 @@ export function ContactPageView({
   locale,
 }: ContactPageViewProps) {
   const isMarketingNetwork = activeHref === "/contact/marketing-network";
+  const currentTitle = isMarketingNetwork
+    ? content.marketingTitle
+    : content.pageTitle;
+  const breadcrumbItems = [
+    { href: "/", name: homeLabel },
+    { href: "/contact", name: content.pageTitle },
+    ...(isMarketingNetwork
+      ? [{ href: activeHref, name: content.marketingTitle }]
+      : []),
+  ];
 
   return (
     <>
+      <JsonLd
+        data={createBreadcrumbJsonLd(locale, breadcrumbItems)}
+        id={"contact-" + (isMarketingNetwork ? "network" : "main") + "-breadcrumb-jsonld"}
+      />
       <PageHero
         breadcrumbLabel={breadcrumbLabel}
         breadcrumbs={[
           { href: "/", label: homeLabel },
           { label: content.heroTitle },
-          ...(isMarketingNetwork
-            ? [{ label: content.marketingTitle }]
-            : []),
+          ...(isMarketingNetwork ? [{ label: currentTitle }] : []),
         ]}
         breadcrumbSeparator="-"
         title={content.heroTitle}

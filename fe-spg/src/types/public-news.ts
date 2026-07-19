@@ -1,3 +1,5 @@
+import type { AppLocale } from "@/i18n/routing";
+
 export const PUBLIC_NEWS_CATEGORY_SLUGS = [
   "current-affairs",
   "group-news",
@@ -34,12 +36,14 @@ export type Thumbnail = {
 
 export type PublicNewsItem = {
   id: number;
+  locale: AppLocale;
   title: string;
   slug: string;
   summary: string;
   category: PublicNewsItemCategory | null;
   thumbnail: Thumbnail | null;
   publishedAt: string;
+  updatedAt?: string;
   isFeatured: boolean;
 };
 

@@ -10,6 +10,7 @@ type NewsNavigationLabels = {
 };
 
 type NewsPageHeroProps = {
+  articleTitle?: string;
   breadcrumbLabel: string;
   currentHref: string;
   homeLabel: string;
@@ -27,6 +28,7 @@ const newsRoutes = {
 } as const;
 
 export function NewsPageHero({
+  articleTitle,
   breadcrumbLabel,
   currentHref,
   homeLabel,
@@ -39,17 +41,26 @@ export function NewsPageHero({
     href: `${href}?page=1`,
     label: navigationLabels[key as keyof NewsNavigationLabels],
   }));
+  const breadcrumbs = articleTitle
+    ? [
+        { href: "/", label: homeLabel },
+        { label: newsTitle },
+        { href: currentHref, label: pageTitle },
+        { label: articleTitle },
+      ]
+    : [
+        { href: "/", label: homeLabel },
+        { label: newsTitle },
+        { label: pageTitle },
+      ];
 
   return (
     <PageHero
       breadcrumbLabel={breadcrumbLabel}
-      breadcrumbs={[
-        { href: "/", label: homeLabel },
-        { label: newsTitle },
-        { label: pageTitle },
-      ]}
+      breadcrumbs={breadcrumbs}
       breadcrumbSeparator="-"
-      title={newsTitle}
+      title={pageTitle}
+      titleTag={articleTitle ? "p" : "h1"}
       variant="news"
     >
       <NewsSubNavigation

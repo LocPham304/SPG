@@ -1,5 +1,6 @@
 import { getTranslations } from "next-intl/server";
 
+import { JsonLd } from "@/components/common/JsonLd";
 import { GroupNewsSection } from "@/components/news/GroupNewsSection";
 import { NewsDateListSection } from "@/components/news/NewsDateListSection";
 import { NewsPageHero } from "@/components/news/NewsPageHero";
@@ -7,6 +8,7 @@ import { ProductDeliverySection } from "@/components/news/ProductDeliverySection
 import { PublicNewsStateSection } from "@/components/news/PublicNewsStateSection";
 import { NewsPagination } from "@/components/public/NewsPagination";
 import type { AppLocale } from "@/i18n/routing";
+import { createBreadcrumbJsonLd } from "@/lib/seo";
 import { getPublicNews } from "@/services/public-news.service";
 import type { PublicNewsCategorySlug } from "@/types/public-news";
 
@@ -58,20 +60,30 @@ export async function PublicNewsCategoryPage({
   const title = t(`news.${categoryKey}.title`);
   const labels = stateLabels[locale];
   const hero = (
-    <NewsPageHero
-      breadcrumbLabel={t("common.breadcrumb")}
-      currentHref={currentHref}
-      homeLabel={t("common.home")}
-      navigationLabel={t("news.subNavigationLabel")}
-      navigationLabels={{
-        currentAffairs: t("news.currentAffairs.title"),
-        groupNews: t("news.groupNews.title"),
-        productDelivery: t("news.productDelivery.title"),
-        notices: t("news.notices.title"),
-      }}
-      newsTitle={t("news.title")}
-      pageTitle={title}
-    />
+    <>
+      <JsonLd
+        data={createBreadcrumbJsonLd(locale, [
+          { href: "/", name: t("common.home") },
+          { href: "/news", name: t("news.title") },
+          { href: currentHref, name: title },
+        ])}
+        id={"news-" + category + "-breadcrumb-jsonld"}
+      />
+      <NewsPageHero
+        breadcrumbLabel={t("common.breadcrumb")}
+        currentHref={currentHref}
+        homeLabel={t("common.home")}
+        navigationLabel={t("news.subNavigationLabel")}
+        navigationLabels={{
+          currentAffairs: t("news.currentAffairs.title"),
+          groupNews: t("news.groupNews.title"),
+          productDelivery: t("news.productDelivery.title"),
+          notices: t("news.notices.title"),
+        }}
+        newsTitle={t("news.title")}
+        pageTitle={title}
+      />
+    </>
   );
 
   let response;

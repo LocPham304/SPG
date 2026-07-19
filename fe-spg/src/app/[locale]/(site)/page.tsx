@@ -14,7 +14,7 @@ import {
 import { HomeSolutionsSection } from "@/components/home/HomeSolutions";
 import { HomeTechnologySection } from "@/components/home/HomeTechnology";
 import { isAppLocale } from "@/i18n/routing";
-import { getStaticPageMetadata } from "@/lib/seo";
+import { getHomePageMetadata } from "@/lib/seo";
 
 type HomePageProps = {
   params: Promise<{ locale: string }>;
@@ -25,7 +25,7 @@ export async function generateMetadata({
   params,
 }: HomePageProps): Promise<Metadata> {
   const { locale } = await params;
-  return getStaticPageMetadata(locale, "home", "/");
+  return getHomePageMetadata(locale);
 }
 
 function getNewsQaState(value: string | undefined): HomeNewsQaState | undefined {

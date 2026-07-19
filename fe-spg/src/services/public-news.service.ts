@@ -99,6 +99,7 @@ export async function getPublicNews(params: {
   locale: unknown;
   category?: string | null;
   page?: number;
+  limit?: number;
   search?: string | null;
   featured?: boolean;
 }): Promise<PublicNewsListResponse> {
@@ -106,11 +107,17 @@ export async function getPublicNews(params: {
     Number.isSafeInteger(params.page) && Number(params.page) > 0
       ? Number(params.page)
       : 1;
+  const limit =
+    Number.isSafeInteger(params.limit) &&
+    Number(params.limit) > 0 &&
+    Number(params.limit) <= 100
+      ? Number(params.limit)
+      : PUBLIC_NEWS_PAGE_SIZE;
   const query = buildQuery({
     locale: normalizePublicNewsLocale(params.locale),
     category: params.category,
     page,
-    limit: PUBLIC_NEWS_PAGE_SIZE,
+    limit,
     search: params.search,
     featured: params.featured,
   });
