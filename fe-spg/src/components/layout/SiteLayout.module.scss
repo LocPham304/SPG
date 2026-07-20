@@ -288,6 +288,13 @@
   color: #fff;
 }
 
+@media (1200px <= width <= 1599px) {
+  .footer,
+  .footerInner {
+    min-height: 0;
+  }
+}
+
 @media (width <= 1199px) {
   .footerDetails {
     gap: 24px;
