@@ -38,7 +38,7 @@ export function NewsPageHero({
   pageTitle,
 }: NewsPageHeroProps) {
   const items = Object.entries(newsRoutes).map(([key, href]) => ({
-    href: `${href}?page=1`,
+    href,
     label: navigationLabels[key as keyof NewsNavigationLabels],
   }));
   const breadcrumbs = articleTitle

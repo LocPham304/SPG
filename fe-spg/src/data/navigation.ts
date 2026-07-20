@@ -47,7 +47,7 @@ export const mainNavigation: readonly NavigationItem[] = [
     ],
   },
   {
-    href: "/news",
+    href: "/news/current-affairs",
     label: "news",
     children: [
       { href: "/news/current-affairs", label: "currentAffairs" },

@@ -5,16 +5,23 @@ import { defaultLocale, isAppLocale } from "@/i18n/routing";
 import { getNewsCategoryMetadata } from "@/lib/seo";
 import { parsePublicNewsPage } from "@/services/public-news.service";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 
 type PageProps = {
   params: Promise<{ locale: string }>;
   searchParams: Promise<{ page?: string | string[] }>;
 };
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { locale } = await params;
-  return getNewsCategoryMetadata(locale, "notices");
+export async function generateMetadata({
+  params,
+  searchParams,
+}: PageProps): Promise<Metadata> {
+  const [{ locale }, query] = await Promise.all([params, searchParams]);
+  return getNewsCategoryMetadata(
+    locale,
+    "notices",
+    parsePublicNewsPage(query.page),
+  );
 }
 
 export default async function NoticesPage({
@@ -23,12 +30,13 @@ export default async function NoticesPage({
 }: PageProps) {
   const [{ locale }, query] = await Promise.all([params, searchParams]);
   const activeLocale = isAppLocale(locale) ? locale : defaultLocale;
+  const page = parsePublicNewsPage(query.page);
 
   return (
     <PublicNewsCategoryPage
       category="notices"
       locale={activeLocale}
-      page={parsePublicNewsPage(query.page)}
+      page={page}
     />
   );
 }

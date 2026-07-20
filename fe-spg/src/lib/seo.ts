@@ -361,11 +361,15 @@ export function getContactPageMetadata(localeValue: unknown) {
 export function getNewsCategoryMetadata(
   localeValue: unknown,
   category: PublicNewsCategorySlug,
+  page = 1,
 ) {
   const locale = isAppLocale(localeValue) ? localeValue : defaultLocale;
+  const href =
+    page > 1 ? `/news/${category}?page=${page}` : `/news/${category}`;
+
   return createLocalizedMetadata({
     locale,
-    href: `/news/${category}`,
+    href,
     ...newsCategoryMetadata[category][locale],
   });
 }

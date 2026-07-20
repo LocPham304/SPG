@@ -49,7 +49,7 @@ function getPaginationItems(
 }
 
 function getPageHref(basePath: string, page: number) {
-  return `${basePath}?page=${page}`;
+  return page === 1 ? basePath : `${basePath}?page=${page}`;
 }
 
 export function NewsPagination({
