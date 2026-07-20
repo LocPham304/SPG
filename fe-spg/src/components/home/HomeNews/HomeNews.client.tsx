@@ -140,6 +140,7 @@ function HomeNewsPanel({ articles, copy, locale }: HomeNewsPanelProps) {
         >
           {sliderArticles.map((article) => {
             const date = formatNewsDate(article.publishedAt, locale);
+            const year = locale === "zh" ? date.year.replace(/年$/u, "") : date.year;
 
             return (
               <SwiperSlide className={styles.featuredSlide} key={article.id}>
@@ -164,7 +165,7 @@ function HomeNewsPanel({ articles, copy, locale }: HomeNewsPanelProps) {
                       dateTime={article.publishedAt}
                     >
                       <strong>{date.dayMonth}</strong>
-                      <span>{date.year}</span>
+                      <span>{year}</span>
                     </time>
                     <div className={styles.featuredContent}>
                       <h3>{article.title}</h3>
