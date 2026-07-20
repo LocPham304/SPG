@@ -1,7 +1,13 @@
 export const companyContact = {
   address: "No. 877, Lijiang West Road, Huangdao District, Qingdao City",
+  addressHref: "https://ditu.amap.com/place/B021413THX",
   phoneDisplay: "0532-82983063",
   phoneHref: "0532-82983063",
+} as const;
+
+export const vietnamOfficeContact = {
+  phoneDisplay: "Mr Thịnh +84772066685",
+  phoneHref: "+84772066685",
 } as const;
 
 export const companyLegal = {

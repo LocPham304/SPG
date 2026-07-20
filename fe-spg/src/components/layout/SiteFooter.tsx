@@ -8,6 +8,7 @@ import {
   companyContact,
   companyLegal,
   footerQrCodes,
+  vietnamOfficeContact,
 } from "@/data/company";
 import { mainNavigation } from "@/data/navigation";
 
@@ -57,8 +58,27 @@ export async function SiteFooter() {
 
           <address className={styles.footerContact}>
             <div>
+              <strong>{t("vietnamOfficeAddress")}</strong>
+              <span>{t("vietnamOfficeLocation")}</span>
+            </div>
+            <div>
+              <strong>{t("phone")}</strong>
+              <a href={`tel:${vietnamOfficeContact.phoneHref}`}>
+                {vietnamOfficeContact.phoneDisplay}
+              </a>
+            </div>
+          </address>
+
+          <address className={styles.footerContact}>
+            <div>
               <strong>{t("address")}</strong>
-              <span>{companyContact.address}</span>
+              <a
+                href={companyContact.addressHref}
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                {companyContact.address}
+              </a>
             </div>
             <div>
               <strong>{t("phone")}</strong>

@@ -294,7 +294,9 @@
     "qrMiniProgramAlt": "QR code for the Shandong Port Equipment Group WeChat Mini Program",
     "qrPublicAccount": "WeChat public account",
     "qrPublicAccountAlt": "QR code for the Shandong Port Equipment Group WeChat public account",
-    "sitemap": "Sitemap"
+    "sitemap": "Sitemap",
+    "vietnamOfficeAddress": "Vietnam Office Address",
+    "vietnamOfficeLocation": "1B D13 Street, Tan Cang Villa Area, Thanh My Tay Ward, Ho Chi Minh City"
   },
   "errors": {
     "notFound": {

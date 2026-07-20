@@ -90,8 +90,12 @@
 
 .footerDetails {
   display: grid;
-  grid-template-columns: minmax(190px, 1fr) minmax(360px, 0.82fr) auto;
-  gap: 40px;
+  grid-template-columns:
+    minmax(185px, 0.55fr)
+    minmax(260px, 0.82fr)
+    minmax(320px, 1fr)
+    auto;
+  gap: clamp(20px, 2.08vw, 40px);
   min-height: clamp(145px, 9.22vw, 177px);
   padding-top: 15px;
   align-items: start;
