@@ -6,6 +6,7 @@ import { setRequestLocale } from "next-intl/server";
 import type { ReactNode } from "react";
 
 import { JsonLd } from "@/components/common/JsonLd";
+import { NewsLocaleLinksProvider } from "@/components/layout/NewsLocaleLinksContext";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import styles from "@/components/layout/SiteLayout.module.scss";
@@ -67,11 +68,13 @@ export default async function LocaleLayout({
       <body suppressHydrationWarning>
         <JsonLd data={createOrganizationJsonLd()} id="organization-jsonld" />
         <NextIntlClientProvider>
-          <div className={styles.site}>
-            <SiteHeader />
-            <main className={styles.main}>{children}</main>
-            <SiteFooter />
-          </div>
+          <NewsLocaleLinksProvider>
+            <div className={styles.site}>
+              <SiteHeader />
+              <main className={styles.main}>{children}</main>
+              <SiteFooter />
+            </div>
+          </NewsLocaleLinksProvider>
         </NextIntlClientProvider>
       </body>
     </html>

@@ -61,11 +61,17 @@ function ArrowIcon() {
 
 type HomeNewsPanelProps = {
   articles: PublicNewsArticle[];
+  categorySlug: string;
   copy: HomeNewsCopy;
   locale: AppLocale;
 };
 
-function HomeNewsPanel({ articles, copy, locale }: HomeNewsPanelProps) {
+function HomeNewsPanel({
+  articles,
+  categorySlug,
+  copy,
+  locale,
+}: HomeNewsPanelProps) {
   const swiperRef = useRef<SwiperInstance | null>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [isListActive, setIsListActive] = useState(false);
@@ -145,7 +151,10 @@ function HomeNewsPanel({ articles, copy, locale }: HomeNewsPanelProps) {
             return (
               <SwiperSlide className={styles.featuredSlide} key={article.id}>
                 <article className={styles.featured}>
-                  <LocalizedLink href="/news" className={styles.featuredLink}>
+                  <LocalizedLink
+                    href={`/news/${categorySlug}/${article.slug}`}
+                    className={styles.featuredLink}
+                  >
                     <ImageWithSkeleton
                       aspectRatio="auto"
                       className={styles.featuredImageFrame}
@@ -202,7 +211,7 @@ function HomeNewsPanel({ articles, copy, locale }: HomeNewsPanelProps) {
             >
               <ScrollReveal delay={getStaggerDelay(index)}>
                 <LocalizedLink
-                  href="/news"
+                  href={`/news/${categorySlug}/${article.slug}`}
                   className={styles.secondaryLink}
                   onFocus={() => showArticle(index)}
                   onMouseEnter={() => showArticle(index)}
@@ -241,6 +250,10 @@ export function HomeNewsClient({
     () => articles.filter((article) => article.categoryKey === activeCategory),
     [activeCategory, articles],
   );
+  const activeCategorySlug =
+    categories.find((category) => category.key === activeCategory)?.slug ??
+    categories[0]?.slug ??
+    "current-affairs";
 
   const selectTab = (index: number) => {
     const category = categories[index];
@@ -329,6 +342,7 @@ export function HomeNewsClient({
         >
           <HomeNewsPanel
             articles={activeArticles}
+            categorySlug={activeCategorySlug}
             copy={copy}
             locale={locale}
           />

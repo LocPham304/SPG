@@ -11,21 +11,21 @@ import {
   type AppLocale,
 } from "@/i18n/routing";
 
+import { useNewsLocaleLinks } from "./NewsLocaleLinksContext";
 import styles from "./header/Header.module.scss";
 
 type LanguageSwitcherProps = {
-  newsLocaleLinks?: Partial<Record<AppLocale, string>>;
   onNavigate?: () => void;
 };
 
 export function LanguageSwitcher({
-  newsLocaleLinks,
   onNavigate,
 }: LanguageSwitcherProps) {
   const locale = useLocale();
   const t = useTranslations("navigation");
   const pathname = usePathname();
   const router = useRouter();
+  const newsLocaleLinks = useNewsLocaleLinks();
   const rootRef = useRef<HTMLDivElement>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [isPending, startTransition] = useTransition();

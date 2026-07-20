@@ -4,6 +4,7 @@ import { getTranslations } from "next-intl/server";
 import { cache } from "react";
 
 import { JsonLd } from "@/components/common/JsonLd";
+import { NewsLocaleLinksSync } from "@/components/layout/NewsLocaleLinksContext";
 import { NewsArticleDetail } from "@/components/news/NewsArticleDetail";
 import { NewsPageHero } from "@/components/news/NewsPageHero";
 import { PublicNewsStateSection } from "@/components/news/PublicNewsStateSection";
@@ -82,7 +83,7 @@ async function getArticleLanguagePaths(article: PublicNewsDetail) {
         });
         totalPages = response.meta.totalPages;
         const localizedArticle = response.data.find(
-          (item) => item.id === article.id && item.locale === locale,
+          (item) => item.id === article.id,
         );
         const localizedCategory = localizedArticle?.category?.slug;
 
@@ -219,6 +220,7 @@ export default async function NewsArticlePage({ params }: PageProps) {
   if (!isArticleInCategory(article, category)) notFound();
 
   const articleHref = `/news/${category}/${article.slug}`;
+  const languagePaths = await getArticleLanguagePaths(article);
   const description = article.seoDescription || article.summary;
   const breadcrumbJsonLd = createBreadcrumbJsonLd(activeLocale, [
     { href: "/", name: t("common.home") },
@@ -238,6 +240,12 @@ export default async function NewsArticlePage({ params }: PageProps) {
 
   return (
     <>
+      <NewsLocaleLinksSync
+        links={{
+          ...languagePaths,
+          [activeLocale]: articleHref,
+        }}
+      />
       <JsonLd data={breadcrumbJsonLd} id="article-breadcrumb-jsonld" />
       <JsonLd data={articleJsonLd} id="article-jsonld" />
       {renderHero(article.title)}
