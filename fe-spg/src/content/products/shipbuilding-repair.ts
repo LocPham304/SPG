@@ -35,7 +35,7 @@ export type ShipbuildingRepairContent = {
   }[];
 };
 
-const assetRoot = "/images/uploads/allimg/20240531";
+const assetRoot = "/images/Shipbuilding and repairing";
 
 function asset(file: string, en: string, vi: string, zh: string): GalleryAsset {
   return {

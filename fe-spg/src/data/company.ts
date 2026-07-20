@@ -1,8 +1,7 @@
 export const companyContact = {
-  address:
-    "1B đường D13, Khu Biệt Thự Tân Cảng, Phường Thạnh Mỹ Tây, TP Hồ Chí Minh",
-  phoneDisplay: "Mr Thịnh +84772066685",
-  phoneHref: "+84772066685",
+  address: "No. 877, Lijiang West Road, Huangdao District, Qingdao City",
+  phoneDisplay: "0532-82983063",
+  phoneHref: "0532-82983063",
 } as const;
 
 export const companyLegal = {

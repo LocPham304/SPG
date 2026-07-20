@@ -43,10 +43,9 @@ function asset(
   en: string,
   vi: string,
   zh: string,
-  folder = "20240531",
 ): GalleryAsset {
   return {
-    file: `/images/uploads/allimg/${folder}/${file}_lp.jpg`,
+    file: `/images/Other products and services/${file}_lp.jpg`,
     caption: { en, vi, zh },
   };
 }
@@ -102,11 +101,11 @@ const galleryAssets: Record<OtherServicesSectionId, readonly GalleryAsset[]> = {
     asset("6c9b0afe6e71eb6f6c9d0c08840d3a70", "Idlers", "Con lăn đỡ", "托辊"),
   ],
   "dust-free-cleaners": [
-    asset("b9606383e83df7f273a3c1a42a2d7685", "Dust-free cleaner - yellow", "Máy quét không bụi - màu vàng", "无尘清扫器-黄", "20240603"),
-    asset("ec723f7de3b2edfa221e6443b8e7edbb", "Dust-free cleaner - green", "Máy quét không bụi - màu xanh", "无尘清扫器-绿", "20240603"),
+    asset("b9606383e83df7f273a3c1a42a2d7685", "Dust-free cleaner - yellow", "Máy quét không bụi - màu vàng", "无尘清扫器-黄"),
+    asset("ec723f7de3b2edfa221e6443b8e7edbb", "Dust-free cleaner - green", "Máy quét không bụi - màu xanh", "无尘清扫器-绿"),
   ],
   "electric-bulk-handler": [
-    asset("f03e639ac08748dc27c909a36c99b112", "Weifang Port - electric bulk-material stacker", "Cảng Duy Phường - Máy xếp vật liệu rời chạy điện", "潍坊港-电动散料堆高机", "20240603"),
+    asset("f03e639ac08748dc27c909a36c99b112", "Weifang Port - electric bulk-material stacker", "Cảng Duy Phường - Máy xếp vật liệu rời chạy điện", "潍坊港-电动散料堆高机"),
   ],
   "technical-transformation-maintenance": [
     asset("2c7e2bdb34381ea3ee3afc25f277b025", "Mobile-equipment refurbishment", "Tân trang thiết bị di động", "流机翻新"),
