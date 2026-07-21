@@ -89,10 +89,10 @@ export const mainNavigation: readonly NavigationItem[] = [
     ],
   },
   {
-    href: "/contact",
+    href: "https://zalo.me/0772066685",
     label: "contact",
     children: [
-      { href: "/contact", label: "contactPage" },
+      { href: "https://zalo.me/0772066685", label: "contactPage" },
       { href: "/contact/marketing-network", label: "marketingNetwork" },
     ],
   },

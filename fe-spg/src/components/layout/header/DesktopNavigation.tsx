@@ -93,6 +93,8 @@ export function DesktopNavigation({
                 onClick={() => setActiveDropdown(null)}
                 onFocus={() => setActiveDropdown(index)}
                 onKeyDown={(event) => handleKeyDown(event, index)}
+                rel={item.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                target={item.href.startsWith("http") ? "_blank" : undefined}
               >
                 {item.label}
               </LocalizedLink>
@@ -123,7 +125,9 @@ export function DesktopNavigation({
                     data-submenu-link
                     href={child.href}
                     key={child.href}
+                    rel={child.href.startsWith("http") ? "noopener noreferrer" : undefined}
                     tabIndex={isMegaMenuOpen ? 0 : -1}
+                    target={child.href.startsWith("http") ? "_blank" : undefined}
                   >
                     {child.label}
                   </LocalizedLink>

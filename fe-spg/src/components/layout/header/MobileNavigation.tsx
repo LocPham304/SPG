@@ -120,7 +120,9 @@ export function MobileNavigation({
                       className={`${styles.mobileParentLink} ${isActive ? styles.mobileActive : ""}`}
                       href={item.href}
                       onClick={onClose}
+                      rel={item.href.startsWith("http") ? "noopener noreferrer" : undefined}
                       tabIndex={isOpen ? 0 : -1}
+                      target={item.href.startsWith("http") ? "_blank" : undefined}
                     >
                       {item.label}
                     </LocalizedLink>
@@ -152,7 +154,9 @@ export function MobileNavigation({
                           href={child.href}
                           key={child.href}
                           onClick={onClose}
+                          rel={child.href.startsWith("http") ? "noopener noreferrer" : undefined}
                           tabIndex={isOpen && isExpanded ? 0 : -1}
+                          target={child.href.startsWith("http") ? "_blank" : undefined}
                         >
                           {child.label}
                         </LocalizedLink>

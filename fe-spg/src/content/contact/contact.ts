@@ -71,8 +71,7 @@ const content: Record<AppLocale, ContactContent> = {
     },
     primary: {
       company: "Shandong Port Equipment Group Co., Ltd",
-      address:
-        "No. 877, Lijiang West Road, Huangdao District, Qingdao City",
+      address: "No. 877, Lijiang West Road, Huangdao District, Qingdao City",
       phone: "0532-82983063",
       mailbox: "zbjt@spe.cn",
       businessPhone: "0532-82985191",
@@ -89,8 +88,7 @@ const content: Record<AppLocale, ContactContent> = {
       },
       {
         company: "Qingdao Port Equipment Manufacturing Co., Ltd",
-        address:
-          "No. 58A, Ganghuan Road, Shibei District, Qingdao City",
+        address: "No. 58A, Ganghuan Road, Shibei District, Qingdao City",
         fax: "86-532-82982509",
         phone: "+86-0532-82982557",
         mailbox: "shihcangbu.gi@qdport.com",
@@ -146,15 +144,14 @@ const content: Record<AppLocale, ContactContent> = {
     primary: {
       company: "Tập đoàn Thiết bị Cảng Sơn Đông",
       address:
-        "Số 877, đường Lijiang Tây, quận Huangdao, thành phố Thanh Đảo",
-      phone: "0532-82983063",
-      mailbox: "zbjt@spe.cn",
-      businessPhone: "0532-82985191",
+        "1B đường D13, Khu Biệt Thự Tân Cảng, Phường Thạnh Mỹ Tây, TP Hồ Chí Minh",
+      phone: "+84772066685",
+      mailbox: "neocegc@spe.cn",
+      businessPhone: "+84772066685",
     },
     network: [
       {
-        company:
-          "Công ty TNHH Công nghiệp nặng Đóng tàu Gangda Nhật Chiếu",
+        company: "Công ty TNHH Công nghiệp nặng Đóng tàu Gangda Nhật Chiếu",
         address:
           "Phía nam đường Shanghai, phía đông đường Haibin 5, thành phố Nhật Chiếu (khu vực Cảng Nhật Chiếu)",
         fax: "",
@@ -164,16 +161,14 @@ const content: Record<AppLocale, ContactContent> = {
       },
       {
         company: "Công ty TNHH Sản xuất Thiết bị Cảng Thanh Đảo",
-        address:
-          "Số 58A, đường Ganghuan, quận Shibei, thành phố Thanh Đảo",
+        address: "Số 58A, đường Ganghuan, quận Shibei, thành phố Thanh Đảo",
         fax: "86-532-82982509",
         phone: "+86-0532-82982557",
         mailbox: "shihcangbu.gi@qdport.com",
         postcode: "266011",
       },
       {
-        company:
-          "Công ty TNHH Công nghiệp Máy móc Hàng hải Cảng Nhật Chiếu",
+        company: "Công ty TNHH Công nghiệp Máy móc Hàng hải Cảng Nhật Chiếu",
         address:
           "Tòa C, Trung tâm Thương mại Quốc tế Cảng Nhật Chiếu, phía đông đường Shanghai, quận Donggang, thành phố Nhật Chiếu",
         fax: "",
@@ -183,8 +178,7 @@ const content: Record<AppLocale, ContactContent> = {
       },
       {
         company: "Công ty TNHH Công nghiệp nặng Lục Hải Sơn Đông",
-        address:
-          "Số 23, đường Haigang, quận Zhifu, thành phố Yên Đài",
+        address: "Số 23, đường Haigang, quận Zhifu, thành phố Yên Đài",
         fax: "0535-6742563",
         phone: "+86-0535-6742566",
         mailbox: "jyk@ytpmc.com",
@@ -263,5 +257,19 @@ const content: Record<AppLocale, ContactContent> = {
 };
 
 export function getContactContent(locale: AppLocale) {
-  return content[locale];
+  const localizedContent = content[locale];
+
+  if (locale !== "vi") {
+    return localizedContent;
+  }
+
+  const network = content.en.network.map((contact, index) => ({
+    ...contact,
+    company: content.vi.network[index]?.company ?? contact.company,
+  }));
+
+  return {
+    ...localizedContent,
+    network,
+  };
 }

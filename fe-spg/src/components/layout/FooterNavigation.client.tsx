@@ -46,7 +46,12 @@ export function FooterNavigation({
         return (
           <section className={styles.footerColumn} key={group.id}>
             <h2 className={styles.footerDesktopHeading}>
-              <LocalizedLink href={group.href} prefetch={false}>
+              <LocalizedLink
+                href={group.href}
+                prefetch={false}
+                rel={group.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                target={group.href.startsWith("http") ? "_blank" : undefined}
+              >
                 {group.label}
               </LocalizedLink>
             </h2>
@@ -71,7 +76,9 @@ export function FooterNavigation({
                   <LocalizedLink
                     href={item.href}
                     prefetch={false}
+                    rel={item.href.startsWith("http") ? "noopener noreferrer" : undefined}
                     tabIndex={isMobile && !isOpen ? -1 : undefined}
+                    target={item.href.startsWith("http") ? "_blank" : undefined}
                   >
                     {item.label}
                   </LocalizedLink>

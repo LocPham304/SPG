@@ -273,7 +273,7 @@
   },
   "contact": { "title": "联系我们" },
   "footer": {
-    "address": "地址",
+    "address": "总部地址",
     "backToTop": "返回顶部",
     "copyright": "© {year} Shandong Port Equipment Group。保留所有权利。",
     "designer": "设计：{name}",
@@ -281,6 +281,9 @@
     "navigationLabel": "页脚导航",
     "partnerLinksLabel": "合作伙伴链接",
     "phone": "电话",
+    "supportLabel": "联系支持",
+    "supportPhone": "联系电话",
+    "supportZalo": "通过 Zalo 联系",
     "qrMiniProgram": "微信小程序",
     "qrMiniProgramAlt": "山东港口装备集团微信小程序二维码",
     "qrPublicAccount": "微信公众号",

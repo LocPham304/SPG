@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 import { Container } from "@/components/common/Container";
 import { ImageWithSkeleton } from "@/components/news/ImageWithSkeleton";
 import { ScrollReveal } from "@/components/news/ScrollReveal";
@@ -110,6 +112,14 @@ export function ContactSection({
           </ScrollReveal>
           <ScrollReveal animation="animate__fadeInUp" threshold={0.15}>
             <article className={styles.primaryCard}>
+            <Image
+              alt=""
+              aria-hidden="true"
+              className={styles.primaryLogoWatermark}
+              height={317}
+              src="/images/public/files/image/bg_logo.png"
+              width={402}
+            />
             <div className={styles.primaryContent}>
               <h3>{primary.company}</h3>
               <DetailsList
@@ -141,6 +151,7 @@ export function ContactSection({
               priority
               sizes="(max-width: 767px) 85vw, 47vw"
               src="/images/public/files/image/contact_img1.png"
+              transparent
             />
             </article>
           </ScrollReveal>

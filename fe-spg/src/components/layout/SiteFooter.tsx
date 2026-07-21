@@ -1,18 +1,16 @@
 import { getTranslations } from "next-intl/server";
 
 import { LocalizedLink } from "@/components/common/LocalizedLink";
-import { ImageWithSkeleton } from "@/components/news/ImageWithSkeleton";
 import { ScrollReveal } from "@/components/news/ScrollReveal";
-import { getStaggerDelay } from "@/components/news/animation";
 import {
   companyContact,
   companyLegal,
-  footerQrCodes,
   vietnamOfficeContact,
 } from "@/data/company";
 import { mainNavigation } from "@/data/navigation";
 
 import { BackToTop } from "./BackToTop.client";
+import { ContactSupport } from "./ContactSupport.client";
 import { FooterLinksDropdown } from "./FooterLinksDropdown.client";
 import {
   FooterNavigation,
@@ -50,78 +48,88 @@ export async function SiteFooter() {
         </ScrollReveal>
 
         <ScrollReveal animation="animate__fadeInUp" threshold={0.1}>
-        <div className={styles.footerDetails}>
-          <FooterLinksDropdown
-            label={t("links")}
-            menuLabel={t("partnerLinksLabel")}
-          />
+          <div className={styles.footerDetails}>
+            <FooterLinksDropdown
+              label={t("links")}
+              menuLabel={t("partnerLinksLabel")}
+            />
 
-          <address className={styles.footerContact}>
-            <div>
-              <strong>{t("vietnamOfficeAddress")}</strong>
-              <span>{t("vietnamOfficeLocation")}</span>
-            </div>
-            <div>
-              <strong>{t("phone")}</strong>
-              <a href={`tel:${vietnamOfficeContact.phoneHref}`}>
-                {vietnamOfficeContact.phoneDisplay}
-              </a>
-            </div>
-          </address>
+            <address className={styles.footerContact}>
+              <div>
+                <strong>{t("address")}</strong>
+                <a
+                  href={companyContact.addressHref}
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  {companyContact.address}
+                </a>
+              </div>
+              <div>
+                <strong>{t("phone")}</strong>
+                <a href={`tel:${companyContact.phoneHref}`}>
+                  {companyContact.phoneDisplay}
+                </a>
+              </div>
+            </address>
 
-          <address className={styles.footerContact}>
-            <div>
-              <strong>{t("address")}</strong>
-              <a
-                href={companyContact.addressHref}
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                {companyContact.address}
-              </a>
-            </div>
-            <div>
-              <strong>{t("phone")}</strong>
-              <a href={`tel:${companyContact.phoneHref}`}>
-                {companyContact.phoneDisplay}
-              </a>
-            </div>
-          </address>
-
-          <div className={styles.footerQrCodes}>
-            {footerQrCodes.map((qr, index) => (
-              <ScrollReveal
-                className={styles.footerQrReveal}
-                delay={getStaggerDelay(index)}
-                key={qr.id}
-                threshold={0.1}
-              >
-              <figure>
-                <ImageWithSkeleton
-                  alt={t(`${qr.labelKey}Alt`)}
-                  aspectRatio="square"
-                  className={styles.footerQrImage}
-                  imageClassName={styles.footerQrImageElement}
-                          sizes="(max-width: 767px) 112px, 126px"
-                  src={qr.src}
-                />
-                <figcaption>{t(qr.labelKey)}</figcaption>
-              </figure>
-              </ScrollReveal>
-            ))}
+            <address className={styles.footerContact}>
+              <div>
+                <strong>{t("vietnamOfficeAddress")}</strong>
+                <span>{t("vietnamOfficeLocation")}</span>
+              </div>
+              <div>
+                <strong>{t("phone")}</strong>
+                <a href={`tel:${vietnamOfficeContact.phoneHref}`}>
+                  {vietnamOfficeContact.phoneDisplay}
+                </a>
+              </div>
+              <div>
+                <strong>Email</strong>
+                <a href={`mailto:${vietnamOfficeContact.email}`}>
+                  {vietnamOfficeContact.email}
+                </a>
+              </div>
+            </address>
           </div>
-        </div>
         </ScrollReveal>
 
         <div className={styles.footerLegal}>
-          <p>{t("copyright", { year: new Date().getFullYear() })}</p>
-          <span>{companyLegal.registration}</span>
-          <LocalizedLink href="/sitemap" prefetch={false}>
-            {t("sitemap")}
-          </LocalizedLink>
-          <span>{t("designer", { name: companyLegal.designer })}</span>
+          <p>
+            © {new Date().getFullYear()}{" "}
+            <a
+              href={companyLegal.companyUrl}
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Shandong Port Equipment Group
+            </a>{" "}
+            All rights reserved{" "}
+            <a
+              href={companyLegal.registrationUrl}
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              {companyLegal.registration}
+            </a>{" "}
+            <LocalizedLink href="/sitemap" prefetch={false}>
+              Sitemap
+            </LocalizedLink>{" "}
+            <a
+              href={companyLegal.designerUrl}
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Design:LTD
+            </a>{" "}.
+          </p>
         </div>
       </div>
+      <ContactSupport
+        phoneLabel={t("supportPhone")}
+        supportLabel={t("supportLabel")}
+        zaloLabel={t("supportZalo")}
+      />
       <BackToTop label={t("backToTop")} />
     </footer>
   );

@@ -40,16 +40,14 @@
   padding: clamp(42px, 3.13vw, 60px);
 }
 
-.primaryCard::before {
+.primaryLogoWatermark {
   position: absolute;
-  bottom: -44px;
-  left: 15px;
-  width: 290px;
-  height: 230px;
-  background: url("/images/public/files/image/bg_logo.png") left bottom / contain
-    no-repeat;
-  content: "";
-  opacity: 0.12;
+  bottom: -38px;
+  left: 28px;
+  z-index: 0;
+  width: 350px;
+  height: auto;
+  opacity: 0.32;
   pointer-events: none;
 }
 
@@ -327,11 +325,11 @@
     padding: 32px;
   }
 
-  .primaryCard::before {
+  .primaryLogoWatermark {
     bottom: -28px;
     left: 0;
-    width: 220px;
-    height: 175px;
+    width: 240px;
+    opacity: 0.24;
   }
 
   .primaryContent {
@@ -411,11 +409,11 @@
     padding: 18px 14px 105px;
   }
 
-  .primaryCard::before {
+  .primaryLogoWatermark {
     bottom: -24px;
     left: -12px;
-    width: 180px;
-    height: 145px;
+    width: 190px;
+    opacity: 0.2;
   }
 
   .primaryContent {
