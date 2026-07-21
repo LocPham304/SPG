@@ -172,7 +172,7 @@
 
 .footerContact {
   display: grid;
-  gap: 20px;
+  gap: 10px;
   padding-top: 5px;
   color: #454b50;
   font-style: normal;
@@ -181,6 +181,17 @@
 .footerContact div {
   display: grid;
   gap: 3px;
+}
+
+.footerContact .footerVietnamContactMethods {
+  grid-template-columns: 1fr;
+  gap: 6px;
+}
+
+.footerContact .footerVietnamContactMethods > div {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
 }
 
 .footerContact strong {
@@ -224,14 +235,16 @@
 .contactSupport {
   position: fixed;
   z-index: 75;
-  right: 18px;
+  right: 13px;
   bottom: 94px;
 }
 
 .contactSupportButton {
+  position: relative;
+  isolation: isolate;
   display: grid;
-  width: 42px;
-  height: 42px;
+  width: clamp(52px, 3vw, 58px);
+  height: clamp(52px, 3vw, 58px);
   place-items: center;
   border: 0;
   border-radius: 50%;
@@ -245,12 +258,48 @@
     transform 180ms ease;
 }
 
+.contactSupportButton::before {
+  position: absolute;
+  z-index: -1;
+  border: 2px solid rgb(22 134 200 / 48%);
+  border-radius: inherit;
+  animation: contact-support-pulse 2.2s ease-out infinite;
+  content: "";
+  inset: -7px;
+  pointer-events: none;
+}
+
+.contactSupportButton svg {
+  width: clamp(24px, 1.5vw, 28px);
+  height: clamp(24px, 1.5vw, 28px);
+  transition: transform 180ms ease;
+}
+
 .contactSupportButton:hover,
 .contactSupportButton:focus-visible,
 .contactSupportButton[aria-expanded="true"] {
   background: #0f70ae;
   box-shadow: 0 10px 26px rgb(16 101 154 / 34%);
   transform: translateY(-2px);
+}
+
+.contactSupportButton:hover svg,
+.contactSupportButton:focus-visible svg,
+.contactSupportButton[aria-expanded="true"] svg {
+  transform: scale(1.1) rotate(-5deg);
+}
+
+@keyframes contact-support-pulse {
+  0% {
+    opacity: 0.65;
+    transform: scale(0.86);
+  }
+
+  75%,
+  100% {
+    opacity: 0;
+    transform: scale(1.25);
+  }
 }
 
 .contactSupportMenu {
@@ -361,10 +410,32 @@
   color: #fff;
 }
 
-@media (1200px <= width <= 1599px) {
+@media (width >= 1200px) {
   .footer,
   .footerInner {
     min-height: 0;
+  }
+
+  .footerDetails {
+    margin-bottom: clamp(15px, 1.3vw, 15px);
+  }
+}
+
+@media (width <= 800px) {
+  .footerDetails {
+    margin-bottom: clamp(5px, 1.3vw, 5px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .contactSupportButton::before {
+    animation: none;
+  }
+
+  .contactSupportButton,
+  .contactSupportButton svg,
+  .contactSupportMenu {
+    transition: none;
   }
 }
 
@@ -494,8 +565,16 @@
     margin-inline: auto;
   }
 
+  .footerContact .footerVietnamContactMethods > div {
+    justify-content: center;
+  }
+
+  .footerContact .footerVietnamContactMethods a {
+    margin-inline: 0;
+  }
+
   .footerLegal {
-    margin-top: 26px;
+    margin-top: 20px;
     gap: 4px 8px;
     padding: 19px 24px;
     font-size: 11px;
@@ -549,7 +628,7 @@
     margin: 36px auto 0;
   }
 
-  .footerLegal {
-    margin-top: 32px;
-  }
+  // .footerLegal {
+  //   margin-top: 32px;
+  // }
 }

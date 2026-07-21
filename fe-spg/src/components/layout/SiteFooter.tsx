@@ -78,17 +78,19 @@ export async function SiteFooter() {
                 <strong>{t("vietnamOfficeAddress")}</strong>
                 <span>{t("vietnamOfficeLocation")}</span>
               </div>
-              <div>
-                <strong>{t("phone")}</strong>
-                <a href={`tel:${vietnamOfficeContact.phoneHref}`}>
-                  {vietnamOfficeContact.phoneDisplay}
-                </a>
-              </div>
-              <div>
-                <strong>Email</strong>
-                <a href={`mailto:${vietnamOfficeContact.email}`}>
-                  {vietnamOfficeContact.email}
-                </a>
+              <div className={styles.footerVietnamContactMethods}>
+                <div>
+                  <strong>{t("phone")}:</strong>
+                  <a href={`tel:${vietnamOfficeContact.phoneHref}`}>
+                    {vietnamOfficeContact.phoneDisplay}
+                  </a>
+                </div>
+                <div>
+                  <strong>Email:</strong>
+                  <a href={`mailto:${vietnamOfficeContact.email}`}>
+                    {vietnamOfficeContact.email}
+                  </a>
+                </div>
               </div>
             </address>
           </div>
