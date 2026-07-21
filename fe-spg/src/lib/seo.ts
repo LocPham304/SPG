@@ -10,12 +10,11 @@ import {
 } from "@/i18n/routing";
 import type { PublicNewsCategorySlug } from "@/types/public-news";
 
-const fallbackSiteUrl = "https://your-vercel-domain.vercel.app";
+const fallbackSiteUrl = "https://spg-jet.vercel.app";
 
 export const DEFAULT_OG_IMAGE_PATH =
   "/images/public/files/image/index_banner1.jpg";
-export const ORGANIZATION_LOGO_PATH =
-  "/images/public/files/image/logo.png";
+export const ORGANIZATION_LOGO_PATH = "/images/public/files/image/logo.png";
 
 const openGraphLocales: Record<AppLocale, string> = {
   vi: "vi_VN",
@@ -43,25 +42,23 @@ const localeDefaults: Record<
   },
 };
 
-const aboutMetadata: Record<
-  AppLocale,
-  { title: string; description: string }
-> = {
-  vi: {
-    title: "Giới thiệu SPG | Thông tin doanh nghiệp",
-    description:
-      "Tìm hiểu về SPG, năng lực doanh nghiệp, định hướng phát triển và các giá trị thương hiệu.",
-  },
-  en: {
-    title: "About SPG | Company Information",
-    description:
-      "Learn about SPG, its corporate capabilities, development direction and brand values.",
-  },
-  zh: {
-    title: "关于 SPG | 企业信息",
-    description: "了解 SPG 的企业实力、发展方向和品牌价值。",
-  },
-};
+const aboutMetadata: Record<AppLocale, { title: string; description: string }> =
+  {
+    vi: {
+      title: "Giới thiệu SPG | Thông tin doanh nghiệp",
+      description:
+        "Tìm hiểu về SPG, năng lực doanh nghiệp, định hướng phát triển và các giá trị thương hiệu.",
+    },
+    en: {
+      title: "About SPG | Company Information",
+      description:
+        "Learn about SPG, its corporate capabilities, development direction and brand values.",
+    },
+    zh: {
+      title: "关于 SPG | 企业信息",
+      description: "了解 SPG 的企业实力、发展方向和品牌价值。",
+    },
+  };
 
 const contactMetadata: Record<
   AppLocale,
@@ -105,8 +102,7 @@ const newsCategoryMetadata: Record<
   "group-news": {
     vi: {
       title: "Tin Tập đoàn | Tin tức SPG",
-      description:
-        "Cập nhật tin tức, hoạt động và thông tin mới nhất của SPG.",
+      description: "Cập nhật tin tức, hoạt động và thông tin mới nhất của SPG.",
     },
     en: {
       title: "Group News | SPG News",
@@ -191,10 +187,7 @@ export function getAbsoluteUrl(pathOrUrl: string) {
   return new URL(pathOrUrl, getSiteUrl()).toString();
 }
 
-export function getLocalizedAbsoluteUrl(
-  locale: AppLocale,
-  href: string,
-) {
+export function getLocalizedAbsoluteUrl(locale: AppLocale, href: string) {
   return getAbsoluteUrl(getPathname({ href, locale }));
 }
 
@@ -204,9 +197,7 @@ function getLanguageAlternates(
   const languages = Object.fromEntries(
     locales.flatMap((locale) => {
       const href = languagePaths[locale];
-      return href
-        ? [[locale, getLocalizedAbsoluteUrl(locale, href)]]
-        : [];
+      return href ? [[locale, getLocalizedAbsoluteUrl(locale, href)]] : [];
     }),
   );
   const defaultHref = languagePaths[defaultLocale];
@@ -273,8 +264,7 @@ export function createLocalizedMetadata({
           type: "website",
         };
   const alternatePaths =
-    languagePaths ??
-    Object.fromEntries(locales.map((item) => [item, href]));
+    languagePaths ?? Object.fromEntries(locales.map((item) => [item, href]));
 
   return {
     metadataBase,
