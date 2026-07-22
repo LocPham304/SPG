@@ -36,6 +36,7 @@ export class ArticleAdminResponseDto {
   thumbnailId!: number | null;
   status!: ArticleStatus;
   isFeatured!: boolean;
+  sourceLocale!: LocaleCode;
   sourceVersion!: number;
   sourceUrl!: string | null;
   title!: string | null;

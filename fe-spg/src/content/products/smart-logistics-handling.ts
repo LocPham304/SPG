@@ -65,165 +65,163 @@ function asset(file: string, en: string, vi: string, zh: string): GalleryAsset {
   return { file: `${root}/${localFile}`, caption: { en, vi, zh } };
 }
 
-const galleryAssets: Record<
-  SmartLogisticsSectionId,
-  readonly GalleryAsset[]
-> = {
-  "rail-mounted-gantry-crane": [
-    asset(
-      "d9565f8fe4a32f5b64c25c92e2ef9cd7.gif",
-      "Automated rail crane",
-      "Cẩu ray tự động",
-      "自动化轨道吊",
-    ),
-    asset(
-      "a0a3e9282759308e4e96ddc7ef627241_lp.jpg",
-      "Qingdao Port QQCTN Phase III - 41T automated rail crane",
-      "Cẩu ray tự động 41T giai đoạn III QQCTN tại Cảng Thanh Đảo",
-      "青岛港QQCTN三期-41T自动化轨道吊",
-    ),
-    asset(
-      "57356f72e78e1cc7f22f6a139b55c02b_lp.jpg",
-      "Qingdao Port QQCTN Phase II - 41T automated rail crane",
-      "Cẩu ray tự động 41T giai đoạn II QQCTN tại Cảng Thanh Đảo",
-      "青岛港QQCTN二期-41T自动化轨道吊",
-    ),
-    asset(
-      "65a59424974c5b4bc882ce01bc6fed8a_lp.jpg",
-      "Qingdao Port QQCTN Phase III - 41T automated rail crane",
-      "Cẩu ray tự động 41T giai đoạn III QQCTN tại Cảng Thanh Đảo",
-      "青岛港QQCTN三期-41T自动化轨道吊",
-    ),
-    asset(
-      "613c90a703d29daeb793681f2991b103_lp.jpg",
-      "Qingdao Port QQCTU - 41T rail crane",
-      "Cẩu ray 41T QQCTU tại Cảng Thanh Đảo",
-      "青岛港QQCTU-41T轨道吊",
-    ),
-    asset(
-      "5a5e438704d71961e0bc005efe99a452_lp.jpg",
-      "Qingdao Port QQCTN Phase I - 41T automated rail crane",
-      "Cẩu ray tự động 41T giai đoạn I QQCTN tại Cảng Thanh Đảo",
-      "青岛港QQCTN一期-41T自动化轨道吊",
-    ),
-  ],
-  "rubber-tyred-gantry-crane": [
-    asset(
-      "f0b7a05afa6f4e3c15d53e4e55fb3737.gif",
-      "Qingdao Port QQCTU - automated rubber-tyred gantry crane",
-      "Cẩu giàn bánh lốp tự động QQCTU tại Cảng Thanh Đảo",
-      "青岛港QQCTU-自动化轮胎吊",
-    ),
-    asset(
-      "89d33b655c1bcfd0b4c5e29e50b86c7a_lp.jpg",
-      "Jiangsu Zhenjiang Port - 40.5T rubber-tyred gantry crane",
-      "Cẩu giàn bánh lốp 40,5T tại Cảng Trấn Giang, Giang Tô",
-      "江苏镇江港-40.5T轮胎吊",
-    ),
-    asset(
-      "6970047016d430f9f6cb48590e5fa9db_lp.jpg",
-      "Yantai Longkou Port - 40.5T rubber-tyred gantry crane",
-      "Cẩu giàn bánh lốp 40,5T tại Cảng Long Khẩu, Yên Đài",
-      "烟台龙口港-40.5T轮胎吊",
-    ),
-    asset(
-      "bbf72a3868e979d63937ef6935f5e719_lp.jpg",
-      "Shandong Hi-Speed Weifang Port - 40.5T rubber-tyred gantry crane",
-      "Cẩu giàn bánh lốp 40,5T tại Cảng Duy Phường, Sơn Đông",
-      "山东高速潍坊港-40.5T轮胎吊",
-    ),
-  ],
-  "electric-reach-stacker": [
-    asset(
-      "8080aeb773c5592765898043f2d41b29_lp.jpg",
-      "Shandong Port Logistics Group - electric reach stacker",
-      "Xe nâng container điện của Tập đoàn Logistics Cảng Sơn Đông",
-      "山东港口物流集团-电动正面吊",
-    ),
-    asset(
-      "08773ae37f244bf03d5ab0472ffcfe18_lp.jpg",
-      "Shandong Port Logistics Group - electric reach stacker",
-      "Xe nâng container điện của Tập đoàn Logistics Cảng Sơn Đông",
-      "山东港口物流集团-电动正面吊",
-    ),
-    asset(
-      "fdaf86cd906b7346c6802a29e9405129_lp.jpg",
-      "Shandong Port Logistics Group - electric reach stacker",
-      "Xe nâng container điện của Tập đoàn Logistics Cảng Sơn Đông",
-      "山东港口物流集团-电动正面吊",
-    ),
-    asset(
-      "8547bb56783f4acb16fce3d5f8a0b563_lp.jpg",
-      "Shandong Port Logistics Group - electric reach stacker",
-      "Xe nâng container điện của Tập đoàn Logistics Cảng Sơn Đông",
-      "山东港口物流集团-电动正面吊",
-    ),
-    asset(
-      "b3cb6586a8ed557c7612e5f5b384797a_lp.jpg",
-      "Shandong Port Logistics Group - electric reach stacker",
-      "Xe nâng container điện của Tập đoàn Logistics Cảng Sơn Đông",
-      "山东港口物流集团-电动正面吊",
-    ),
-    asset(
-      "681391d847b35607fcc5970da0437abf_lp.jpg",
-      "Shandong Port Logistics Group - electric reach stacker",
-      "Xe nâng container điện của Tập đoàn Logistics Cảng Sơn Đông",
-      "山东港口物流集团-电动正面吊",
-    ),
-    asset(
-      "98d0697f5e3ae19507e1ef021968eb5f_lp.jpg",
-      "Shandong Port Logistics Group - electric reach stacker",
-      "Xe nâng container điện của Tập đoàn Logistics Cảng Sơn Đông",
-      "山东港口物流集团-电动正面吊",
-    ),
-  ],
-  "electric-stacker": [
-    asset(
-      "40bf2a7c9ed9cc84b8ceea78e48e139c_lp.jpg",
-      "Qingdao Port QQCT - electric stacker",
-      "Xe nâng xếp điện QQCT tại Cảng Thanh Đảo",
-      "青岛港QQCT-电动堆高机",
-    ),
-    asset(
-      "aad62f72634b1a06cb2398ef89e456b3_lp.jpg",
-      "Qingdao Port QQCT - electric stacker",
-      "Xe nâng xếp điện QQCT tại Cảng Thanh Đảo",
-      "青岛港QQCT-电动堆高机",
-    ),
-    asset(
-      "82aa1f5471532d7f0782184c68cfff1f_lp.jpg",
-      "Qingdao Port QQCT - electric stacker",
-      "Xe nâng xếp điện QQCT tại Cảng Thanh Đảo",
-      "青岛港QQCT-电动堆高机",
-    ),
-    asset(
-      "731a826f3ba7951f1a1a9c7fbb1d8878_lp.jpg",
-      "Qingdao Port QQCT - electric stacker",
-      "Xe nâng xếp điện QQCT tại Cảng Thanh Đảo",
-      "青岛港QQCT-电动堆高机",
-    ),
-    asset(
-      "15a4aaea55662e41839c7f64db283c14_lp.jpg",
-      "Qingdao Port QQCT - electric stacker",
-      "Xe nâng xếp điện QQCT tại Cảng Thanh Đảo",
-      "青岛港QQCT-电动堆高机",
-    ),
-  ],
-  aigt: [
-    asset(
-      "50bd1a9c4762aeaa78c49f3814097789_lp.jpg",
-      "Qingdao Port QQCTU - AIGT",
-      "Xe vận chuyển container thông minh AIGT QQCTU tại Cảng Thanh Đảo",
-      "青岛港QQCTU-AIGT",
-    ),
-    asset(
-      "50fc7383a5e153040676352266200182_lp.jpg",
-      "Qingdao Port QQCTU - AIGT",
-      "Xe vận chuyển container thông minh AIGT QQCTU tại Cảng Thanh Đảo",
-      "青岛港QQCTU-AIGT",
-    ),
-  ],
-};
+const galleryAssets: Record<SmartLogisticsSectionId, readonly GalleryAsset[]> =
+  {
+    "rail-mounted-gantry-crane": [
+      asset(
+        "d9565f8fe4a32f5b64c25c92e2ef9cd7.gif",
+        "Automated rail crane",
+        "Cẩu ray tự động",
+        "自动化轨道吊",
+      ),
+      asset(
+        "a0a3e9282759308e4e96ddc7ef627241_lp.jpg",
+        "Qingdao Port QQCTN Phase III - 41T automated rail crane",
+        "Cẩu ray tự động 41T giai đoạn III QQCTN tại Cảng Thanh Đảo",
+        "青岛港QQCTN三期-41T自动化轨道吊",
+      ),
+      asset(
+        "57356f72e78e1cc7f22f6a139b55c02b_lp.jpg",
+        "Qingdao Port QQCTN Phase II - 41T automated rail crane",
+        "Cẩu ray tự động 41T giai đoạn II QQCTN tại Cảng Thanh Đảo",
+        "青岛港QQCTN二期-41T自动化轨道吊",
+      ),
+      asset(
+        "65a59424974c5b4bc882ce01bc6fed8a_lp.jpg",
+        "Qingdao Port QQCTN Phase III - 41T automated rail crane",
+        "Cẩu ray tự động 41T giai đoạn III QQCTN tại Cảng Thanh Đảo",
+        "青岛港QQCTN三期-41T自动化轨道吊",
+      ),
+      asset(
+        "613c90a703d29daeb793681f2991b103_lp.jpg",
+        "Qingdao Port QQCTU - 41T rail crane",
+        "Cẩu ray 41T QQCTU tại Cảng Thanh Đảo",
+        "青岛港QQCTU-41T轨道吊",
+      ),
+      asset(
+        "5a5e438704d71961e0bc005efe99a452_lp.jpg",
+        "Qingdao Port QQCTN Phase I - 41T automated rail crane",
+        "Cẩu ray tự động 41T giai đoạn I QQCTN tại Cảng Thanh Đảo",
+        "青岛港QQCTN一期-41T自动化轨道吊",
+      ),
+    ],
+    "rubber-tyred-gantry-crane": [
+      asset(
+        "f0b7a05afa6f4e3c15d53e4e55fb3737.gif",
+        "Qingdao Port QQCTU - automated rubber-tyred gantry crane",
+        "Cẩu giàn bánh lốp tự động QQCTU tại Cảng Thanh Đảo",
+        "青岛港QQCTU-自动化轮胎吊",
+      ),
+      asset(
+        "89d33b655c1bcfd0b4c5e29e50b86c7a_lp.jpg",
+        "Jiangsu Zhenjiang Port - 40.5T rubber-tyred gantry crane",
+        "Cẩu giàn bánh lốp 40,5T tại Cảng Trấn Giang, Giang Tô",
+        "江苏镇江港-40.5T轮胎吊",
+      ),
+      asset(
+        "6970047016d430f9f6cb48590e5fa9db_lp.jpg",
+        "Yantai Longkou Port - 40.5T rubber-tyred gantry crane",
+        "Cẩu giàn bánh lốp 40,5T tại Cảng Long Khẩu, Yên Đài",
+        "烟台龙口港-40.5T轮胎吊",
+      ),
+      asset(
+        "bbf72a3868e979d63937ef6935f5e719_lp.jpg",
+        "Shandong Hi-Speed Weifang Port - 40.5T rubber-tyred gantry crane",
+        "Cẩu giàn bánh lốp 40,5T tại Cảng Duy Phường, Sơn Đông",
+        "山东高速潍坊港-40.5T轮胎吊",
+      ),
+    ],
+    "electric-reach-stacker": [
+      asset(
+        "8080aeb773c5592765898043f2d41b29_lp.jpg",
+        "Shandong Port Logistics Group - electric reach stacker",
+        "Xe nâng container điện của Tập đoàn Logistics Cảng Sơn Đông",
+        "山东港口物流集团-电动正面吊",
+      ),
+      asset(
+        "08773ae37f244bf03d5ab0472ffcfe18_lp.jpg",
+        "Shandong Port Logistics Group - electric reach stacker",
+        "Xe nâng container điện của Tập đoàn Logistics Cảng Sơn Đông",
+        "山东港口物流集团-电动正面吊",
+      ),
+      asset(
+        "fdaf86cd906b7346c6802a29e9405129_lp.jpg",
+        "Shandong Port Logistics Group - electric reach stacker",
+        "Xe nâng container điện của Tập đoàn Logistics Cảng Sơn Đông",
+        "山东港口物流集团-电动正面吊",
+      ),
+      asset(
+        "8547bb56783f4acb16fce3d5f8a0b563_lp.jpg",
+        "Shandong Port Logistics Group - electric reach stacker",
+        "Xe nâng container điện của Tập đoàn Logistics Cảng Sơn Đông",
+        "山东港口物流集团-电动正面吊",
+      ),
+      asset(
+        "b3cb6586a8ed557c7612e5f5b384797a_lp.jpg",
+        "Shandong Port Logistics Group - electric reach stacker",
+        "Xe nâng container điện của Tập đoàn Logistics Cảng Sơn Đông",
+        "山东港口物流集团-电动正面吊",
+      ),
+      asset(
+        "681391d847b35607fcc5970da0437abf_lp.jpg",
+        "Shandong Port Logistics Group - electric reach stacker",
+        "Xe nâng container điện của Tập đoàn Logistics Cảng Sơn Đông",
+        "山东港口物流集团-电动正面吊",
+      ),
+      asset(
+        "98d0697f5e3ae19507e1ef021968eb5f_lp.jpg",
+        "Shandong Port Logistics Group - electric reach stacker",
+        "Xe nâng container điện của Tập đoàn Logistics Cảng Sơn Đông",
+        "山东港口物流集团-电动正面吊",
+      ),
+    ],
+    "electric-stacker": [
+      asset(
+        "40bf2a7c9ed9cc84b8ceea78e48e139c_lp.jpg",
+        "Qingdao Port QQCT - electric stacker",
+        "Xe nâng xếp điện QQCT tại Cảng Thanh Đảo",
+        "青岛港QQCT-电动堆高机",
+      ),
+      asset(
+        "aad62f72634b1a06cb2398ef89e456b3_lp.jpg",
+        "Qingdao Port QQCT - electric stacker",
+        "Xe nâng xếp điện QQCT tại Cảng Thanh Đảo",
+        "青岛港QQCT-电动堆高机",
+      ),
+      asset(
+        "82aa1f5471532d7f0782184c68cfff1f_lp.jpg",
+        "Qingdao Port QQCT - electric stacker",
+        "Xe nâng xếp điện QQCT tại Cảng Thanh Đảo",
+        "青岛港QQCT-电动堆高机",
+      ),
+      asset(
+        "731a826f3ba7951f1a1a9c7fbb1d8878_lp.jpg",
+        "Qingdao Port QQCT - electric stacker",
+        "Xe nâng xếp điện QQCT tại Cảng Thanh Đảo",
+        "青岛港QQCT-电动堆高机",
+      ),
+      asset(
+        "15a4aaea55662e41839c7f64db283c14_lp.jpg",
+        "Qingdao Port QQCT - electric stacker",
+        "Xe nâng xếp điện QQCT tại Cảng Thanh Đảo",
+        "青岛港QQCT-电动堆高机",
+      ),
+    ],
+    aigt: [
+      asset(
+        "50bd1a9c4762aeaa78c49f3814097789_lp.jpg",
+        "Qingdao Port QQCTU - AIGT",
+        "Xe vận chuyển container thông minh AIGT QQCTU tại Cảng Thanh Đảo",
+        "青岛港QQCTU-AIGT",
+      ),
+      asset(
+        "50fc7383a5e153040676352266200182_lp.jpg",
+        "Qingdao Port QQCTU - AIGT",
+        "Xe vận chuyển container thông minh AIGT QQCTU tại Cảng Thanh Đảo",
+        "青岛港QQCTU-AIGT",
+      ),
+    ],
+  };
 
 const sectionText: Record<
   AppLocale,
@@ -303,7 +301,7 @@ const sectionText: Record<
     aigt: {
       title: "AIGT",
       paragraphs: [
-        "AIGT do Tập đoàn Thiết bị Cảng Sơn Đông phát triển kết hợp định vị vệ tinh, LiDAR SLAM và SLAM thị giác để định vị hợp nhất đa cảm biến. Nhiều xe có thể chia sẻ dữ liệu môi trường, phối hợp định vị, tự hành và vận hành đội xe thông minh. Thiết bị có thể đạt mức tự hành L5 trong khu vực khép kín, tận dụng phần lớn hạ tầng cảng hiện hữu với mức cải tạo nhỏ và đạt độ chính xác định vị ±30 mm.",
+        "AIGT do Tập đoàn Thiết bị Cảng Sealand Sơn Đông phát triển kết hợp định vị vệ tinh, LiDAR SLAM và SLAM thị giác để định vị hợp nhất đa cảm biến. Nhiều xe có thể chia sẻ dữ liệu môi trường, phối hợp định vị, tự hành và vận hành đội xe thông minh. Thiết bị có thể đạt mức tự hành L5 trong khu vực khép kín, tận dụng phần lớn hạ tầng cảng hiện hữu với mức cải tạo nhỏ và đạt độ chính xác định vị ±30 mm.",
         "So với AGV dẫn hướng bằng đinh từ, xe vận chuyển container tự động thế hệ mới nhẹ hơn, thông minh hơn, tiết kiệm năng lượng hơn và có chi phí chỉ khoảng 70% AGV. Cấu hình có thể tùy chỉnh theo nhu cầu.",
       ],
     },
@@ -376,7 +374,8 @@ const localeCopy: Record<
   },
   zh: {
     title: "智慧物流园区解决方案",
-    description: "面向智慧物流园区的自动化装卸、智能运输与数字化管理一体化解决方案。",
+    description:
+      "面向智慧物流园区的自动化装卸、智能运输与数字化管理一体化解决方案。",
     productsLabel: "产品与解决方案",
     intro:
       "提供自动化轨道式/轮胎式/铁路专用集装箱门式起重机、无人集卡、装配式钢结构建筑等全系列定制产品，并根据需求配套车号/箱号识别、集卡定位、集卡防吊起、自动防撞、一键自动锚定、智能状态管理系统、智能润滑、自动消防、智慧闸口及智慧照明等功能。",

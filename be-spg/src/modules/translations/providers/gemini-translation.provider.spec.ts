@@ -99,7 +99,9 @@ describe('GeminiTranslationProvider', () => {
       );
     const provider = createProvider();
 
-    await expect(provider.translateArticle(SOURCE, ['en'])).resolves.toEqual({
+    await expect(
+      provider.translateArticle(SOURCE, 'vi', ['en']),
+    ).resolves.toEqual({
       en: ENGLISH_TRANSLATION,
     });
 
@@ -143,7 +145,7 @@ describe('GeminiTranslationProvider', () => {
     const provider = createProvider();
 
     await expect(
-      provider.translateArticle(SOURCE, ['en', 'zh']),
+      provider.translateArticle(SOURCE, 'vi', ['en', 'zh']),
     ).resolves.toEqual({
       en: ENGLISH_TRANSLATION,
       zh: chineseTranslation,
@@ -156,9 +158,9 @@ describe('GeminiTranslationProvider', () => {
       .mockImplementation(() => Promise.resolve(geminiResponse('not-json')));
     const provider = createProvider();
 
-    await expect(provider.translateArticle(SOURCE, ['en'])).rejects.toThrow(
-      'Gemini trả về JSON không hợp lệ.',
-    );
+    await expect(
+      provider.translateArticle(SOURCE, 'vi', ['en']),
+    ).rejects.toThrow('Gemini trả về JSON không hợp lệ.');
     expect(fetchMock).toHaveBeenCalledTimes(2);
   });
 
@@ -171,12 +173,36 @@ describe('GeminiTranslationProvider', () => {
     const provider = createProvider();
 
     try {
-      await provider.translateArticle(SOURCE, ['en']);
+      await provider.translateArticle(SOURCE, 'vi', ['en']);
       throw new Error('Expected Gemini request to fail.');
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : String(error);
       expect(message).toBe('Gemini API không thể xử lý yêu cầu (HTTP 403).');
       expect(message).not.toContain(API_KEY);
     }
+  });
+
+  it('supports English source content translated into Vietnamese', async () => {
+    const vietnameseTranslation = {
+      ...ENGLISH_TRANSLATION,
+      title: 'Tiêu đề',
+      summary: 'Tóm tắt',
+      contentHtml: '<p>Nội dung</p>',
+    };
+    const fetchMock = jest
+      .spyOn(global, 'fetch')
+      .mockResolvedValue(
+        geminiResponse(JSON.stringify({ vi: vietnameseTranslation })),
+      );
+    const provider = createProvider();
+
+    await expect(
+      provider.translateArticle(ENGLISH_TRANSLATION, 'en', ['vi']),
+    ).resolves.toEqual({ vi: vietnameseTranslation });
+
+    const body = asRecord(parseRequestBody(fetchMock.mock.calls[0][1]?.body));
+    const serializedBody = JSON.stringify(body);
+    expect(serializedBody).toContain('English (en)');
+    expect(serializedBody).toContain('Vietnamese (vi)');
   });
 });

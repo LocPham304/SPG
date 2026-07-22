@@ -2,6 +2,7 @@ import { Transform, Type, type TransformFnParams } from 'class-transformer';
 import {
   ArrayMaxSize,
   IsArray,
+  IsEnum,
   IsInt,
   IsOptional,
   IsString,
@@ -15,6 +16,7 @@ import {
 } from 'class-validator';
 
 import { ArticleTranslationInputDto } from './article-translation-input.dto';
+import { LocaleCode } from '../../categories/enums/locale-code.enum';
 function trimNullableString({ value }: TransformFnParams): unknown {
   return typeof value === 'string' ? value.trim() : value;
 }
@@ -24,6 +26,10 @@ function normalizeSlug({ value }: TransformFnParams): unknown {
 }
 
 export class UpdateArticleDto {
+  @IsOptional()
+  @IsEnum(LocaleCode)
+  sourceLocale?: LocaleCode;
+
   @IsOptional()
   @Type(() => Number)
   @IsInt()

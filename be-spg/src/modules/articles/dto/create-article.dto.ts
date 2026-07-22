@@ -2,6 +2,7 @@ import { Transform, Type, type TransformFnParams } from 'class-transformer';
 import {
   ArrayMaxSize,
   IsBoolean,
+  IsEnum,
   IsIn,
   IsInt,
   IsArray,
@@ -16,6 +17,7 @@ import {
 } from 'class-validator';
 
 import { ArticleTranslationInputDto } from './article-translation-input.dto';
+import { LocaleCode } from '../../categories/enums/locale-code.enum';
 import { ArticleStatus } from '../enums/article-status.enum';
 
 function trimString({ value }: TransformFnParams): unknown {
@@ -31,6 +33,10 @@ export class CreateArticleDto {
   @IsInt()
   @Min(1)
   categoryId!: number;
+
+  @IsOptional()
+  @IsEnum(LocaleCode)
+  sourceLocale: LocaleCode = LocaleCode.Vietnamese;
 
   @IsOptional()
   @Type(() => Number)

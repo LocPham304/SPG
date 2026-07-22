@@ -94,30 +94,30 @@ const vietnameseArticles: readonly GroupNewsSourceArticle[] = [
   {
     ...englishArticles[0],
     title:
-      "Tập đoàn Thiết bị Cảng Sơn Đông tổ chức kỳ họp thứ ba của Đại hội đại biểu Công đoàn khóa I và Hội nghị người lao động lần thứ ba",
+      "Tập đoàn Thiết bị Cảng Sealand Sơn Đông tổ chức kỳ họp thứ ba của Đại hội đại biểu Công đoàn khóa I và Hội nghị người lao động lần thứ ba",
     description:
-      "Ngày 12 tháng 3, Tập đoàn Thiết bị Cảng Sơn Đông tổ chức kỳ họp thứ ba của Đại hội đại biểu Công đoàn khóa I và Hội nghị người lao động lần thứ ba. Tổng cộng 46 đại biểu chính thức và 4 đại biểu dự thính từ bốn đoàn đại biểu của trụ sở tập đoàn và các đơn vị trực thuộc đã tham dự, thực hiện nghiêm túc trách nhiệm của mình.",
+      "Ngày 12 tháng 3, Tập đoàn Thiết bị Cảng Sealand Sơn Đông tổ chức kỳ họp thứ ba của Đại hội đại biểu Công đoàn khóa I và Hội nghị người lao động lần thứ ba. Tổng cộng 46 đại biểu chính thức và 4 đại biểu dự thính từ bốn đoàn đại biểu của trụ sở tập đoàn và các đơn vị trực thuộc đã tham dự, thực hiện nghiêm túc trách nhiệm của mình.",
   },
   {
     ...englishArticles[1],
     title:
-      'Tập đoàn Thiết bị Cảng Sơn Đông triển khai hoạt động “Bài học đầu tiên” về trở lại làm việc và sản xuất an toàn sau Tết Nguyên đán 2024',
+      "Tập đoàn Thiết bị Cảng Sealand Sơn Đông triển khai hoạt động “Bài học đầu tiên” về trở lại làm việc và sản xuất an toàn sau Tết Nguyên đán 2024",
     description:
-      'Nhằm duy trì ổn định công tác an toàn sản xuất sau Tết Nguyên đán, sáng ngày 18 tháng 2, ông Chen Jikang, Phó Bí thư Đảng ủy kiêm Tổng Giám đốc Tập đoàn Thiết bị Cảng Sơn Đông, đã giảng “Bài học đầu tiên khi bắt đầu làm việc”, tăng cường nhận thức, triển khai các biện pháp an toàn và bảo đảm hoạt động sản xuất ổn định.',
+      "Nhằm duy trì ổn định công tác an toàn sản xuất sau Tết Nguyên đán, sáng ngày 18 tháng 2, ông Chen Jikang, Phó Bí thư Đảng ủy kiêm Tổng Giám đốc Tập đoàn Thiết bị Cảng Sealand Sơn Đông, đã giảng “Bài học đầu tiên khi bắt đầu làm việc”, tăng cường nhận thức, triển khai các biện pháp an toàn và bảo đảm hoạt động sản xuất ổn định.",
   },
   {
     ...englishArticles[2],
     title:
-      "Tập đoàn Thiết bị Cảng Sơn Đông tổ chức Hội nghị tổng kết và tuyên dương năm 2023",
+      "Tập đoàn Thiết bị Cảng Sealand Sơn Đông tổ chức Hội nghị tổng kết và tuyên dương năm 2023",
     description:
-      "Ngày 7 tháng 2, Tập đoàn Thiết bị Cảng Sơn Đông tổ chức Hội nghị tổng kết và tuyên dương năm 2023 nhằm tổng kết toàn diện công việc trong năm qua, biểu dương các tập thể, cá nhân có đóng góp nổi bật và khích lệ cán bộ, người lao động đẩy nhanh quá trình chuyển đổi, phát triển chất lượng cao.",
+      "Ngày 7 tháng 2, Tập đoàn Thiết bị Cảng Sealand Sơn Đông tổ chức Hội nghị tổng kết và tuyên dương năm 2023 nhằm tổng kết toàn diện công việc trong năm qua, biểu dương các tập thể, cá nhân có đóng góp nổi bật và khích lệ cán bộ, người lao động đẩy nhanh quá trình chuyển đổi, phát triển chất lượng cao.",
   },
   {
     ...englishArticles[3],
     title:
-      "Tập đoàn Thiết bị Cảng Sơn Đông tổ chức hội nghị cán bộ lãnh đạo",
+      "Tập đoàn Thiết bị Cảng Sealand Sơn Đông tổ chức hội nghị cán bộ lãnh đạo",
     description:
-      "Ngày 27 tháng 12, Tập đoàn Thiết bị Cảng Sơn Đông tổ chức hội nghị cán bộ lãnh đạo. Ông Gao Ya, Ủy viên Ban Thường vụ Đảng ủy kiêm Phó Tổng Giám đốc Tập đoàn Cảng Sơn Đông, tham dự và phát biểu. Hội nghị công bố quyết định điều chỉnh bộ máy lãnh đạo của tập đoàn.",
+      "Ngày 27 tháng 12, Tập đoàn Thiết bị Cảng Sealand Sơn Đông tổ chức hội nghị cán bộ lãnh đạo. Ông Gao Ya, Ủy viên Ban Thường vụ Đảng ủy kiêm Phó Tổng Giám đốc Tập đoàn Cảng Sơn Đông, tham dự và phát biểu. Hội nghị công bố quyết định điều chỉnh bộ máy lãnh đạo của tập đoàn.",
   },
   {
     ...englishArticles[4],
@@ -142,7 +142,7 @@ const vietnameseArticles: readonly GroupNewsSourceArticle[] = [
   },
   {
     ...englishArticles[7],
-    title: '“Người khổng lồ sắt” của cảng “chuyển đến ngôi nhà mới”',
+    title: "“Người khổng lồ sắt” của cảng “chuyển đến ngôi nhà mới”",
     description:
       "Công ty Công nghiệp nặng Lục Hải và Cảng Long Khẩu thuộc Cảng Yên Đài đã phối hợp hoàn thành việc di dời ba cần trục cổng chỉ trong 10 ngày, cung cấp dịch vụ thiết bị chất lượng cao và nâng cao năng lực xếp dỡ tại các cầu cảng.",
   },
@@ -247,10 +247,10 @@ const detailCopy: Record<
       "The results provide a practical foundation for the next stage and support the Group's steady, high-quality development.",
   },
   vi: {
-    author: "Tập đoàn Thiết bị Cảng Sơn Đông",
+    author: "Tập đoàn Thiết bị Cảng Sealand Sơn Đông",
     categoryName: "Tin tập đoàn",
     introduction: (title) =>
-      `Tập đoàn Thiết bị Cảng Sơn Đông cập nhật thông tin mới nhất về “${title}”, hoạt động gắn với các nhiệm vụ trọng tâm và kế hoạch vận hành của Tập đoàn.`,
+      `Tập đoàn Thiết bị Cảng Sealand Sơn Đông cập nhật thông tin mới nhất về “${title}”, hoạt động gắn với các nhiệm vụ trọng tâm và kế hoạch vận hành của Tập đoàn.`,
     development: (title) =>
       `Thông qua các hoạt động được nêu trong bài “${title}”, Tập đoàn tiếp tục tăng cường phối hợp, quản trị chuyên nghiệp và triển khai hiệu quả các nhiệm vụ trọng tâm.`,
     conclusion:

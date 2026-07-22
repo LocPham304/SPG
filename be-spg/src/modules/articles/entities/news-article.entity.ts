@@ -11,6 +11,7 @@ import {
 } from 'typeorm';
 
 import { NewsCategoryEntity } from '../../categories/entities/news-category.entity';
+import { LocaleCode } from '../../categories/enums/locale-code.enum';
 import { MediaFileEntity } from '../../media/entities/media-file.entity';
 import { CmsUserEntity } from '../../users/entities/cms-user.entity';
 import { ArticleStatus } from '../enums/article-status.enum';
@@ -49,6 +50,15 @@ export class NewsArticleEntity {
 
   @Column({ name: 'source_version', type: 'integer', default: 1 })
   sourceVersion!: number;
+
+  @Column({
+    name: 'source_locale',
+    type: 'enum',
+    enum: LocaleCode,
+    enumName: 'locale_code',
+    default: LocaleCode.Vietnamese,
+  })
+  sourceLocale!: LocaleCode;
 
   @Column({ name: 'source_url', type: 'varchar', length: 1000, nullable: true })
   sourceUrl!: string | null;

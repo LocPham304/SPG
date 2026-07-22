@@ -224,6 +224,7 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
   const [categories, setCategories] = useState<NewsCategory[]>([]);
   const [categoryId, setCategoryId] = useState("");
   const [sourceUrl, setSourceUrl] = useState("");
+  const [sourceLocale, setSourceLocale] = useState<LocaleCode>("vi");
   const [isFeatured, setIsFeatured] = useState(false);
   const [activeLocale, setActiveLocale] = useState<LocaleCode>("vi");
   const [translations, setTranslations] = useState<TranslationFormState>(
@@ -283,6 +284,8 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
         }
         setTranslations(nextTranslations);
         setArticle(articleResponse);
+        setSourceLocale(articleResponse.sourceLocale);
+        setActiveLocale(articleResponse.sourceLocale);
         setCategoryId(String(articleResponse.categoryId ?? ""));
         setSourceUrl(articleResponse.sourceUrl ?? "");
         setIsFeatured(articleResponse.isFeatured);
@@ -405,7 +408,9 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
 
     for (const locale of ARTICLE_LOCALES) {
       const value = translations[locale];
-      const isRequired = locale === "vi" || hasAnyTranslationContent(value);
+      const isRequired =
+        locale === sourceLocale ||
+        hasAnyTranslationContent(value);
       if (!isRequired) continue;
 
       if (!value.title.trim()) {
@@ -453,10 +458,20 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
 
   async function handleAutoTranslate() {
     if (articleId === undefined || isSaving || isTranslating) return;
+    const savedSourceLocale = article?.sourceLocale ?? sourceLocale;
+    if (savedSourceLocale !== sourceLocale) {
+      setApiError("Vui lòng lưu thay đổi ngôn ngữ nguồn trước khi dịch tự động.");
+      return;
+    }
+    const targets = ARTICLE_LOCALES.filter(
+      (locale) => locale !== savedSourceLocale,
+    );
     const confirmed = await confirmAction({
       confirmLabel: "Dịch tự động",
       description:
-        "Hệ thống sẽ dịch nội dung tiếng Việt sang English và 中文.",
+        `Hệ thống sẽ dịch nội dung ${localeLabels[savedSourceLocale]} sang ${targets
+          .map((locale) => localeLabels[locale])
+          .join(" và ")}.`,
       title: "Tiếp tục dịch tự động?",
       tone: "primary",
     });
@@ -469,7 +484,7 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
     try {
       const response = await translateArticle(articleId, {
         overwrite: overwriteTranslations,
-        targets: ["en", "zh"],
+        targets,
       });
       setTranslations((current) => {
         const next = { ...current };
@@ -531,11 +546,11 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!validateForm()) return;
     const submitter = (event.nativeEvent as SubmitEvent)
       .submitter as HTMLButtonElement | null;
     const requestedStatus =
       submitter?.value === "published" ? "published" : "draft";
+    if (!validateForm()) return;
     setIsSaving(true);
     setApiError("");
     setTranslationNotice(null);
@@ -546,7 +561,7 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
       if (pendingThumbnail) {
         const uploadedMedia = await uploadMedia(
           pendingThumbnail.file,
-          translations.vi.thumbnailAltText,
+          translations[sourceLocale].thumbnailAltText,
         );
         thumbnail = toThumbnailChoice(uploadedMedia);
         setSelectedThumbnail(thumbnail);
@@ -556,6 +571,7 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
       if (articleId !== undefined) {
         const payload: UpdateArticleData = {
           categoryId: Number(categoryId),
+          sourceLocale,
           sourceUrl: sourceUrl.trim() || null,
           thumbnailId: thumbnail?.id ?? null,
           translations: buildTranslationPayload(),
@@ -565,6 +581,7 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
       } else {
         const payload: CreateArticleData = {
           categoryId: Number(categoryId),
+          sourceLocale,
           ...(isAdmin ? { isFeatured } : {}),
           ...(sourceUrl.trim() ? { sourceUrl: sourceUrl.trim() } : {}),
           status: requestedStatus,
@@ -593,7 +610,7 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
   const activeTranslation = translations[activeLocale];
   const activeErrors = translationErrors[activeLocale];
   const statusLabel =
-    activeLocale === "vi"
+    activeLocale === sourceLocale
       ? null
       : translationStatusLabels[
           activeTranslation.translationStatus ?? "queued"
@@ -614,8 +631,8 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
         }
         description={
           isEditing
-            ? "Cập nhật nội dung tiếng Việt, English và 中文."
-            : "Tiếng Việt bắt buộc; English và 中文 có thể bổ sung sau."
+            ? "Cập nhật nội dung và chọn Tiếng Việt, English hoặc 中文 làm ngôn ngữ nguồn."
+            : "Chọn Tiếng Việt, English hoặc 中文 làm ngôn ngữ nguồn để tạo bài viết."
         }
         title={isEditing ? "Chỉnh sửa bài viết" : "Tạo bài viết"}
       />
@@ -756,7 +773,7 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
                     <img
                       alt={
                         pendingThumbnail
-                          ? translations.vi.thumbnailAltText ||
+                          ? translations[sourceLocale].thumbnailAltText ||
                             pendingThumbnail.file.name
                           : selectedThumbnail?.altText ||
                             selectedThumbnail?.name ||
@@ -820,6 +837,24 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
 
               <section className="mt-7 border-t border-slate-200 pt-6">
                 <div className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-lg bg-slate-50 p-3">
+                  <label className="flex items-center gap-2 text-sm font-medium text-slate-700">
+                    <span>Ngôn ngữ nguồn</span>
+                    <select
+                      className="h-10 rounded-lg border border-slate-300 bg-white px-3 text-sm font-semibold text-slate-700 outline-none focus:border-[#1d2088]"
+                      onChange={(event) => {
+                        const locale = event.target.value as LocaleCode;
+                        setSourceLocale(locale);
+                        setActiveLocale(locale);
+                      }}
+                      value={sourceLocale}
+                    >
+                      {ARTICLE_LOCALES.map((locale) => (
+                        <option key={locale} value={locale}>
+                          {localeLabels[locale]}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
                   {isEditing ? (
                     <>
                       <button
@@ -865,7 +900,7 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
                       type="button"
                     >
                       {localeLabels[locale]}
-                      {locale === "vi" ? (
+                      {locale === sourceLocale ? (
                         <span className="ml-1 text-red-600">*</span>
                       ) : null}
                     </button>
@@ -880,8 +915,8 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
                       </span>
                       {activeTranslation.translationStatus === "outdated" ? (
                         <p className="text-sm text-amber-700">
-                          Bản dịch này có thể đã cũ vì nội dung tiếng Việt đã
-                          thay đổi.
+                          Bản dịch này có thể đã cũ vì nội dung ngôn ngữ nguồn
+                          đã thay đổi.
                         </p>
                       ) : null}
                       {activeTranslation.translationStatus === "failed" &&
@@ -895,7 +930,7 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
                   <label>
                     <span className="mb-2 block text-sm font-semibold text-slate-700">
                       Tiêu đề
-                      {activeLocale === "vi" ? (
+                      {activeLocale === sourceLocale ? (
                         <span className="ml-1 text-red-600">*</span>
                       ) : null}
                     </span>
@@ -921,7 +956,7 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
                   <label>
                     <span className="mb-2 block text-sm font-semibold text-slate-700">
                       Slug
-                      {activeLocale === "vi" ? (
+                      {activeLocale === sourceLocale ? (
                         <span className="ml-1 text-red-600">*</span>
                       ) : null}
                     </span>
@@ -946,7 +981,7 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
                   <label>
                     <span className="mb-2 block text-sm font-semibold text-slate-700">
                       Mô tả ngắn
-                      {activeLocale === "vi" ? (
+                      {activeLocale === sourceLocale ? (
                         <span className="ml-1 text-red-600">*</span>
                       ) : null}
                     </span>
@@ -971,7 +1006,7 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
                       id={`article-content-label-${activeLocale}`}
                     >
                       Nội dung
-                      {activeLocale === "vi" ? (
+                      {activeLocale === sourceLocale ? (
                         <span className="ml-1 text-red-600">*</span>
                       ) : null}
                     </span>

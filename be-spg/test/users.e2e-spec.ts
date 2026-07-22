@@ -7,7 +7,10 @@ import { DataSource, In, MoreThanOrEqual } from 'typeorm';
 
 import { AppModule } from '../src/app.module';
 import { ActivityLogEntity } from '../src/modules/activity-logs/entities/activity-log.entity';
+import { NewsArticleEntity } from '../src/modules/articles/entities/news-article.entity';
+import { ArticleStatus } from '../src/modules/articles/enums/article-status.enum';
 import { AuthSessionEntity } from '../src/modules/auth/entities/auth-session.entity';
+import { MediaFileEntity } from '../src/modules/media/entities/media-file.entity';
 import { CmsUserEntity } from '../src/modules/users/entities/cms-user.entity';
 import { UserRole } from '../src/modules/users/enums/user-role.enum';
 import { UsersService } from '../src/modules/users/users.service';
@@ -21,6 +24,8 @@ const EMPLOYEE_PASSWORD = 'Employee@123';
 const MANAGED_EMAIL = 'users.managed@example.com';
 const MANAGED_INITIAL_PASSWORD = 'Managed@123';
 const MANAGED_RESET_PASSWORD = 'Managed@456';
+const MANAGED_ARTICLE_SOURCE_URL = 'https://example.com/users-e2e/article';
+const MANAGED_MEDIA_STORAGE_PATH = 'users-e2e/managed-user-image.png';
 const TEST_EMAILS = [EMPLOYEE_EMAIL, MANAGED_EMAIL];
 
 type LoginResult = {
@@ -62,6 +67,8 @@ describe('Admin Users API (e2e)', () => {
   let employeeAccessToken: string;
   let managedUserId: number;
   let managedAccessToken: string;
+  let managedArticleId: number;
+  let managedMediaId: number;
   const testStartedAt = new Date();
 
   async function login(email: string, password: string): Promise<LoginResult> {
@@ -96,6 +103,10 @@ describe('Admin Users API (e2e)', () => {
     const usersRepository = dataSource.getRepository(CmsUserEntity);
     const sessionsRepository = dataSource.getRepository(AuthSessionEntity);
     const activityLogsRepository = dataSource.getRepository(ActivityLogEntity);
+    const articleRepository = dataSource.getRepository(NewsArticleEntity);
+    const mediaRepository = dataSource.getRepository(MediaFileEntity);
+    await articleRepository.delete({ sourceUrl: MANAGED_ARTICLE_SOURCE_URL });
+    await mediaRepository.delete({ storagePath: MANAGED_MEDIA_STORAGE_PATH });
     const staleUsers = await usersRepository.find({
       select: { id: true },
       where: { email: In(TEST_EMAILS) },
@@ -107,6 +118,8 @@ describe('Admin Users API (e2e)', () => {
         entityType: 'cms_user',
         entityId: In(staleUserIds),
       });
+      await articleRepository.delete({ createdBy: In(staleUserIds) });
+      await mediaRepository.delete({ uploadedBy: In(staleUserIds) });
       await sessionsRepository.delete({ userId: In(staleUserIds) });
       await usersRepository.delete({ id: In(staleUserIds) });
     }
@@ -354,7 +367,42 @@ describe('Admin Users API (e2e)', () => {
       .expect(400);
   });
 
-  it('deletes an employee, their sessions, and records the action', async () => {
+  it('does not allow an employee to delete another account', () => {
+    return request(app.getHttpServer())
+      .delete(`/api/v1/admin/users/${managedUserId}`)
+      .set('Authorization', `Bearer ${employeeAccessToken}`)
+      .expect(403);
+  });
+
+  it('deletes an employee and transfers their articles and media', async () => {
+    const articleRepository = dataSource.getRepository(NewsArticleEntity);
+    const mediaRepository = dataSource.getRepository(MediaFileEntity);
+    const managedArticle = await articleRepository.save(
+      articleRepository.create({
+        createdBy: managedUserId,
+        updatedBy: managedUserId,
+        publishedBy: managedUserId,
+        publishedAt: new Date(),
+        status: ArticleStatus.Published,
+        sourceUrl: MANAGED_ARTICLE_SOURCE_URL,
+      }),
+    );
+    const managedMedia = await mediaRepository.save(
+      mediaRepository.create({
+        uploadedBy: managedUserId,
+        storagePath: MANAGED_MEDIA_STORAGE_PATH,
+        originalName: 'managed-user-image.png',
+        mimeType: 'image/png',
+        sizeBytes: 128,
+        width: 10,
+        height: 10,
+        altText: null,
+        deletedAt: null,
+      }),
+    );
+    managedArticleId = managedArticle.id;
+    managedMediaId = managedMedia.id;
+
     const response = await request(app.getHttpServer())
       .delete(`/api/v1/admin/users/${managedUserId}`)
       .set('Authorization', `Bearer ${adminAccessToken}`)
@@ -375,6 +423,19 @@ describe('Admin Users API (e2e)', () => {
       }),
     ).toBe(0);
 
+    await expect(
+      articleRepository.findOneByOrFail({ id: managedArticleId }),
+    ).resolves.toEqual(
+      expect.objectContaining({
+        createdBy: adminId,
+        updatedBy: adminId,
+        publishedBy: adminId,
+      }),
+    );
+    await expect(
+      mediaRepository.findOneByOrFail({ id: managedMediaId }),
+    ).resolves.toEqual(expect.objectContaining({ uploadedBy: adminId }));
+
     const deletionLog = await dataSource
       .getRepository(ActivityLogEntity)
       .findOne({
@@ -391,6 +452,15 @@ describe('Admin Users API (e2e)', () => {
         title: 'Xóa tài khoản nhân viên',
       }),
     );
+
+    expect(deletionLog?.changes).toEqual(
+      expect.objectContaining({
+        reassignedArticles: 1,
+        reassignedPublishedArticles: 1,
+        reassignedUpdatedArticles: 1,
+        reassignedMedia: 1,
+      }),
+    );
   });
 
   afterAll(async () => {
@@ -401,6 +471,21 @@ describe('Admin Users API (e2e)', () => {
     const usersRepository = dataSource.getRepository(CmsUserEntity);
     const sessionsRepository = dataSource.getRepository(AuthSessionEntity);
     const activityLogsRepository = dataSource.getRepository(ActivityLogEntity);
+    const articleRepository = dataSource.getRepository(NewsArticleEntity);
+    const mediaRepository = dataSource.getRepository(MediaFileEntity);
+
+    if (managedArticleId) {
+      await articleRepository.delete({ id: managedArticleId });
+    } else {
+      await articleRepository.delete({ sourceUrl: MANAGED_ARTICLE_SOURCE_URL });
+    }
+
+    if (managedMediaId) {
+      await mediaRepository.delete({ id: managedMediaId });
+    } else {
+      await mediaRepository.delete({ storagePath: MANAGED_MEDIA_STORAGE_PATH });
+    }
+
     const temporaryUsers = await usersRepository.find({
       select: { id: true },
       where: { email: In(TEST_EMAILS) },

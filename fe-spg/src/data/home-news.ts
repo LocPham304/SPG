@@ -52,7 +52,8 @@ export const mockNewsRecords: readonly MockNewsRecord[] = [
         title: "Tập đoàn tổ chức hội nghị đại biểu công đoàn và người lao động",
         summary:
           "Các đại biểu cùng đánh giá hoạt động năm qua và thống nhất nhiệm vụ trọng tâm cho giai đoạn tiếp theo.",
-        imageAlt: "Hội nghị đại biểu của Tập đoàn Thiết bị Cảng Sơn Đông",
+        imageAlt:
+          "Hội nghị đại biểu của Tập đoàn Thiết bị Cảng Sealand Sơn Đông",
       },
       en: {
         title: "Shandong Port Equipment Group convened its employee congress",
@@ -78,12 +79,14 @@ export const mockNewsRecords: readonly MockNewsRecord[] = [
     translations: {
       vi: {
         title: "Triển khai bài học an toàn đầu tiên sau kỳ nghỉ Tết",
-        summary: "Tập đoàn tăng cường nhận thức và biện pháp an toàn khi trở lại sản xuất.",
+        summary:
+          "Tập đoàn tăng cường nhận thức và biện pháp an toàn khi trở lại sản xuất.",
         imageAlt: "Chương trình đào tạo an toàn sau kỳ nghỉ Tết",
       },
       en: {
         title: "The first safety lesson after the Spring Festival holiday",
-        summary: "The group strengthened safety awareness and measures before production resumed.",
+        summary:
+          "The group strengthened safety awareness and measures before production resumed.",
         imageAlt: "Safety training after the Spring Festival holiday",
       },
       zh: {
@@ -104,12 +107,14 @@ export const mockNewsRecords: readonly MockNewsRecord[] = [
     translations: {
       vi: {
         title: "Hội nghị tổng kết và tuyên dương năm 2023",
-        summary: "Hội nghị tổng kết kết quả và ghi nhận các tập thể, cá nhân tiêu biểu.",
+        summary:
+          "Hội nghị tổng kết kết quả và ghi nhận các tập thể, cá nhân tiêu biểu.",
         imageAlt: "Hội nghị tổng kết năm 2023",
       },
       en: {
         title: "2023 annual summary and commendation conference",
-        summary: "The conference reviewed results and recognised outstanding teams and employees.",
+        summary:
+          "The conference reviewed results and recognised outstanding teams and employees.",
         imageAlt: "2023 annual summary conference",
       },
       zh: {
@@ -130,12 +135,14 @@ export const mockNewsRecords: readonly MockNewsRecord[] = [
     translations: {
       vi: {
         title: "Hoàn thành di dời đồng bộ thiết bị cảng quy mô lớn",
-        summary: "Các thiết bị được vận chuyển và bàn giao an toàn, đúng tiến độ.",
+        summary:
+          "Các thiết bị được vận chuyển và bàn giao an toàn, đúng tiến độ.",
         imageAlt: "Thiết bị cẩu cảng được bàn giao",
       },
       en: {
         title: "Large-scale port equipment relocation completed successfully",
-        summary: "The equipment was transported and delivered safely and on schedule.",
+        summary:
+          "The equipment was transported and delivered safely and on schedule.",
         imageAlt: "Port crane equipment delivery",
       },
       zh: {
@@ -156,12 +163,14 @@ export const mockNewsRecords: readonly MockNewsRecord[] = [
     translations: {
       vi: {
         title: "Thiết bị xanh hỗ trợ xây dựng bến cảng gần như không carbon",
-        summary: "Giải pháp điện hóa giúp giảm phát thải trong hoạt động khai thác cảng.",
+        summary:
+          "Giải pháp điện hóa giúp giảm phát thải trong hoạt động khai thác cảng.",
         imageAlt: "Hệ thống thiết bị công nghiệp xanh",
       },
       en: {
         title: "Green equipment supports a near-zero-carbon terminal",
-        summary: "Electrification solutions help reduce emissions in port operations.",
+        summary:
+          "Electrification solutions help reduce emissions in port operations.",
         imageAlt: "Green industrial equipment system",
       },
       zh: {
@@ -182,12 +191,14 @@ export const mockNewsRecords: readonly MockNewsRecord[] = [
     translations: {
       vi: {
         title: "Giải pháp thiết bị thông minh được đưa vào vận hành tại cảng",
-        summary: "Dự án nâng cao hiệu quả vận hành và năng lực xếp dỡ hàng hóa.",
+        summary:
+          "Dự án nâng cao hiệu quả vận hành và năng lực xếp dỡ hàng hóa.",
         imageAlt: "Thiết bị thông minh tại bến cảng",
       },
       en: {
         title: "Smart equipment solution enters service at the port",
-        summary: "The project improves operating efficiency and cargo-handling capacity.",
+        summary:
+          "The project improves operating efficiency and cargo-handling capacity.",
         imageAlt: "Smart equipment at the port terminal",
       },
       zh: {
@@ -208,12 +219,14 @@ export const mockNewsRecords: readonly MockNewsRecord[] = [
     translations: {
       vi: {
         title: "Thông báo về đối tượng đánh giá và tuyên dương năm 2023",
-        summary: "Công bố danh sách đề xuất trong chương trình tổng kết và tuyên dương năm 2023.",
+        summary:
+          "Công bố danh sách đề xuất trong chương trình tổng kết và tuyên dương năm 2023.",
         imageAlt: "Hội nghị công bố thông báo doanh nghiệp",
       },
       en: {
         title: "Announcement on the 2023 annual commendation candidates",
-        summary: "The proposed candidates for the 2023 annual review and commendation are announced.",
+        summary:
+          "The proposed candidates for the 2023 annual review and commendation are announced.",
         imageAlt: "Corporate announcement conference",
       },
       zh: {

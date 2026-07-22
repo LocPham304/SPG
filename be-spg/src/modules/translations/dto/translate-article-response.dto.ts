@@ -1,5 +1,6 @@
 import { TranslationStatus } from '../../articles/enums/translation-status.enum';
 import type { TranslationTargetLocale } from '../providers/translation-provider.interface';
+import type { LocaleCode } from '../../categories/enums/locale-code.enum';
 
 export class TranslateArticleResultDto {
   locale!: TranslationTargetLocale;
@@ -18,7 +19,7 @@ export class TranslateArticleResultDto {
 
 export class TranslateArticleResponseDto {
   articleId!: number;
-  sourceLocale!: 'vi';
+  sourceLocale!: LocaleCode;
   provider!: string;
   results!: TranslateArticleResultDto[];
 }

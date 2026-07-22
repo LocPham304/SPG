@@ -99,7 +99,7 @@ export function AdminSidebar({
             onClick={onClose}
           >
             <Image
-              alt="Tập đoàn Thiết bị Cảng Sơn Đông"
+              alt="Tập đoàn Thiết bị Cảng Sealand Sơn Đông"
               className="h-auto w-[190px]"
               height={32}
               priority

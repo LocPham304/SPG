@@ -91,9 +91,10 @@
 .footerDetails {
   display: grid;
   grid-template-columns:
-    minmax(185px, 1.35fr)
-    minmax(320px, 0.8fr)
-    minmax(320px, 0.8fr);
+    minmax(185px, 1.15fr)
+    minmax(250px, 0.82fr)
+    minmax(320px, 1fr)
+    minmax(250px, auto);
   gap: clamp(20px, 2.08vw, 40px);
   min-height: clamp(145px, 9.22vw, 177px);
   padding-top: 15px;
@@ -211,6 +212,36 @@
 .footerContact a:hover,
 .footerContact a:focus-visible {
   color: #147fc1;
+}
+
+.footerQrCodes {
+  display: grid;
+  align-self: start;
+  justify-self: end;
+  grid-template-columns: repeat(2, minmax(0, 142px));
+  gap: clamp(12px, 1.25vw, 24px);
+}
+
+.footerQrCodes figure {
+  display: grid;
+  gap: 7px;
+  margin: 0;
+  text-align: center;
+}
+
+.footerQrImage {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  background: #fff;
+  object-fit: contain;
+}
+
+.footerQrCodes figcaption {
+  color: #454b50;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.2;
 }
 
 .footerLegal {
@@ -571,6 +602,12 @@
 
   .footerContact .footerVietnamContactMethods a {
     margin-inline: 0;
+  }
+
+  .footerQrCodes {
+    justify-self: center;
+    grid-template-columns: repeat(2, minmax(0, 128px));
+    gap: 18px;
   }
 
   .footerLegal {

@@ -87,7 +87,7 @@ const content: Record<AppLocale, MajorProjectContent> = {
         title: "Scatter to set",
         paragraphs: [
           'The "scatter-to-set" automatic process system has a 360-meter-long, 75-meter-wide process greenhouse, strip silo, automatic unloading dust removal room, underground corridor and other closed operation areas. It mainly includes five system modules: unloading, stacking, reclaiming, packing and horizontal transportation. The system achieves new breakthroughs in dust suppression, cargo-damage reduction, packing efficiency and automation, raising the port\'s green and low-carbon development level and providing an environmentally friendly, green, intelligent and fast fully automated service.',
-          'The system concept is first-class in China, and most process equipment is being applied domestically for the first time. It meets customer demand for coke dry quenching without adding water, with dust suppression reaching 97%. High-precision intelligent weighing and dumping equipment and the through-type hydraulic unloading platform enable data sharing and trade delivery while avoiding secondary handling. Large-scale oil-electric hybrid low-mast straddle carriers, remote-controlled stackers, unattended automatic weighing and fully automated packing improve yard use and can save 50% of labor costs. Permanent-magnet motors improve efficiency by 30% and reduce energy consumption by 20%.',
+          "The system concept is first-class in China, and most process equipment is being applied domestically for the first time. It meets customer demand for coke dry quenching without adding water, with dust suppression reaching 97%. High-precision intelligent weighing and dumping equipment and the through-type hydraulic unloading platform enable data sharing and trade delivery while avoiding secondary handling. Large-scale oil-electric hybrid low-mast straddle carriers, remote-controlled stackers, unattended automatic weighing and fully automated packing improve yard use and can save 50% of labor costs. Permanent-magnet motors improve efficiency by 30% and reduce energy consumption by 20%.",
         ],
       },
       {
@@ -149,7 +149,7 @@ const content: Record<AppLocale, MajorProjectContent> = {
     title: "Đổi mới công nghệ",
     pageTitle: "Dự án trọng điểm",
     description:
-      "Các dự án nghiên cứu, phát triển và thiết bị thông minh trọng điểm của Tập đoàn Thiết bị Cảng Sơn Đông.",
+      "Các dự án nghiên cứu, phát triển và thiết bị thông minh trọng điểm của Tập đoàn Thiết bị Cảng Sealand Sơn Đông.",
     projects: withMedia([
       {
         title: "Hệ thống chuyển đổi hàng rời sang hàng đóng kiện",
@@ -169,7 +169,8 @@ const content: Record<AppLocale, MajorProjectContent> = {
       },
       {
         title: "Phát triển cần trục ray tự động cấp điện thông minh thế hệ mới",
-        subtitle: "Dự án khoa học công nghệ trọng điểm ngành giao thông năm 2022",
+        subtitle:
+          "Dự án khoa học công nghệ trọng điểm ngành giao thông năm 2022",
         paragraphs: [
           "Cần trục ray tự động cấp điện thông minh được sử dụng tại bãi container tự động. Thiết bị tích hợp công nghệ điều khiển tự động tiên tiến và sử dụng ray cấp điện hạ áp, cho phép vận hành tự động hoàn toàn không người lái, thay đổi phương thức khai thác container truyền thống.",
           "Sản phẩm có công nghệ tiên tiến, tiết kiệm năng lượng, thân thiện môi trường, giảm nguy cơ mất an toàn và có độ tin cậy cao. Tốc độ di chuyển đạt 270 m/phút, tốc độ nâng đạt 90 m/phút, có thể vận hành liên tục 24 giờ, đáp ứng tốt yêu cầu nâng cấp bãi tự động và có khả năng chuyển giao công nghệ cao cho cảng thông minh.",
@@ -185,7 +186,8 @@ const content: Record<AppLocale, MajorProjectContent> = {
       },
       {
         title: "Ứng dụng công nghệ nam châm vĩnh cửu trong thiết bị cảng",
-        subtitle: "Dự án khoa học công nghệ trọng điểm Sở Giao thông Sơn Đông năm 2023",
+        subtitle:
+          "Dự án khoa học công nghệ trọng điểm Sở Giao thông Sơn Đông năm 2023",
         paragraphs: [
           "Tiết kiệm năng lượng, phát triển xanh và bảo vệ môi trường là yêu cầu thiết yếu của cảng hiện đại. Dự án nghiên cứu ứng dụng truyền động nam châm vĩnh cửu cho cần trục chân đế và băng tải vận chuyển ngang, góp phần xây dựng cảng xanh thông minh đẳng cấp thế giới.",
           "Khi hệ truyền động băng tải dùng tang điện nam châm vĩnh cửu, độ tin cậy và hiệu suất năng lượng tăng rõ rệt, tỷ lệ tiết kiệm năng lượng đạt từ 14%, khối lượng bảo trì giảm và hiệu năng tổng thể được cải thiện.",
@@ -200,7 +202,8 @@ const content: Record<AppLocale, MajorProjectContent> = {
         ],
       },
       {
-        title: "Cần trục giàn container chạy ray tự động 41 tấn, khẩu độ 36,5 m",
+        title:
+          "Cần trục giàn container chạy ray tự động 41 tấn, khẩu độ 36,5 m",
         paragraphs: [
           "Cần trục sử dụng đo khoảng cách laser, ảnh nhiệt, nhận dạng âm thanh và cảm biến thông minh để dự báo đường đi, tránh chướng ngại vật, hiệu chỉnh tư thế bộ nâng, căn chỉnh container tự động, đồng thời giám sát nhiệt độ và tiếng ồn theo thời gian thực. Định vị chính xác toàn máy, trực quan hóa phòng cháy và giám sát sức khỏe trực tuyến nâng cao độ hợp lý, tin cậy và ổn định của toàn quy trình.",
           "Thiết bị có sức nâng tối đa 41 tấn, khẩu độ ray 36,5 m; tích hợp cân tự động, quét laser, nhận dạng thông minh, định vị và neo tự động. Thiết bị phối hợp với xe container không người lái, hỗ trợ chế độ tự động hoàn toàn, bán tự động và thủ công, qua đó giảm năng lượng, nhân công và nâng cao an toàn, hiệu suất khai thác cảng.",

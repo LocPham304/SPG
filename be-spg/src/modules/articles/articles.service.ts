@@ -102,18 +102,17 @@ export class ArticlesService {
       .andWhere(
         `EXISTS (
           SELECT 1
-          FROM news_article_translations vi_translation
-          WHERE vi_translation.article_id = article.id
-            AND vi_translation.locale = :vietnameseLocale
-            AND vi_translation.translation_status = :originalStatus
-            AND vi_translation.title IS NOT NULL
-            AND vi_translation.slug IS NOT NULL
-            AND vi_translation.summary IS NOT NULL
-            AND vi_translation.content_html IS NOT NULL
+          FROM news_article_translations source_translation
+          WHERE source_translation.article_id = article.id
+            AND source_translation.locale = article.source_locale
+            AND source_translation.translation_status IN (:...publicStatuses)
+            AND source_translation.title IS NOT NULL
+            AND source_translation.slug IS NOT NULL
+            AND source_translation.summary IS NOT NULL
+            AND source_translation.content_html IS NOT NULL
         )`,
         {
-          vietnameseLocale: LocaleCode.Vietnamese,
-          originalStatus: TranslationStatus.Original,
+          publicStatuses: VALID_PUBLIC_TRANSLATION_STATUSES,
         },
       )
       .andWhere(
@@ -121,14 +120,17 @@ export class ArticlesService {
           SELECT 1
           FROM news_article_translations public_translation
           WHERE public_translation.article_id = article.id
-            AND public_translation.locale IN (:...publicLocales)
+            AND (
+              public_translation.locale = :requestedLocale
+              OR public_translation.locale = article.source_locale
+            )
             AND public_translation.translation_status IN (:...publicStatuses)
             AND public_translation.title IS NOT NULL
             AND public_translation.slug IS NOT NULL
             AND public_translation.summary IS NOT NULL
         )`,
         {
-          publicLocales: [...new Set([locale, LocaleCode.Vietnamese])],
+          requestedLocale: locale,
           publicStatuses: VALID_PUBLIC_TRANSLATION_STATUSES,
         },
       )
@@ -152,7 +154,10 @@ export class ArticlesService {
           SELECT 1
           FROM news_article_translations search_translation
           WHERE search_translation.article_id = article.id
-            AND search_translation.locale IN (:...searchLocales)
+            AND (
+              search_translation.locale = :requestedLocale
+              OR search_translation.locale = article.source_locale
+            )
             AND search_translation.translation_status IN (:...validStatuses)
             AND (
               search_translation.title ILIKE :search
@@ -160,7 +165,6 @@ export class ArticlesService {
             )
         )`,
         {
-          searchLocales: [...new Set([locale, LocaleCode.Vietnamese])],
           validStatuses: VALID_PUBLIC_TRANSLATION_STATUSES,
           search: `%${search}%`,
         },
@@ -194,18 +198,17 @@ export class ArticlesService {
       .andWhere(
         `EXISTS (
           SELECT 1
-          FROM news_article_translations vi_translation
-          WHERE vi_translation.article_id = article.id
-            AND vi_translation.locale = :vietnameseLocale
-            AND vi_translation.translation_status = :originalStatus
-            AND vi_translation.title IS NOT NULL
-            AND vi_translation.slug IS NOT NULL
-            AND vi_translation.summary IS NOT NULL
-            AND vi_translation.content_html IS NOT NULL
+          FROM news_article_translations source_translation
+          WHERE source_translation.article_id = article.id
+            AND source_translation.locale = article.source_locale
+            AND source_translation.translation_status IN (:...publicStatuses)
+            AND source_translation.title IS NOT NULL
+            AND source_translation.slug IS NOT NULL
+            AND source_translation.summary IS NOT NULL
+            AND source_translation.content_html IS NOT NULL
         )`,
         {
-          vietnameseLocale: LocaleCode.Vietnamese,
-          originalStatus: TranslationStatus.Original,
+          publicStatuses: VALID_PUBLIC_TRANSLATION_STATUSES,
         },
       )
       .andWhere(
@@ -214,12 +217,15 @@ export class ArticlesService {
           FROM news_article_translations slug_translation
           WHERE slug_translation.article_id = article.id
             AND slug_translation.slug = :slug
-            AND slug_translation.locale IN (:...locales)
+            AND (
+              slug_translation.locale = :requestedLocale
+              OR slug_translation.locale = article.source_locale
+            )
             AND slug_translation.translation_status IN (:...validStatuses)
         )`,
         {
           slug: normalizedSlug,
-          locales: [...new Set([locale, LocaleCode.Vietnamese])],
+          requestedLocale: locale,
           validStatuses: VALID_PUBLIC_TRANSLATION_STATUSES,
         },
       )
@@ -279,14 +285,17 @@ export class ArticlesService {
           SELECT 1
           FROM news_article_translations search_translation
           WHERE search_translation.article_id = article.id
-            AND search_translation.locale IN (:...searchLocales)
+            AND (
+              search_translation.locale = :requestedLocale
+              OR search_translation.locale = article.source_locale
+            )
             AND (
               search_translation.title ILIKE :search
               OR search_translation.summary ILIKE :search
             )
         )`,
         {
-          searchLocales: [...new Set([locale, LocaleCode.Vietnamese])],
+          requestedLocale: locale,
           search: `%${search}%`,
         },
       );
@@ -335,9 +344,13 @@ export class ArticlesService {
     }
 
     const translations = this.prepareCreateTranslations(dto);
-    const vietnameseTranslation = translations.find(
-      (translation) => translation.locale === LocaleCode.Vietnamese,
+    const sourceTranslation = translations.find(
+      (translation) => translation.locale === dto.sourceLocale,
     ) as TranslationValues;
+    this.validateCompleteTranslation(
+      sourceTranslation,
+      'Bản ngôn ngữ nguồn phải có đủ title, slug, summary và contentHtml.',
+    );
     let articleId = 0;
 
     try {
@@ -361,6 +374,7 @@ export class ArticlesService {
           thumbnailId: dto.thumbnailId ?? null,
           status: dto.status,
           isFeatured: currentUser.role === 'admin' && dto.isFeatured === true,
+          sourceLocale: dto.sourceLocale,
           sourceVersion: 1,
           sourceUrl: dto.sourceUrl ?? null,
           createdBy: currentUser.id,
@@ -377,7 +391,7 @@ export class ArticlesService {
             ...translation,
             sourceVersion: 1,
             translationStatus:
-              translation.locale === LocaleCode.Vietnamese
+              translation.locale === dto.sourceLocale
                 ? TranslationStatus.Original
                 : this.hasTranslationContent(translation)
                   ? TranslationStatus.Reviewed
@@ -390,11 +404,12 @@ export class ArticlesService {
 
         await this.recordArticleLog(manager, savedArticle, currentUser, {
           action: 'article.created',
-          title: vietnameseTranslation.title as string,
-          description: `Đã tạo bài viết "${vietnameseTranslation.title}".`,
+          title: sourceTranslation.title as string,
+          description: `Đã tạo bài viết "${sourceTranslation.title}".`,
           changes: {
             status: dto.status,
             categoryId: dto.categoryId,
+            sourceLocale: dto.sourceLocale,
             sourceVersion: 1,
           },
           requestInfo,
@@ -403,8 +418,8 @@ export class ArticlesService {
         if (isPublished) {
           await this.recordArticleLog(manager, savedArticle, currentUser, {
             action: 'article.published',
-            title: vietnameseTranslation.title as string,
-            description: `Đã đăng bài viết "${vietnameseTranslation.title}".`,
+            title: sourceTranslation.title as string,
+            description: `Đã đăng bài viết "${sourceTranslation.title}".`,
             changes: { from: null, to: ArticleStatus.Published },
             requestInfo,
           });
@@ -456,10 +471,23 @@ export class ArticlesService {
             values,
           };
         });
-        const vietnameseUpdate = preparedUpdates.find(
-          ({ entity }) => entity.locale === LocaleCode.Vietnamese,
+        const nextSourceLocale = dto.sourceLocale ?? article.sourceLocale;
+        const sourceEntity = article.translations.find(
+          (translation) => translation.locale === nextSourceLocale,
+        ) as NewsArticleTranslationEntity;
+        const sourceUpdate = preparedUpdates.find(
+          ({ entity }) => entity.locale === nextSourceLocale,
         );
-        const sourceChanged = Boolean(vietnameseUpdate?.changed);
+        const sourceValues =
+          sourceUpdate?.values ??
+          this.toTranslationValues(nextSourceLocale, sourceEntity);
+        this.validateCompleteTranslation(
+          sourceValues,
+          'Bản ngôn ngữ nguồn phải có đủ title, slug, summary và contentHtml.',
+        );
+        const sourceLocaleChanged = nextSourceLocale !== article.sourceLocale;
+        const sourceChanged =
+          sourceLocaleChanged || Boolean(sourceUpdate?.changed);
 
         for (const { entity, values } of preparedUpdates) {
           if (values.slug && values.slug !== entity.slug) {
@@ -474,10 +502,9 @@ export class ArticlesService {
 
         if (sourceChanged) {
           article.sourceVersion += 1;
+          article.sourceLocale = nextSourceLocale;
           article.translations
-            .filter(
-              (translation) => translation.locale !== LocaleCode.Vietnamese,
-            )
+            .filter((translation) => translation.locale !== nextSourceLocale)
             .forEach((translation) => {
               translation.translationStatus = this.hasTranslationContent(
                 translation,
@@ -492,7 +519,7 @@ export class ArticlesService {
           Object.assign(entity, values);
           entity.translationError = null;
 
-          if (entity.locale === LocaleCode.Vietnamese) {
+          if (entity.locale === nextSourceLocale) {
             entity.sourceVersion = article.sourceVersion;
             entity.translationStatus = TranslationStatus.Original;
           } else if (changed) {
@@ -502,17 +529,21 @@ export class ArticlesService {
               : TranslationStatus.Queued;
           }
         }
+        sourceEntity.sourceVersion = article.sourceVersion;
+        sourceEntity.translationStatus = TranslationStatus.Original;
+        sourceEntity.translationError = null;
         await manager.save(article.translations);
 
         article.updatedBy = currentUser.id;
         await manager.save(article);
-        const vietnameseTranslation = this.getVietnameseTranslation(article);
+        const sourceTranslation = this.getSourceTranslation(article);
         await this.recordArticleLog(manager, article, currentUser, {
           action: 'article.updated',
-          title: vietnameseTranslation.title ?? `Bài viết #${article.id}`,
+          title: sourceTranslation.title ?? `Bài viết #${article.id}`,
           description: `Đã cập nhật bài viết #${article.id}.`,
           changes: {
             fields: Object.keys(dto),
+            sourceLocale: article.sourceLocale,
             sourceVersion: article.sourceVersion,
           },
           requestInfo,
@@ -533,8 +564,8 @@ export class ArticlesService {
     await this.dataSource.transaction(async (manager) => {
       const article = await this.findArticleForMutation(manager, id);
       this.articlePolicy.assertCanManage(currentUser, article, 'publish');
-      const viTranslation = this.getVietnameseTranslation(article);
-      this.validatePublishable(viTranslation);
+      const sourceTranslation = this.getSourceTranslation(article);
+      this.validatePublishable(sourceTranslation);
 
       const previousStatus = article.status;
       article.status = ArticleStatus.Published;
@@ -544,8 +575,8 @@ export class ArticlesService {
       await manager.save(article);
       await this.recordArticleLog(manager, article, currentUser, {
         action: 'article.published',
-        title: viTranslation.title as string,
-        description: `Đã đăng bài viết "${viTranslation.title}".`,
+        title: sourceTranslation.title as string,
+        description: `Đã đăng bài viết "${sourceTranslation.title}".`,
         changes: { from: previousStatus, to: ArticleStatus.Published },
         requestInfo,
       });
@@ -570,7 +601,7 @@ export class ArticlesService {
         nextStatus === ArticleStatus.Hidden ? 'hide' : 'draft',
       );
       const title =
-        this.getVietnameseTranslation(article).title ?? `Bài viết #${id}`;
+        this.getSourceTranslation(article).title ?? `Bài viết #${id}`;
       const previousStatus = article.status;
       article.status = nextStatus;
       article.updatedBy = currentUser.id;
@@ -603,7 +634,7 @@ export class ArticlesService {
       const article = await this.findArticleForMutation(manager, id);
       this.articlePolicy.assertCanManage(currentUser, article, 'featured');
       const title =
-        this.getVietnameseTranslation(article).title ?? `Bài viết #${id}`;
+        this.getSourceTranslation(article).title ?? `Bài viết #${id}`;
       article.isFeatured = isFeatured;
       article.updatedBy = currentUser.id;
       await manager.save(article);
@@ -630,7 +661,7 @@ export class ArticlesService {
       const article = await this.findArticleForMutation(manager, id);
       this.articlePolicy.assertCanManage(currentUser, article, 'delete');
       const title =
-        this.getVietnameseTranslation(article).title ?? `Bài viết #${id}`;
+        this.getSourceTranslation(article).title ?? `Bài viết #${id}`;
       article.deletedAt = new Date();
       article.updatedBy = currentUser.id;
       await manager.save(article);
@@ -656,7 +687,7 @@ export class ArticlesService {
         throw new BadRequestException('Bài viết chưa bị xóa.');
       }
       const title =
-        this.getVietnameseTranslation(article).title ?? `Bài viết #${id}`;
+        this.getSourceTranslation(article).title ?? `Bài viết #${id}`;
       article.deletedAt = null;
       article.updatedBy = currentUser.id;
       await manager.save(article);
@@ -891,9 +922,7 @@ export class ArticlesService {
   }
 
   private validateTranslationValues(values: TranslationValues): void {
-    const requiresCompleteContent =
-      values.locale === LocaleCode.Vietnamese ||
-      this.hasTranslationContent(values);
+    const requiresCompleteContent = this.hasTranslationContent(values);
     if (!requiresCompleteContent) return;
 
     if (
@@ -905,6 +934,20 @@ export class ArticlesService {
       throw new BadRequestException(
         `Bản ${values.locale} phải có đủ title, slug, summary và contentHtml.`,
       );
+    }
+  }
+
+  private validateCompleteTranslation(
+    values: TranslationValues | NewsArticleTranslationEntity,
+    message: string,
+  ): void {
+    if (
+      !values.title?.trim() ||
+      !values.slug?.trim() ||
+      !values.summary?.trim() ||
+      !values.contentHtml?.trim()
+    ) {
+      throw new BadRequestException(message);
     }
   }
 
@@ -967,7 +1010,7 @@ export class ArticlesService {
           seoDescription: null,
           thumbnailAltText: null,
           translationStatus:
-            locale === LocaleCode.Vietnamese
+            locale === article.sourceLocale
               ? TranslationStatus.Original
               : TranslationStatus.Queued,
           translationError: null,
@@ -1027,26 +1070,27 @@ export class ArticlesService {
   }
 
   private validatePublishable(translation: NewsArticleTranslationEntity): void {
+    this.validateCompleteTranslation(
+      translation,
+      'Bản ngôn ngữ nguồn phải có đủ title, slug, summary và contentHtml trước khi đăng.',
+    );
     if (
-      !translation.title?.trim() ||
-      !translation.slug?.trim() ||
-      !translation.summary?.trim() ||
-      !translation.contentHtml?.trim()
+      !VALID_PUBLIC_TRANSLATION_STATUSES.includes(translation.translationStatus)
     ) {
       throw new BadRequestException(
-        'Bản tiếng Việt phải có đủ title, slug, summary và contentHtml trước khi đăng.',
+        'Bản ngôn ngữ nguồn cần được cập nhật trước khi đăng.',
       );
     }
   }
 
-  private getVietnameseTranslation(
+  private getSourceTranslation(
     article: NewsArticleEntity,
   ): NewsArticleTranslationEntity {
     const translation = article.translations.find(
-      (item) => item.locale === LocaleCode.Vietnamese,
+      (item) => item.locale === article.sourceLocale,
     );
     if (!translation) {
-      throw new BadRequestException('Bài viết chưa có bản tiếng Việt.');
+      throw new BadRequestException('Bài viết chưa có bản ngôn ngữ nguồn.');
     }
     return translation;
   }
@@ -1069,7 +1113,7 @@ export class ArticlesService {
     );
     const fallback = article.translations.find(
       (translation) =>
-        translation.locale === LocaleCode.Vietnamese &&
+        translation.locale === article.sourceLocale &&
         VALID_PUBLIC_TRANSLATION_STATUSES.includes(
           translation.translationStatus,
         ) &&
@@ -1149,6 +1193,7 @@ export class ArticlesService {
       thumbnailId: article.thumbnailId,
       status: article.status,
       isFeatured: article.isFeatured,
+      sourceLocale: article.sourceLocale,
       sourceVersion: article.sourceVersion,
       sourceUrl: article.sourceUrl,
       title: translation?.title ?? null,

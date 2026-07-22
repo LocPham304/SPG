@@ -20,7 +20,7 @@ export const adminArticles: readonly AdminArticle[] = [
       "Hội nghị được tổ chức với sự tham gia của đại diện các đơn vị trực thuộc. Các đại biểu đã thảo luận những nhiệm vụ trọng tâm và giải pháp nâng cao hiệu quả hoạt động.",
     seoTitle: "Hội nghị người lao động năm 2024",
     seoDescription:
-      "Thông tin về hội nghị người lao động của Tập đoàn Thiết bị Cảng Sơn Đông.",
+      "Thông tin về hội nghị người lao động của Tập đoàn Thiết bị Cảng Sealand Sơn Đông.",
   },
   {
     id: "article-002",

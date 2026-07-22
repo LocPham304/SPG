@@ -11,7 +11,9 @@ import { EntityManager, IsNull, Repository } from 'typeorm';
 import { PaginationResponseDto } from '../../common/dto/pagination-response.dto';
 import { ActivityLogsService } from '../activity-logs/activity-logs.service';
 import type { ActivityLogChanges } from '../activity-logs/types/activity-log-action.type';
+import { NewsArticleEntity } from '../articles/entities/news-article.entity';
 import { AuthSessionEntity } from '../auth/entities/auth-session.entity';
+import { MediaFileEntity } from '../media/entities/media-file.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { QueryUsersDto } from './dto/query-users.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -402,6 +404,22 @@ export class UsersService {
         }
 
         await this.ensureLastActiveAdminWithManager(manager, user);
+        const reassignedArticles = await manager
+          .getRepository(NewsArticleEntity)
+          .update({ createdBy: user.id }, { createdBy: currentUserId });
+        const reassignedPublishedArticles = await manager
+          .getRepository(NewsArticleEntity)
+          .update({ publishedBy: user.id }, { publishedBy: currentUserId });
+        const reassignedUpdatedArticles = await manager
+          .getRepository(NewsArticleEntity)
+          .update({ updatedBy: user.id }, { updatedBy: currentUserId });
+        const reassignedMedia = await manager
+          .getRepository(MediaFileEntity)
+          .update({ uploadedBy: user.id }, { uploadedBy: currentUserId });
+        const revokedSessions = await this.revokeSessionsWithManager(
+          manager,
+          user.id,
+        );
         const deleteResult = await repository.delete({ id: user.id });
         this.ensureUserWasUpdated(deleteResult.affected, user.id);
 
@@ -416,6 +434,12 @@ export class UsersService {
             email: user.email,
             fullName: user.fullName,
             role: user.role,
+            reassignedArticles: reassignedArticles.affected ?? 0,
+            reassignedPublishedArticles:
+              reassignedPublishedArticles.affected ?? 0,
+            reassignedUpdatedArticles: reassignedUpdatedArticles.affected ?? 0,
+            reassignedMedia: reassignedMedia.affected ?? 0,
+            revokedSessions,
           },
           ...metadata,
         });
@@ -423,7 +447,7 @@ export class UsersService {
     } catch (error: unknown) {
       if (this.isForeignKeyViolation(error)) {
         throw new ConflictException(
-          'Không thể xóa nhân viên đã tạo bài viết hoặc tải media. Hãy khóa tài khoản này thay vì xóa.',
+          'Không thể xóa nhân viên do tài khoản vẫn còn dữ liệu liên quan chưa được xử lý.',
         );
       }
 

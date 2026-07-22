@@ -83,9 +83,7 @@ export function AdminLoginForm() {
     try {
       const user = await login(email, password, remember);
       router.replace(
-        user.mustChangePassword
-          ? "/admin/change-password"
-          : "/admin/dashboard",
+        user.mustChangePassword ? "/admin/change-password" : "/admin/dashboard",
       );
     } catch (error: unknown) {
       setErrors({
@@ -114,7 +112,7 @@ export function AdminLoginForm() {
     >
       <header className="mb-8 text-center">
         <Image
-          alt="Tập đoàn Thiết bị Cảng Sơn Đông"
+          alt="Tập đoàn Thiết bị Cảng Sealand Sơn Đông"
           className="mx-auto h-auto w-[260px] max-w-full"
           height={32}
           priority
@@ -184,9 +182,7 @@ export function AdminLoginForm() {
           </label>
           <div className="relative">
             <input
-              aria-describedby={
-                errors.password ? "password-error" : undefined
-              }
+              aria-describedby={errors.password ? "password-error" : undefined}
               aria-invalid={Boolean(errors.password)}
               autoComplete="current-password"
               className="block h-11 w-full rounded-lg border border-slate-300 bg-white px-3.5 pr-11 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-[#1d2088] focus:ring-2 focus:ring-[#1d2088]/15"

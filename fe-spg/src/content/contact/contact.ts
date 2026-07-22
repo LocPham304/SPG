@@ -130,9 +130,9 @@ const content: Record<AppLocale, ContactContent> = {
       submit: "Gửi liên hệ",
     },
     description:
-      "Thông tin liên hệ của Tập đoàn Thiết bị Cảng Sơn Đông và mạng lưới tiếp thị.",
+      "Thông tin liên hệ của Tập đoàn Thiết bị Cảng Sealand Sơn Đông và mạng lưới tiếp thị.",
     marketingDescription:
-      "Thông tin liên hệ của các công ty trong mạng lưới tiếp thị thuộc Tập đoàn Thiết bị Cảng Sơn Đông.",
+      "Thông tin liên hệ của các công ty trong mạng lưới tiếp thị thuộc Tập đoàn Thiết bị Cảng Sealand Sơn Đông.",
     labels: {
       address: "Địa chỉ",
       businessPhone: "Điện thoại kinh doanh",
@@ -142,7 +142,7 @@ const content: Record<AppLocale, ContactContent> = {
       postcode: "Mã bưu chính",
     },
     primary: {
-      company: "Tập đoàn Thiết bị Cảng Sơn Đông",
+      company: "Tập đoàn Thiết bị Sealand Sơn Đông",
       address:
         "1B đường D13, Khu Biệt Thự Tân Cảng, Phường Thạnh Mỹ Tây, TP Hồ Chí Minh",
       phone: "+84772066685",

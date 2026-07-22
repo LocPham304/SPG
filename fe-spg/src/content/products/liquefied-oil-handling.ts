@@ -38,45 +38,193 @@ function asset(file: string, en: string, vi: string, zh: string): GalleryAsset {
 
 const galleryAssets: Record<LiquefiedOilSectionId, readonly GalleryAsset[]> = {
   "tank-piping-installation": [
-    asset("129714c13ed56ff030c83aebdf6d1b68_lp.jpg", "Qingdao Port - Dongjiakou crude oil tank farm", "Khu bồn chứa dầu thô Dongjiakou, Cảng Thanh Đảo", "青岛港-董家口原油罐区"),
-    asset("0bdf3f025af155067d0b5cc45cb6b180_lp.jpg", "Qingdao Port - Dongjiakou crude oil tank farm", "Khu bồn chứa dầu thô Dongjiakou, Cảng Thanh Đảo", "青岛港-董家口原油罐区"),
-    asset("d06064239941bc96d47398bb6f1fd6ed_lp.jpg", "Qingdao Port - Dongjiakou crude oil tank farm", "Khu bồn chứa dầu thô Dongjiakou, Cảng Thanh Đảo", "青岛港-董家口原油罐区"),
-    asset("70e43a561bd1663c046a4ef04b9afd3d_lp.jpg", "Qingdao Port - Dongjiakou crude oil tank farm", "Khu bồn chứa dầu thô Dongjiakou, Cảng Thanh Đảo", "青岛港-董家口原油罐区"),
-    asset("e4d44bbdaeef608bf1164030d08b5a99_lp.jpg", "Qingdao Port - Dongjiakou crude oil tank farm", "Khu bồn chứa dầu thô Dongjiakou, Cảng Thanh Đảo", "青岛港-董家口原油罐区"),
+    asset(
+      "129714c13ed56ff030c83aebdf6d1b68_lp.jpg",
+      "Qingdao Port - Dongjiakou crude oil tank farm",
+      "Khu bồn chứa dầu thô Dongjiakou, Cảng Thanh Đảo",
+      "青岛港-董家口原油罐区",
+    ),
+    asset(
+      "0bdf3f025af155067d0b5cc45cb6b180_lp.jpg",
+      "Qingdao Port - Dongjiakou crude oil tank farm",
+      "Khu bồn chứa dầu thô Dongjiakou, Cảng Thanh Đảo",
+      "青岛港-董家口原油罐区",
+    ),
+    asset(
+      "d06064239941bc96d47398bb6f1fd6ed_lp.jpg",
+      "Qingdao Port - Dongjiakou crude oil tank farm",
+      "Khu bồn chứa dầu thô Dongjiakou, Cảng Thanh Đảo",
+      "青岛港-董家口原油罐区",
+    ),
+    asset(
+      "70e43a561bd1663c046a4ef04b9afd3d_lp.jpg",
+      "Qingdao Port - Dongjiakou crude oil tank farm",
+      "Khu bồn chứa dầu thô Dongjiakou, Cảng Thanh Đảo",
+      "青岛港-董家口原油罐区",
+    ),
+    asset(
+      "e4d44bbdaeef608bf1164030d08b5a99_lp.jpg",
+      "Qingdao Port - Dongjiakou crude oil tank farm",
+      "Khu bồn chứa dầu thô Dongjiakou, Cảng Thanh Đảo",
+      "青岛港-董家口原油罐区",
+    ),
   ],
   "steel-structure-engineering": [
-    asset("82fd53f9d2bd080e41ab11af2a70ec08_lp.jpg", "Crude oil pipeline arm", "Cần xuất nhập dầu thô", "原油管道输油臂"),
-    asset("94e4c53cd9740f58880c027b51406af8_lp.jpg", "Crude oil pipelines", "Đường ống dầu thô", "原油管线"),
-    asset("d177c7efcc80676ea08e59a8f4ff80fd_lp.jpg", "Binzhou Port liquid bulk operation area project", "Dự án khu khai thác hàng lỏng tại Cảng Tân Châu", "滨州港海港港区液体散货作业区工程"),
-    asset("139cbd4bd011d33495e69e63c4ca6135_lp.jpg", "Crude oil tank farms and pipelines", "Khu bồn chứa và đường ống dầu thô", "原油罐区及管线"),
-    asset("9c91bd1784791776702c65340a25a43b_lp.jpg", "Binzhou Port liquid bulk operation area project", "Dự án khu khai thác hàng lỏng tại Cảng Tân Châu", "滨州港海港港区液体散货作业区工程"),
-    asset("ecaeea7222aaf8bb0f04619efb8794f8_lp.jpg", "Lanshan 300,000-ton oil terminal", "Bến dầu 300.000 tấn Lanshan", "岚山30万吨油码头"),
-    asset("05e2cb96eb0aee678002d6aab332eaa1_lp.jpg", "Asia Symbol PM14 pipe-gallery steel structure project", "Dự án kết cấu thép hành lang ống Asia Symbol PM14", "亚太森博PM14管廊钢结构项目"),
-    asset("2dc2d42ad1c928f9c1d3ab9bbc5e94df_lp.jpg", "Lanshan 300,000-ton steel approach bridge project", "Dự án cầu dẫn thép 300.000 tấn Lanshan", "岚山30万吨钢引桥工程"),
-    asset("c8d5f543c3739e75eec310e620965bb6_lp.jpg", "Asia Symbol RB11R steel pipe-gallery project", "Dự án hành lang ống kết cấu thép Asia Symbol RB11R", "亚太森博浆纸有限公司RB11R项目钢结构管廊"),
-    asset("685e3957a6bf9447732bbde27873af74_lp.jpg", "Yantai Port West Port Area crude oil terminal phase II", "Giai đoạn II bến dầu thô khu cảng phía Tây, Cảng Yên Đài", "烟台港西港区原油码头二期工程"),
-    asset("b89fdabe4a05bd4afdc890f7c75ea04c_lp.jpg", "Yantai Port crude oil terminal phase II external pipeline steel structure", "Kết cấu thép tuyến ống ngoài giai đoạn II bến dầu thô Cảng Yên Đài", "烟台港西港区原油码头二期外接管线钢结构工程"),
+    asset(
+      "82fd53f9d2bd080e41ab11af2a70ec08_lp.jpg",
+      "Crude oil pipeline arm",
+      "Cần xuất nhập dầu thô",
+      "原油管道输油臂",
+    ),
+    asset(
+      "94e4c53cd9740f58880c027b51406af8_lp.jpg",
+      "Crude oil pipelines",
+      "Đường ống dầu thô",
+      "原油管线",
+    ),
+    asset(
+      "d177c7efcc80676ea08e59a8f4ff80fd_lp.jpg",
+      "Binzhou Port liquid bulk operation area project",
+      "Dự án khu khai thác hàng lỏng tại Cảng Tân Châu",
+      "滨州港海港港区液体散货作业区工程",
+    ),
+    asset(
+      "139cbd4bd011d33495e69e63c4ca6135_lp.jpg",
+      "Crude oil tank farms and pipelines",
+      "Khu bồn chứa và đường ống dầu thô",
+      "原油罐区及管线",
+    ),
+    asset(
+      "9c91bd1784791776702c65340a25a43b_lp.jpg",
+      "Binzhou Port liquid bulk operation area project",
+      "Dự án khu khai thác hàng lỏng tại Cảng Tân Châu",
+      "滨州港海港港区液体散货作业区工程",
+    ),
+    asset(
+      "ecaeea7222aaf8bb0f04619efb8794f8_lp.jpg",
+      "Lanshan 300,000-ton oil terminal",
+      "Bến dầu 300.000 tấn Lanshan",
+      "岚山30万吨油码头",
+    ),
+    asset(
+      "05e2cb96eb0aee678002d6aab332eaa1_lp.jpg",
+      "Asia Symbol PM14 pipe-gallery steel structure project",
+      "Dự án kết cấu thép hành lang ống Asia Symbol PM14",
+      "亚太森博PM14管廊钢结构项目",
+    ),
+    asset(
+      "2dc2d42ad1c928f9c1d3ab9bbc5e94df_lp.jpg",
+      "Lanshan 300,000-ton steel approach bridge project",
+      "Dự án cầu dẫn thép 300.000 tấn Lanshan",
+      "岚山30万吨钢引桥工程",
+    ),
+    asset(
+      "c8d5f543c3739e75eec310e620965bb6_lp.jpg",
+      "Asia Symbol RB11R steel pipe-gallery project",
+      "Dự án hành lang ống kết cấu thép Asia Symbol RB11R",
+      "亚太森博浆纸有限公司RB11R项目钢结构管廊",
+    ),
+    asset(
+      "685e3957a6bf9447732bbde27873af74_lp.jpg",
+      "Yantai Port West Port Area crude oil terminal phase II",
+      "Giai đoạn II bến dầu thô khu cảng phía Tây, Cảng Yên Đài",
+      "烟台港西港区原油码头二期工程",
+    ),
+    asset(
+      "b89fdabe4a05bd4afdc890f7c75ea04c_lp.jpg",
+      "Yantai Port crude oil terminal phase II external pipeline steel structure",
+      "Kết cấu thép tuyến ống ngoài giai đoạn II bến dầu thô Cảng Yên Đài",
+      "烟台港西港区原油码头二期外接管线钢结构工程",
+    ),
   ],
   "tank-maintenance": [
-    asset("0c9b645d3ef8a0386c14b18980239aaa_lp.jpg", "Tank anti-corrosion - floating-roof manholes and reinforcing rings", "Chống ăn mòn bồn chứa - cửa người chui và vòng gia cường mái nổi", "储罐防腐-浮舱人孔、加强圈防腐"),
-    asset("598b0c9e1214001aff5f6f74fa0063eb_lp.jpg", "Tank anti-corrosion - tank-top platform", "Chống ăn mòn bồn chứa - sàn thao tác trên nóc bồn", "储罐防腐-罐顶平台防腐"),
-    asset("2f65f572220ea7e2397a403182617aeb_lp.jpg", "Tank anti-corrosion - nine-section wall panels", "Chống ăn mòn bồn chứa - tấm thành chín đoạn", "储罐防腐-九节壁板防腐"),
-    asset("ff1406857b0d49fbadcdeb0eb0fe827e_lp.jpg", "Tank cleaning - oil-water separation", "Vệ sinh bồn chứa - tách dầu và nước", "储罐清洗-油水分离"),
-    asset("15707f2ca61d9a96aa2f62d6ee3d3ce1_lp.jpg", "Tank cleaning - cleaning guns", "Vệ sinh bồn chứa - súng làm sạch", "储罐清洗-清洗枪"),
-    asset("eb4a5eba51aa1236bc39bfb78d03b11d_lp.jpg", "Tank cleaning - pipeline layout", "Vệ sinh bồn chứa - bố trí đường ống", "储罐清洗-管道布设"),
-    asset("2361df0b7cc9dda8c09c925fc62f6771_lp.jpg", "Tank cleaning - cleaning-machine layout", "Vệ sinh bồn chứa - bố trí máy làm sạch", "储罐清洗-清洗机布设"),
-    asset("21b725252cb9d06a9775d059f5fd1394_lp.jpg", "Tank cleaning - nitrogen generator", "Vệ sinh bồn chứa - máy tạo nitơ", "储罐清洗-制氮机"),
-    asset("79d2ccce577336a94d8fce63f6b0b600_lp.jpg", "Tank maintenance operation", "Công tác bảo trì bồn chứa", "储罐维护作业"),
-    asset("7ca2d190e9b2ba83a5602580dc5a0399_lp.jpg", "Tank repair - wax scraper removal and replacement", "Sửa chữa bồn chứa - tháo và thay bộ gạt sáp", "储罐维修-刮蜡器拆除更换"),
-    asset("eb3d1ce72ee8ef11ce868ac45d4ea5e0_lp.jpg", "Tank repair - anode block", "Sửa chữa bồn chứa - khối anốt", "储罐维修-阳极块"),
-    asset("d95a52f78ece37292907f33ff7f04598_lp.jpg", "Tank repair - fire-sprinkler system replacement", "Sửa chữa bồn chứa - thay hệ thống phun chữa cháy", "储罐维修-消防喷淋系统拆除更换"),
-    asset("ca068500bac4a3a0c94df0dbebc7711c_lp.jpg", "Tank maintenance - primary and secondary seal replacement", "Bảo trì bồn chứa - lắp đặt thay thế phớt sơ cấp và thứ cấp", "储罐维修-一二次密封更换安装"),
+    asset(
+      "0c9b645d3ef8a0386c14b18980239aaa_lp.jpg",
+      "Tank anti-corrosion - floating-roof manholes and reinforcing rings",
+      "Chống ăn mòn bồn chứa - cửa người chui và vòng gia cường mái nổi",
+      "储罐防腐-浮舱人孔、加强圈防腐",
+    ),
+    asset(
+      "598b0c9e1214001aff5f6f74fa0063eb_lp.jpg",
+      "Tank anti-corrosion - tank-top platform",
+      "Chống ăn mòn bồn chứa - sàn thao tác trên nóc bồn",
+      "储罐防腐-罐顶平台防腐",
+    ),
+    asset(
+      "2f65f572220ea7e2397a403182617aeb_lp.jpg",
+      "Tank anti-corrosion - nine-section wall panels",
+      "Chống ăn mòn bồn chứa - tấm thành chín đoạn",
+      "储罐防腐-九节壁板防腐",
+    ),
+    asset(
+      "ff1406857b0d49fbadcdeb0eb0fe827e_lp.jpg",
+      "Tank cleaning - oil-water separation",
+      "Vệ sinh bồn chứa - tách dầu và nước",
+      "储罐清洗-油水分离",
+    ),
+    asset(
+      "15707f2ca61d9a96aa2f62d6ee3d3ce1_lp.jpg",
+      "Tank cleaning - cleaning guns",
+      "Vệ sinh bồn chứa - súng làm sạch",
+      "储罐清洗-清洗枪",
+    ),
+    asset(
+      "eb4a5eba51aa1236bc39bfb78d03b11d_lp.jpg",
+      "Tank cleaning - pipeline layout",
+      "Vệ sinh bồn chứa - bố trí đường ống",
+      "储罐清洗-管道布设",
+    ),
+    asset(
+      "2361df0b7cc9dda8c09c925fc62f6771_lp.jpg",
+      "Tank cleaning - cleaning-machine layout",
+      "Vệ sinh bồn chứa - bố trí máy làm sạch",
+      "储罐清洗-清洗机布设",
+    ),
+    asset(
+      "21b725252cb9d06a9775d059f5fd1394_lp.jpg",
+      "Tank cleaning - nitrogen generator",
+      "Vệ sinh bồn chứa - máy tạo nitơ",
+      "储罐清洗-制氮机",
+    ),
+    asset(
+      "79d2ccce577336a94d8fce63f6b0b600_lp.jpg",
+      "Tank maintenance operation",
+      "Công tác bảo trì bồn chứa",
+      "储罐维护作业",
+    ),
+    asset(
+      "7ca2d190e9b2ba83a5602580dc5a0399_lp.jpg",
+      "Tank repair - wax scraper removal and replacement",
+      "Sửa chữa bồn chứa - tháo và thay bộ gạt sáp",
+      "储罐维修-刮蜡器拆除更换",
+    ),
+    asset(
+      "eb3d1ce72ee8ef11ce868ac45d4ea5e0_lp.jpg",
+      "Tank repair - anode block",
+      "Sửa chữa bồn chứa - khối anốt",
+      "储罐维修-阳极块",
+    ),
+    asset(
+      "d95a52f78ece37292907f33ff7f04598_lp.jpg",
+      "Tank repair - fire-sprinkler system replacement",
+      "Sửa chữa bồn chứa - thay hệ thống phun chữa cháy",
+      "储罐维修-消防喷淋系统拆除更换",
+    ),
+    asset(
+      "ca068500bac4a3a0c94df0dbebc7711c_lp.jpg",
+      "Tank maintenance - primary and secondary seal replacement",
+      "Bảo trì bồn chứa - lắp đặt thay thế phớt sơ cấp và thứ cấp",
+      "储罐维修-一二次密封更换安装",
+    ),
   ],
 };
 
 const sectionText: Record<
   AppLocale,
-  Record<LiquefiedOilSectionId, { title: string; paragraphs: readonly string[] }>
+  Record<
+    LiquefiedOilSectionId,
+    { title: string; paragraphs: readonly string[] }
+  >
 > = {
   en: {
     "tank-piping-installation": {
@@ -149,18 +297,22 @@ const localeCopy: Record<
 > = {
   en: {
     title: "Liquefied oil handling systems",
-    description: "Integrated liquefied-oil storage, transfer, piping and maintenance solutions from Shandong Port Equipment Group.",
+    description:
+      "Integrated liquefied-oil storage, transfer, piping and maintenance solutions from Shandong Port Equipment Group.",
     productsLabel: "Products & Solutions",
-    intro: "Provide a full range of customized products such as oil-arm installation, boarding bridges, storage tanks, loading systems, pipelines and pump rooms, with optional emergency release, explosion protection, intelligent temperature control, intelligent lighting and other functions configured to demand.",
+    intro:
+      "Provide a full range of customized products such as oil-arm installation, boarding bridges, storage tanks, loading systems, pipelines and pump rooms, with optional emergency release, explosion protection, intelligent temperature control, intelligent lighting and other functions configured to demand.",
     previousLabel: "Previous image",
     nextLabel: "Next image",
     galleryLabel: "Product gallery",
   },
   vi: {
     title: "Hệ thống xếp dỡ dầu hóa lỏng",
-    description: "Giải pháp tích hợp lưu trữ, trung chuyển, đường ống và bảo trì dầu hóa lỏng của Tập đoàn Thiết bị Cảng Sơn Đông.",
+    description:
+      "Giải pháp tích hợp lưu trữ, trung chuyển, đường ống và bảo trì dầu hóa lỏng của Tập đoàn Thiết bị Cảng Sealand Sơn Đông.",
     productsLabel: "Sản phẩm & Giải pháp",
-    intro: "Cung cấp đầy đủ các sản phẩm tùy chỉnh gồm cần xuất nhập dầu, cầu lên tàu, bồn chứa, hệ thống xuất hàng, đường ống và trạm bơm; đồng thời có thể tích hợp theo nhu cầu chức năng ngắt khẩn cấp, chống cháy nổ an toàn, điều khiển nhiệt độ thông minh, chiếu sáng thông minh và các chức năng khác.",
+    intro:
+      "Cung cấp đầy đủ các sản phẩm tùy chỉnh gồm cần xuất nhập dầu, cầu lên tàu, bồn chứa, hệ thống xuất hàng, đường ống và trạm bơm; đồng thời có thể tích hợp theo nhu cầu chức năng ngắt khẩn cấp, chống cháy nổ an toàn, điều khiển nhiệt độ thông minh, chiếu sáng thông minh và các chức năng khác.",
     previousLabel: "Ảnh trước",
     nextLabel: "Ảnh tiếp theo",
     galleryLabel: "Thư viện sản phẩm",
@@ -169,7 +321,8 @@ const localeCopy: Record<
     title: "液化油品装卸系统解决方案",
     description: "山东港口装备集团液化油品储运、管道及维护一体化解决方案。",
     productsLabel: "产品与解决方案",
-    intro: "提供输油臂安装、登船桥、储罐、装车系统、管道、泵房等全系列定制产品，并根据需求配套紧急脱离、安全防爆、智能温控及智慧照明等功能。",
+    intro:
+      "提供输油臂安装、登船桥、储罐、装车系统、管道、泵房等全系列定制产品，并根据需求配套紧急脱离、安全防爆、智能温控及智慧照明等功能。",
     previousLabel: "上一张图片",
     nextLabel: "下一张图片",
     galleryLabel: "产品图片",

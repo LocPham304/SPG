@@ -16,8 +16,7 @@ export type AboutBasePopupCopy = {
 type AboutBaseProfiles = Record<HomeBaseId, readonly AboutBaseProfile[]>;
 
 const images = {
-  qingdao:
-    "/images/public/files/image/about_introduction_img7.jpg",
+  qingdao: "/images/public/files/image/about_introduction_img7.jpg",
   shanghai:
     "/images/uploads/allimg/20240606/d8f329ce0c53f71fd3f0913ac50c0e64.jpg",
   rizhaoMarine:
@@ -149,7 +148,7 @@ const vi: AboutBaseProfiles = {
       paragraphs: [
         "Thành lập năm 2023 tại quận Lanshan, thành phố Nhật Chiếu, công ty có vốn đăng ký 80 triệu nhân dân tệ và diện tích hơn 1.000 mẫu. Công suất quy hoạch hằng năm gồm mười tàu 50.000 tấn, sáu tàu dài không quá 80 m và ba mô-đun công trình biển 3.000 tấn, với giá trị sản lượng dự kiến 3 tỷ nhân dân tệ.",
         "Công ty áp dụng thiết kế số tích hợp trong thiết kế, sản xuất và quản lý; triển khai chế tạo chính xác đồng bộ thân tàu, trang bị và sơn phủ. Trọng tâm là các mô-đun công trình biển giá trị cao, thiết bị nuôi biển sâu, đóng mới và sửa chữa tàu thông minh, thân thiện môi trường và sử dụng năng lượng mới.",
-        "Khu công nghiệp thiết bị ngoài khơi cao cấp Nhật Chiếu là một phần trong chương trình mở rộng năng lực chế tạo tiên tiến của Tập đoàn Thiết bị Cảng Sơn Đông, thúc đẩy nâng cấp thiết bị và đóng góp vào việc xây dựng cụm cảng đẳng cấp thế giới.",
+        "Khu công nghiệp thiết bị ngoài khơi cao cấp Nhật Chiếu là một phần trong chương trình mở rộng năng lực chế tạo tiên tiến của Tập đoàn Thiết bị Cảng Sealand Sơn Đông, thúc đẩy nâng cấp thiết bị và đóng góp vào việc xây dựng cụm cảng đẳng cấp thế giới.",
       ],
     },
   ],

@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { getTranslations } from "next-intl/server";
 
 import { LocalizedLink } from "@/components/common/LocalizedLink";
@@ -93,6 +94,31 @@ export async function SiteFooter() {
                 </div>
               </div>
             </address>
+
+            <div className={styles.footerQrCodes}>
+              <figure>
+                <Image
+                  alt={t("qrMiniProgramAlt")}
+                  className={styles.footerQrImage}
+                  height={544}
+                  sizes="(max-width: 1199px) 128px, 142px"
+                  src="/images/uploads/allimg/20240531/deb3408ee543ed1217dfb22f8a768b68.jpg"
+                  width={543}
+                />
+                <figcaption>{t("qrMiniProgram")}</figcaption>
+              </figure>
+              <figure>
+                <Image
+                  alt={t("qrPublicAccountAlt")}
+                  className={styles.footerQrImage}
+                  height={430}
+                  sizes="(max-width: 1199px) 128px, 142px"
+                  src="/images/uploads/allimg/20240531/84dc6533d0aab16149c7e5089d1a95fa.jpg"
+                  width={430}
+                />
+                <figcaption>{t("qrPublicAccount")}</figcaption>
+              </figure>
+            </div>
           </div>
         </ScrollReveal>
 

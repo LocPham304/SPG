@@ -5,6 +5,7 @@ import {
   type TranslationArticleContent,
   type TranslationProvider,
   TranslationProviderError,
+  type TranslationLocale,
   type TranslationProviderResult,
   type TranslationTargetLocale,
 } from './translation-provider.interface';
@@ -47,6 +48,7 @@ export class GeminiTranslationProvider implements TranslationProvider {
 
   async translateArticle(
     source: TranslationArticleContent,
+    sourceLocale: TranslationLocale,
     targets: TranslationTargetLocale[],
   ): Promise<Partial<TranslationProviderResult>> {
     if (!this.isConfigured()) {
@@ -56,7 +58,7 @@ export class GeminiTranslationProvider implements TranslationProvider {
     let lastParseError: TranslationProviderError | null = null;
 
     for (let attempt = 0; attempt < MAX_PARSE_ATTEMPTS; attempt += 1) {
-      const rawText = await this.generateContent(source, targets);
+      const rawText = await this.generateContent(source, sourceLocale, targets);
       try {
         return this.parseTranslationResponse(rawText, targets);
       } catch (error: unknown) {
@@ -75,6 +77,7 @@ export class GeminiTranslationProvider implements TranslationProvider {
 
   private async generateContent(
     source: TranslationArticleContent,
+    sourceLocale: TranslationLocale,
     targets: TranslationTargetLocale[],
   ): Promise<string> {
     const endpoint = this.endpoint.replace(/\/+$/, '');
@@ -96,7 +99,7 @@ export class GeminiTranslationProvider implements TranslationProvider {
               role: 'user',
               parts: [
                 {
-                  text: this.buildPrompt(source, targets),
+                  text: this.buildPrompt(source, sourceLocale, targets),
                 },
               ],
             },
@@ -145,16 +148,20 @@ export class GeminiTranslationProvider implements TranslationProvider {
 
   private buildPrompt(
     source: TranslationArticleContent,
+    sourceLocale: TranslationLocale,
     targets: TranslationTargetLocale[],
   ): string {
+    const languageNames: Record<TranslationLocale, string> = {
+      vi: 'Vietnamese (vi)',
+      en: 'English (en)',
+      zh: 'Simplified Chinese (zh)',
+    };
     const targetDescription = targets
-      .map((target) =>
-        target === 'en' ? 'English (en)' : 'Simplified Chinese (zh)',
-      )
+      .map((target) => languageNames[target])
       .join(' và ');
 
     return [
-      `Dịch bài viết tiếng Việt dưới đây sang ${targetDescription}.`,
+      `Dịch bài viết ${languageNames[sourceLocale]} dưới đây sang ${targetDescription}.`,
       'Yêu cầu bắt buộc:',
       '- Giữ nguyên ý nghĩa, không thêm thông tin mới và không tự bịa dữ kiện.',
       '- Giữ giọng văn báo chí, trang trọng, phù hợp website doanh nghiệp.',

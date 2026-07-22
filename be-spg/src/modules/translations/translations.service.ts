@@ -25,6 +25,7 @@ import {
 import {
   ARTICLE_TRANSLATION_PROVIDER,
   type TranslationArticleContent,
+  type TranslationLocale,
   type TranslationProvider,
   TranslationProviderError,
   type TranslationTargetLocale,
@@ -35,10 +36,9 @@ type RequestInfo = {
   userAgent?: string | null;
 };
 
-const TARGET_LOCALES: TranslationTargetLocale[] = ['en', 'zh'];
+const ARTICLE_LOCALES: TranslationTargetLocale[] = ['vi', 'en', 'zh'];
 const ARTICLE_NOT_FOUND = 'Không tìm thấy bài viết.';
-const INCOMPLETE_VIETNAMESE_ARTICLE =
-  'Bài viết tiếng Việt chưa đủ nội dung để dịch';
+const INCOMPLETE_SOURCE_ARTICLE = 'Bài viết nguồn chưa đủ nội dung để dịch';
 const TRANSLATION_NOT_CONFIGURED = 'Dịch tự động chưa được cấu hình';
 
 @Injectable()
@@ -67,7 +67,8 @@ export class TranslationsService {
     if (!article) throw new NotFoundException(ARTICLE_NOT_FOUND);
 
     this.articlePolicy.assertCanManage(currentUser, article, 'translate');
-    const vietnamese = this.getCompleteVietnameseTranslation(article);
+    const sourceLocale = article.sourceLocale as TranslationLocale;
+    const source = this.getCompleteSourceTranslation(article, sourceLocale);
 
     if (!this.translationProvider.isConfigured()) {
       throw new SafeHttpException(
@@ -76,7 +77,12 @@ export class TranslationsService {
       );
     }
 
-    const targets = dto.targets ?? TARGET_LOCALES;
+    const targets =
+      dto.targets ??
+      ARTICLE_LOCALES.filter((locale) => locale !== sourceLocale);
+    if (targets.includes(sourceLocale)) {
+      throw new BadRequestException('Ngôn ngữ đích phải khác ngôn ngữ nguồn.');
+    }
     const results: TranslateArticleResultDto[] = [];
     const translatedTargets: TranslationTargetLocale[] = [];
     const targetsToTranslate: TranslationTargetLocale[] = [];
@@ -107,7 +113,8 @@ export class TranslationsService {
 
       try {
         translatedByLocale = await this.translationProvider.translateArticle(
-          this.toProviderSource(vietnamese),
+          this.toProviderSource(source),
+          sourceLocale,
           targetsToTranslate,
         );
       } catch (error: unknown) {
@@ -182,10 +189,10 @@ export class TranslationsService {
         entityId: article.id,
         title: 'Dịch tự động bài viết',
         description: `Dịch bài viết sang ${translatedTargets
-          .map((locale) => (locale === 'en' ? 'English' : '中文'))
+          .map((locale) => this.getLocaleLabel(locale))
           .join('/')} bằng Gemini`,
         changes: {
-          sourceLocale: LocaleCode.Vietnamese,
+          sourceLocale,
           targets: translatedTargets,
           overwrite: dto.overwrite,
           sourceVersion: article.sourceVersion,
@@ -202,17 +209,18 @@ export class TranslationsService {
 
     return {
       articleId: article.id,
-      sourceLocale: LocaleCode.Vietnamese,
+      sourceLocale: this.toLocaleCode(sourceLocale),
       provider: this.translationProvider.name,
       results,
     };
   }
 
-  private getCompleteVietnameseTranslation(
+  private getCompleteSourceTranslation(
     article: NewsArticleEntity,
+    sourceLocale: TranslationLocale,
   ): NewsArticleTranslationEntity {
     const translation = article.translations.find(
-      (item) => item.locale === LocaleCode.Vietnamese,
+      (item) => item.locale === this.toLocaleCode(sourceLocale),
     );
 
     if (
@@ -221,7 +229,7 @@ export class TranslationsService {
       !translation.summary?.trim() ||
       !translation.contentHtml?.trim()
     ) {
-      throw new BadRequestException(INCOMPLETE_VIETNAMESE_ARTICLE);
+      throw new BadRequestException(INCOMPLETE_SOURCE_ARTICLE);
     }
 
     return translation;
@@ -231,8 +239,7 @@ export class TranslationsService {
     article: NewsArticleEntity,
     locale: TranslationTargetLocale,
   ): Promise<NewsArticleTranslationEntity> {
-    const localeCode =
-      locale === 'en' ? LocaleCode.English : LocaleCode.Chinese;
+    const localeCode = this.toLocaleCode(locale);
     const existing = article.translations.find(
       (translation) => translation.locale === localeCode,
     );
@@ -347,8 +354,7 @@ export class TranslationsService {
     translatedTitle: string,
     ignoredTranslationId?: number,
   ): Promise<string> {
-    const localeCode =
-      locale === 'en' ? LocaleCode.English : LocaleCode.Chinese;
+    const localeCode = this.toLocaleCode(locale);
     const baseSlug =
       this.slugifyTranslatedTitle(translatedTitle) ||
       `translated-${locale}-${articleId}`;
@@ -409,7 +415,7 @@ export class TranslationsService {
     skipped: boolean,
   ): TranslateArticleResultDto {
     return {
-      locale: translation.locale === LocaleCode.English ? 'en' : 'zh',
+      locale: translation.locale,
       status: translation.translationStatus,
       skipped,
       ...(skipped ? { reason: 'Bản dịch đã được chỉnh sửa thủ công' } : {}),
@@ -422,5 +428,15 @@ export class TranslationsService {
       thumbnailAltText: translation.thumbnailAltText,
       translationError: translation.translationError,
     };
+  }
+
+  private toLocaleCode(locale: TranslationLocale): LocaleCode {
+    return locale as LocaleCode;
+  }
+
+  private getLocaleLabel(locale: TranslationLocale): string {
+    if (locale === 'vi') return 'Tiếng Việt';
+    if (locale === 'en') return 'English';
+    return '中文';
   }
 }

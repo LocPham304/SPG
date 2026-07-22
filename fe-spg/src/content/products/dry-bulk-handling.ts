@@ -40,55 +40,260 @@ function asset(file: string, en: string, vi: string, zh: string): GalleryAsset {
 
 const galleryAssets: Record<DryBulkSectionId, readonly GalleryAsset[]> = {
   "port-portal-crane": [
-    asset("3342a75ed56be700aec700fff1351606.gif", "Automatic portal crane", "Cẩu chân đế tự động", "自动化门机"),
-    asset("7944e491f330f09056626d8dcc7a61b9_lp.jpg", "Fujian Jiangyin Port - 40T43M portal crane", "Cẩu chân đế 40T43M tại Cảng Giang Âm, Phúc Kiến", "福建江阴港-40T43M门机"),
-    asset("7ddbc3f321cf7d5a6abf27139d484492_lp.jpg", "Jiangxi Zhangshugang - 25T25M portal crane", "Cẩu chân đế 25T25M tại Cảng Chương Thụ, Giang Tây", "江西樟树港-25T25M门机"),
-    asset("4e555637187070aa673240814bac12e7_lp.jpg", "Jiangsu Yangzhou Port - 40T40M portal crane", "Cẩu chân đế 40T40M tại Cảng Dương Châu, Giang Tô", "江苏扬州港-40T40M门机"),
-    asset("63945706d6c79b2703eb303995cea398_lp.jpg", "Russia Vladivostok - 60T45M portal crane", "Cẩu chân đế 60T45M tại Vladivostok, Nga", "俄罗斯海参崴-60T45M门机"),
-    asset("2168d86c21587ba4d950b98a84ac3b8b_lp.jpg", "Jiangsu Zhenjiang Port - 40T40M portal crane", "Cẩu chân đế 40T40M tại Cảng Trấn Giang, Giang Tô", "江苏镇江港-40T40M门机"),
-    asset("08aa27ea475dcbbaf51687216dc1e48d_lp.jpg", "Qingdao Port Datang - 40T40M portal crane", "Cẩu chân đế 40T40M tại Đại Đường, Cảng Thanh Đảo", "青岛港大唐-40T40M门机"),
-    asset("33761b62910b20238320256ca3098837_lp.jpg", "Qingdao Port Dongfen - 40T40M portal crane", "Cẩu chân đế 40T40M tại Dongfen, Cảng Thanh Đảo", "青岛港董分-40T40M门机"),
-    asset("64bbdad5c0ab1eba2f9419732c40142d_lp.jpg", "Qingdao Port Dongjiakou Huaneng - 40T40M portal crane", "Cẩu chân đế 40T40M tại Huaneng Dongjiakou, Cảng Thanh Đảo", "青岛港董家口华能-40T40M门机"),
-    asset("b22a26a2b3b55c9d3253aa3d7a268974_lp.jpg", "Qingdao Port Xilian - 40T43M portal crane", "Cẩu chân đế 40T43M tại Xilian, Cảng Thanh Đảo", "青岛港西联-40T43M门机"),
-    asset("e61f19ee7bbdee5ca59c07a19334ca66_lp.jpg", "Qingdao Port Dagang - 45T40M portal crane", "Cẩu chân đế 45T40M tại Dagang, Cảng Thanh Đảo", "青岛港大港-45T40M门机"),
-    asset("0fc117591f1df320b564b18807e31aad_lp.jpg", "Qingdao Port Xilian - 40T43M portal crane", "Cẩu chân đế 40T43M tại Xilian, Cảng Thanh Đảo", "青岛港西联-40T43M门机"),
-    asset("8e39b6891662d820106816e77ee18d2f_lp.jpg", "Tianjin Yuanhang - 40T45M portal crane", "Cẩu chân đế 40T45M tại Yuanhang, Thiên Tân", "天津远航-40T45M门机"),
-    asset("82637bb82632b997eec8a832ef8ba69a_lp.jpg", "Tianjin Coal Terminal - 40T45M portal crane", "Cẩu chân đế 40T45M tại Bến than Thiên Tân", "天津煤码头-40T45M门机"),
-    asset("c6edad351aec31e5bdcc170b04d6a220_lp.jpg", "Tianjin Port - 25T35M portal crane", "Cẩu chân đế 25T35M tại Cảng Thiên Tân", "天津港-25T35M门机"),
+    asset(
+      "3342a75ed56be700aec700fff1351606.gif",
+      "Automatic portal crane",
+      "Cẩu chân đế tự động",
+      "自动化门机",
+    ),
+    asset(
+      "7944e491f330f09056626d8dcc7a61b9_lp.jpg",
+      "Fujian Jiangyin Port - 40T43M portal crane",
+      "Cẩu chân đế 40T43M tại Cảng Giang Âm, Phúc Kiến",
+      "福建江阴港-40T43M门机",
+    ),
+    asset(
+      "7ddbc3f321cf7d5a6abf27139d484492_lp.jpg",
+      "Jiangxi Zhangshugang - 25T25M portal crane",
+      "Cẩu chân đế 25T25M tại Cảng Chương Thụ, Giang Tây",
+      "江西樟树港-25T25M门机",
+    ),
+    asset(
+      "4e555637187070aa673240814bac12e7_lp.jpg",
+      "Jiangsu Yangzhou Port - 40T40M portal crane",
+      "Cẩu chân đế 40T40M tại Cảng Dương Châu, Giang Tô",
+      "江苏扬州港-40T40M门机",
+    ),
+    asset(
+      "63945706d6c79b2703eb303995cea398_lp.jpg",
+      "Russia Vladivostok - 60T45M portal crane",
+      "Cẩu chân đế 60T45M tại Vladivostok, Nga",
+      "俄罗斯海参崴-60T45M门机",
+    ),
+    asset(
+      "2168d86c21587ba4d950b98a84ac3b8b_lp.jpg",
+      "Jiangsu Zhenjiang Port - 40T40M portal crane",
+      "Cẩu chân đế 40T40M tại Cảng Trấn Giang, Giang Tô",
+      "江苏镇江港-40T40M门机",
+    ),
+    asset(
+      "08aa27ea475dcbbaf51687216dc1e48d_lp.jpg",
+      "Qingdao Port Datang - 40T40M portal crane",
+      "Cẩu chân đế 40T40M tại Đại Đường, Cảng Thanh Đảo",
+      "青岛港大唐-40T40M门机",
+    ),
+    asset(
+      "33761b62910b20238320256ca3098837_lp.jpg",
+      "Qingdao Port Dongfen - 40T40M portal crane",
+      "Cẩu chân đế 40T40M tại Dongfen, Cảng Thanh Đảo",
+      "青岛港董分-40T40M门机",
+    ),
+    asset(
+      "64bbdad5c0ab1eba2f9419732c40142d_lp.jpg",
+      "Qingdao Port Dongjiakou Huaneng - 40T40M portal crane",
+      "Cẩu chân đế 40T40M tại Huaneng Dongjiakou, Cảng Thanh Đảo",
+      "青岛港董家口华能-40T40M门机",
+    ),
+    asset(
+      "b22a26a2b3b55c9d3253aa3d7a268974_lp.jpg",
+      "Qingdao Port Xilian - 40T43M portal crane",
+      "Cẩu chân đế 40T43M tại Xilian, Cảng Thanh Đảo",
+      "青岛港西联-40T43M门机",
+    ),
+    asset(
+      "e61f19ee7bbdee5ca59c07a19334ca66_lp.jpg",
+      "Qingdao Port Dagang - 45T40M portal crane",
+      "Cẩu chân đế 45T40M tại Dagang, Cảng Thanh Đảo",
+      "青岛港大港-45T40M门机",
+    ),
+    asset(
+      "0fc117591f1df320b564b18807e31aad_lp.jpg",
+      "Qingdao Port Xilian - 40T43M portal crane",
+      "Cẩu chân đế 40T43M tại Xilian, Cảng Thanh Đảo",
+      "青岛港西联-40T43M门机",
+    ),
+    asset(
+      "8e39b6891662d820106816e77ee18d2f_lp.jpg",
+      "Tianjin Yuanhang - 40T45M portal crane",
+      "Cẩu chân đế 40T45M tại Yuanhang, Thiên Tân",
+      "天津远航-40T45M门机",
+    ),
+    asset(
+      "82637bb82632b997eec8a832ef8ba69a_lp.jpg",
+      "Tianjin Coal Terminal - 40T45M portal crane",
+      "Cẩu chân đế 40T45M tại Bến than Thiên Tân",
+      "天津煤码头-40T45M门机",
+    ),
+    asset(
+      "c6edad351aec31e5bdcc170b04d6a220_lp.jpg",
+      "Tianjin Port - 25T35M portal crane",
+      "Cẩu chân đế 25T35M tại Cảng Thiên Tân",
+      "天津港-25T35M门机",
+    ),
   ],
   "ship-loader-unloader": [
-    asset("d21ea94b2793ab2c2b8e96ea83ad548f_lp.jpg", "Qingdao Port Dong Mine 200,000-ton wharf - ship loader", "Máy xếp hàng lên tàu tại bến 200.000 tấn Dong Mine, Cảng Thanh Đảo", "青岛港董矿20万吨码头-装船机"),
-    asset("61cd3199a9f5c392d1bd3a710e9a2875_lp.jpg", "Qingdao Port Dong Mine 400,000-ton wharf - bridge grab ship unloader", "Máy dỡ tàu gầu ngoạm kiểu cầu tại bến 400.000 tấn Dong Mine, Cảng Thanh Đảo", "青岛港董矿40万吨码头-桥式抓斗卸船机"),
+    asset(
+      "d21ea94b2793ab2c2b8e96ea83ad548f_lp.jpg",
+      "Qingdao Port Dong Mine 200,000-ton wharf - ship loader",
+      "Máy xếp hàng lên tàu tại bến 200.000 tấn Dong Mine, Cảng Thanh Đảo",
+      "青岛港董矿20万吨码头-装船机",
+    ),
+    asset(
+      "61cd3199a9f5c392d1bd3a710e9a2875_lp.jpg",
+      "Qingdao Port Dong Mine 400,000-ton wharf - bridge grab ship unloader",
+      "Máy dỡ tàu gầu ngoạm kiểu cầu tại bến 400.000 tấn Dong Mine, Cảng Thanh Đảo",
+      "青岛港董矿40万吨码头-桥式抓斗卸船机",
+    ),
   ],
   "stacker-reclaimer": [
-    asset("26d59c1719e95a3687904be3a6bb7a2d.gif", "Stacker-reclaimer", "Máy đánh đống/lấy liệu", "堆取料机"),
-    asset("a75400de2286cc8373d6385625343a3f_lp.jpg", "China's first environmental protection solution for converting coke bulk cargo to containers", "Giải pháp môi trường đầu tiên tại Trung Quốc chuyển than cốc rời sang container", "国内首创焦炭散货改集装箱（散改集）工艺系统环保解决方案"),
-    asset("a5559ad7dc0d117d375ddca40894f16d_lp.jpg", "Rizhao Port", "Cảng Nhật Chiếu", "日照港"),
-    asset("868659aaa1b77ba0b98ef481eba0c85a_lp.jpg", "Rizhao Port", "Cảng Nhật Chiếu", "日照港"),
-    asset("89245a51f05d6ecf46e071266d99e5b0_lp.jpg", "Rizhao Port", "Cảng Nhật Chiếu", "日照港"),
-    asset("afe7a15b8e9cb77883df0f1789e419b4_lp.jpg", "Rizhao Port Shijiu area - 12000t/h stacker-reclaimer intelligent O&M system", "Hệ thống vận hành và bảo trì cảm nhận thông minh máy đánh đống/lấy liệu 12.000 tấn/giờ tại khu Shijiu, Cảng Nhật Chiếu", "日照港石臼港区-12000t/h堆取料机智慧感知运维系统"),
+    asset(
+      "26d59c1719e95a3687904be3a6bb7a2d.gif",
+      "Stacker-reclaimer",
+      "Máy đánh đống/lấy liệu",
+      "堆取料机",
+    ),
+    asset(
+      "a75400de2286cc8373d6385625343a3f_lp.jpg",
+      "China's first environmental protection solution for converting coke bulk cargo to containers",
+      "Giải pháp môi trường đầu tiên tại Trung Quốc chuyển than cốc rời sang container",
+      "国内首创焦炭散货改集装箱（散改集）工艺系统环保解决方案",
+    ),
+    asset(
+      "a5559ad7dc0d117d375ddca40894f16d_lp.jpg",
+      "Rizhao Port",
+      "Cảng Nhật Chiếu",
+      "日照港",
+    ),
+    asset(
+      "868659aaa1b77ba0b98ef481eba0c85a_lp.jpg",
+      "Rizhao Port",
+      "Cảng Nhật Chiếu",
+      "日照港",
+    ),
+    asset(
+      "89245a51f05d6ecf46e071266d99e5b0_lp.jpg",
+      "Rizhao Port",
+      "Cảng Nhật Chiếu",
+      "日照港",
+    ),
+    asset(
+      "afe7a15b8e9cb77883df0f1789e419b4_lp.jpg",
+      "Rizhao Port Shijiu area - 12000t/h stacker-reclaimer intelligent O&M system",
+      "Hệ thống vận hành và bảo trì cảm nhận thông minh máy đánh đống/lấy liệu 12.000 tấn/giờ tại khu Shijiu, Cảng Nhật Chiếu",
+      "日照港石臼港区-12000t/h堆取料机智慧感知运维系统",
+    ),
   ],
   "belt-conveyor": [
-    asset("08e9b86832ed43b56dc35d9234e89ed0_lp.jpg", "Huaneng Rizhao Power Plant - China's largest-diameter coal conveying pipe belt conveyor", "Băng tải ống vận chuyển than có đường kính lớn nhất Trung Quốc tại Nhà máy điện Huaneng Nhật Chiếu", "华能日照电厂-国内最大管径输煤通道管带机"),
-    asset("c6702c427ceb74811ae1d674f54fa808_lp.jpg", "Hainan Jinhai Pulp & Paper - belt conveyor", "Băng tải tại Nhà máy Bột giấy & Giấy Jinhai Hải Nam", "海南金海浆纸-皮带机"),
-    asset("4da545195b4bb4c35851dde57fbc68b2_lp.jpg", "Guinea State Power Investment - belt conveyor", "Băng tải tại dự án SPIC Guinea", "几内亚国电投-皮带机"),
-    asset("5aa572fafa93182eac7f1dfc93bbc4a7_lp.jpg", "Guangxi Fangchenggang steel base - belt conveyor", "Băng tải tại khu liên hợp thép Phòng Thành Cảng, Quảng Tây", "广西防城港-钢铁基地皮带机"),
-    asset("91bd899b6b33e3eafd6afdf1ac8d71f6_lp.jpg", "Hainan Jinhai Pulp & Paper - belt conveyor", "Băng tải tại Nhà máy Bột giấy & Giấy Jinhai Hải Nam", "海南金海浆纸-皮带机"),
-    asset("dddae6df83fb7324ea3fcde4ba890d88_lp.jpg", "Rizhao Port - southern area process system", "Hệ thống quy trình khu phía Nam, Cảng Nhật Chiếu", "日照港-南区流程化"),
-    asset("2ec602128ca491dfa4e13829b0463455_lp.jpg", "Guinea - belt conveyor", "Băng tải tại Guinea", "几内亚-皮带机"),
-    asset("52254d4758684fede96eecc1d6baddbc_lp.jpg", "Lannan Berth 11 - belt conveyor", "Băng tải tại bến số 11 Lannan", "岚南11泊-皮带机"),
-    asset("6834f638eb149ae0f9574b4a3e15139e_lp.jpg", "Rizhao Lanshan Port - China's largest-capacity ore pipe belt conveyor", "Băng tải ống quặng có công suất lớn nhất Trung Quốc tại Cảng Lanshan, Nhật Chiếu", "日照岚山港-国内最大运量矿石输送管带机"),
-    asset("f76ca08f1c6603819a3d550f6361f70f_lp.jpg", "Rizhao Port - southern area process system", "Hệ thống quy trình khu phía Nam, Cảng Nhật Chiếu", "日照港-南区流程化"),
-    asset("e0abd4fe95edeb4495910f3ead61dc33_lp.jpg", "Rizhao Lanshan Port - China's largest-capacity ore pipe belt conveyor", "Băng tải ống quặng có công suất lớn nhất Trung Quốc tại Cảng Lanshan, Nhật Chiếu", "日照岚山港-国内最大运量矿石输送管带机"),
-    asset("529936f534583a96bc33092f9a5487ec_lp.jpg", "Rizhao Lanshan Port - China's largest-capacity ore pipe belt conveyor", "Băng tải ống quặng có công suất lớn nhất Trung Quốc tại Cảng Lanshan, Nhật Chiếu", "日照岚山港-国内最大运量矿石输送管带机"),
-    asset("1afca5fcef3aa4d2f1408497e95ab8ed_lp.jpg", "Rizhao Port - southern area process system", "Hệ thống quy trình khu phía Nam, Cảng Nhật Chiếu", "日照港-南区流程化"),
-    asset("1e2e18afc508f0e53293117118924281_lp.jpg", "Huaneng Rizhao Power Plant - China's largest-diameter coal conveying pipe belt conveyor", "Băng tải ống vận chuyển than có đường kính lớn nhất Trung Quốc tại Nhà máy điện Huaneng Nhật Chiếu", "华能日照电厂-国内最大管径输煤通道管带机"),
-    asset("7cd1fb93c315e78c8f1c1ada876190f0_lp.jpg", "Indonesia Sugang - coal belt conveyor", "Băng tải than tại Sugang, Indonesia", "印尼苏钢-输煤皮带机"),
-    asset("a4ceeeaf29fc6ff45594232ad5cdd8d6_lp.jpg", "Zhenjiang Golden Port - belt conveyor", "Băng tải tại Golden Port, Trấn Giang", "镇江金港-皮带机"),
-    asset("1a9f762f2406f9be9cd376146fa53b71_lp.jpg", "Vietnam RDF pipe belt conveyor", "Băng tải ống RDF tại Việt Nam", "越南RDF管带机"),
+    asset(
+      "08e9b86832ed43b56dc35d9234e89ed0_lp.jpg",
+      "Huaneng Rizhao Power Plant - China's largest-diameter coal conveying pipe belt conveyor",
+      "Băng tải ống vận chuyển than có đường kính lớn nhất Trung Quốc tại Nhà máy điện Huaneng Nhật Chiếu",
+      "华能日照电厂-国内最大管径输煤通道管带机",
+    ),
+    asset(
+      "c6702c427ceb74811ae1d674f54fa808_lp.jpg",
+      "Hainan Jinhai Pulp & Paper - belt conveyor",
+      "Băng tải tại Nhà máy Bột giấy & Giấy Jinhai Hải Nam",
+      "海南金海浆纸-皮带机",
+    ),
+    asset(
+      "4da545195b4bb4c35851dde57fbc68b2_lp.jpg",
+      "Guinea State Power Investment - belt conveyor",
+      "Băng tải tại dự án SPIC Guinea",
+      "几内亚国电投-皮带机",
+    ),
+    asset(
+      "5aa572fafa93182eac7f1dfc93bbc4a7_lp.jpg",
+      "Guangxi Fangchenggang steel base - belt conveyor",
+      "Băng tải tại khu liên hợp thép Phòng Thành Cảng, Quảng Tây",
+      "广西防城港-钢铁基地皮带机",
+    ),
+    asset(
+      "91bd899b6b33e3eafd6afdf1ac8d71f6_lp.jpg",
+      "Hainan Jinhai Pulp & Paper - belt conveyor",
+      "Băng tải tại Nhà máy Bột giấy & Giấy Jinhai Hải Nam",
+      "海南金海浆纸-皮带机",
+    ),
+    asset(
+      "dddae6df83fb7324ea3fcde4ba890d88_lp.jpg",
+      "Rizhao Port - southern area process system",
+      "Hệ thống quy trình khu phía Nam, Cảng Nhật Chiếu",
+      "日照港-南区流程化",
+    ),
+    asset(
+      "2ec602128ca491dfa4e13829b0463455_lp.jpg",
+      "Guinea - belt conveyor",
+      "Băng tải tại Guinea",
+      "几内亚-皮带机",
+    ),
+    asset(
+      "52254d4758684fede96eecc1d6baddbc_lp.jpg",
+      "Lannan Berth 11 - belt conveyor",
+      "Băng tải tại bến số 11 Lannan",
+      "岚南11泊-皮带机",
+    ),
+    asset(
+      "6834f638eb149ae0f9574b4a3e15139e_lp.jpg",
+      "Rizhao Lanshan Port - China's largest-capacity ore pipe belt conveyor",
+      "Băng tải ống quặng có công suất lớn nhất Trung Quốc tại Cảng Lanshan, Nhật Chiếu",
+      "日照岚山港-国内最大运量矿石输送管带机",
+    ),
+    asset(
+      "f76ca08f1c6603819a3d550f6361f70f_lp.jpg",
+      "Rizhao Port - southern area process system",
+      "Hệ thống quy trình khu phía Nam, Cảng Nhật Chiếu",
+      "日照港-南区流程化",
+    ),
+    asset(
+      "e0abd4fe95edeb4495910f3ead61dc33_lp.jpg",
+      "Rizhao Lanshan Port - China's largest-capacity ore pipe belt conveyor",
+      "Băng tải ống quặng có công suất lớn nhất Trung Quốc tại Cảng Lanshan, Nhật Chiếu",
+      "日照岚山港-国内最大运量矿石输送管带机",
+    ),
+    asset(
+      "529936f534583a96bc33092f9a5487ec_lp.jpg",
+      "Rizhao Lanshan Port - China's largest-capacity ore pipe belt conveyor",
+      "Băng tải ống quặng có công suất lớn nhất Trung Quốc tại Cảng Lanshan, Nhật Chiếu",
+      "日照岚山港-国内最大运量矿石输送管带机",
+    ),
+    asset(
+      "1afca5fcef3aa4d2f1408497e95ab8ed_lp.jpg",
+      "Rizhao Port - southern area process system",
+      "Hệ thống quy trình khu phía Nam, Cảng Nhật Chiếu",
+      "日照港-南区流程化",
+    ),
+    asset(
+      "1e2e18afc508f0e53293117118924281_lp.jpg",
+      "Huaneng Rizhao Power Plant - China's largest-diameter coal conveying pipe belt conveyor",
+      "Băng tải ống vận chuyển than có đường kính lớn nhất Trung Quốc tại Nhà máy điện Huaneng Nhật Chiếu",
+      "华能日照电厂-国内最大管径输煤通道管带机",
+    ),
+    asset(
+      "7cd1fb93c315e78c8f1c1ada876190f0_lp.jpg",
+      "Indonesia Sugang - coal belt conveyor",
+      "Băng tải than tại Sugang, Indonesia",
+      "印尼苏钢-输煤皮带机",
+    ),
+    asset(
+      "a4ceeeaf29fc6ff45594232ad5cdd8d6_lp.jpg",
+      "Zhenjiang Golden Port - belt conveyor",
+      "Băng tải tại Golden Port, Trấn Giang",
+      "镇江金港-皮带机",
+    ),
+    asset(
+      "1a9f762f2406f9be9cd376146fa53b71_lp.jpg",
+      "Vietnam RDF pipe belt conveyor",
+      "Băng tải ống RDF tại Việt Nam",
+      "越南RDF管带机",
+    ),
   ],
   "barge-platform": [
-    asset("ada86a3e82708ed50daca57074234d51_lp.jpg", "Guinea - offshore floating transshipment platform", "Sàn trung chuyển nổi ngoài khơi tại Guinea", "几内亚-海上浮式转运平台"),
+    asset(
+      "ada86a3e82708ed50daca57074234d51_lp.jpg",
+      "Guinea - offshore floating transshipment platform",
+      "Sàn trung chuyển nổi ngoài khơi tại Guinea",
+      "几内亚-海上浮式转运平台",
+    ),
   ],
 };
 
@@ -123,13 +328,13 @@ const sectionText: Record<
     "belt-conveyor": {
       title: "Ordinary trough belt conveyor, round pipe belt conveyor",
       paragraphs: [
-        "As a bulk material conveying system service provider integrating design, R&D, manufacturing, installation and operation and maintenance, Luhai Equipment Group has more than 40 years of experience in the operation and maintenance of bulk material conveying equipment, has a full range of bulk material conveying equipment production capacity, and has built nearly 300 kilometers of various belt conveyors such as belt conveyors and pipe belt conveyors. Among them, the ore conveyor belt machine in Lanshan Port Area of Rizhao Port and the pipe belt machine in the coal conveying channel of Rizhao Huaneng Power Plant won two \"Best Pipe Belt Machines\", and the process project in the southern area of Shijiu Port Area of Rizhao Port was listed by the State Council as a smart green demonstration project for bulk dry bulk cargo.",
+        'As a bulk material conveying system service provider integrating design, R&D, manufacturing, installation and operation and maintenance, Luhai Equipment Group has more than 40 years of experience in the operation and maintenance of bulk material conveying equipment, has a full range of bulk material conveying equipment production capacity, and has built nearly 300 kilometers of various belt conveyors such as belt conveyors and pipe belt conveyors. Among them, the ore conveyor belt machine in Lanshan Port Area of Rizhao Port and the pipe belt machine in the coal conveying channel of Rizhao Huaneng Power Plant won two "Best Pipe Belt Machines", and the process project in the southern area of Shijiu Port Area of Rizhao Port was listed by the State Council as a smart green demonstration project for bulk dry bulk cargo.',
       ],
     },
     "barge-platform": {
       title: "Bulk material transportation barge platform",
       paragraphs: [
-        "The Land and Sea Equipment Group integrates the \"three-in-one\" technical assembly of various advantageous products, port machinery, ships and belt conveyors, and conducts in-depth research on the structure, materials, stability and bearing capacity of the transfer platform. The new high-efficiency offshore material handling platform will improve loading and unloading and transshipment efficiency, reduce costs and accident risks, and promote sustainable development, and has been applied in Guinea, Africa.",
+        'The Land and Sea Equipment Group integrates the "three-in-one" technical assembly of various advantageous products, port machinery, ships and belt conveyors, and conducts in-depth research on the structure, materials, stability and bearing capacity of the transfer platform. The new high-efficiency offshore material handling platform will improve loading and unloading and transshipment efficiency, reduce costs and accident risks, and promote sustainable development, and has been applied in Guinea, Africa.',
       ],
     },
   },
@@ -215,18 +420,22 @@ const localeCopy: Record<
 > = {
   en: {
     title: "Dry bulk handling systems",
-    description: "Integrated dry bulk loading, unloading and conveying solutions from Shandong Port Equipment Group.",
+    description:
+      "Integrated dry bulk loading, unloading and conveying solutions from Shandong Port Equipment Group.",
     productsLabel: "Products & Solutions",
-    intro: "Provide a full range of customized products such as automatic bridge grab ship unloader, automatic continuous bulk cargo ship loader, automated port loading and unloading portal crane, automatic stacker/reclaimer, belt conveyor, round pipe belt conveyor, automatic loading building/transfer machine room and supporting equipment, and support digital material yard, automatic collision avoidance, one-key automatic anchoring, intelligent status management system, intelligent lubrication, automatic fire protection, intelligent lightning protection, unmanned inspection and intelligent lighting and other functions according to demand.",
+    intro:
+      "Provide a full range of customized products such as automatic bridge grab ship unloader, automatic continuous bulk cargo ship loader, automated port loading and unloading portal crane, automatic stacker/reclaimer, belt conveyor, round pipe belt conveyor, automatic loading building/transfer machine room and supporting equipment, and support digital material yard, automatic collision avoidance, one-key automatic anchoring, intelligent status management system, intelligent lubrication, automatic fire protection, intelligent lightning protection, unmanned inspection and intelligent lighting and other functions according to demand.",
     previousLabel: "Previous image",
     nextLabel: "Next image",
     galleryLabel: "Product gallery",
   },
   vi: {
     title: "Hệ thống xếp dỡ hàng rời khô",
-    description: "Giải pháp tích hợp xếp dỡ và vận chuyển hàng rời khô của Tập đoàn Thiết bị Cảng Sơn Đông.",
+    description:
+      "Giải pháp tích hợp xếp dỡ và vận chuyển hàng rời khô của Tập đoàn Thiết bị Cảng Sealand Sơn Đông.",
     productsLabel: "Sản phẩm & Giải pháp",
-    intro: "Cung cấp đầy đủ các sản phẩm tùy chỉnh gồm máy dỡ tàu gầu ngoạm kiểu cầu tự động, máy xếp hàng rời liên tục lên tàu, cẩu chân đế xếp dỡ cảng tự động, máy đánh đống/lấy liệu tự động, băng tải, băng tải ống tròn, nhà xếp hàng tự động, phòng máy trung chuyển và thiết bị phụ trợ; đồng thời tích hợp theo nhu cầu bãi vật liệu số, chống va chạm tự động, neo tự động một chạm, quản lý trạng thái thông minh, bôi trơn và chữa cháy tự động, chống sét thông minh, kiểm tra không người lái và chiếu sáng thông minh.",
+    intro:
+      "Cung cấp đầy đủ các sản phẩm tùy chỉnh gồm máy dỡ tàu gầu ngoạm kiểu cầu tự động, máy xếp hàng rời liên tục lên tàu, cẩu chân đế xếp dỡ cảng tự động, máy đánh đống/lấy liệu tự động, băng tải, băng tải ống tròn, nhà xếp hàng tự động, phòng máy trung chuyển và thiết bị phụ trợ; đồng thời tích hợp theo nhu cầu bãi vật liệu số, chống va chạm tự động, neo tự động một chạm, quản lý trạng thái thông minh, bôi trơn và chữa cháy tự động, chống sét thông minh, kiểm tra không người lái và chiếu sáng thông minh.",
     previousLabel: "Ảnh trước",
     nextLabel: "Ảnh tiếp theo",
     galleryLabel: "Thư viện sản phẩm",
@@ -235,7 +444,8 @@ const localeCopy: Record<
     title: "干散货装卸输送系统解决方案",
     description: "山东港口装备集团干散货装卸与输送一体化解决方案。",
     productsLabel: "产品与解决方案",
-    intro: "提供自动化桥式抓斗卸船机、自动化连续散货装船机、自动化港口装卸门座起重机、自动化堆/取料机、皮带输送机、圆管带式输送机、自动化装车楼/转载机房及配套设备等全系列定制产品，并根据需求配套数字料场、自动防撞、一键自动锚定、智能状态管理系统、智能润滑、自动消防、智能防雷、无人巡检及智慧照明等功能。",
+    intro:
+      "提供自动化桥式抓斗卸船机、自动化连续散货装船机、自动化港口装卸门座起重机、自动化堆/取料机、皮带输送机、圆管带式输送机、自动化装车楼/转载机房及配套设备等全系列定制产品，并根据需求配套数字料场、自动防撞、一键自动锚定、智能状态管理系统、智能润滑、自动消防、智能防雷、无人巡检及智慧照明等功能。",
     previousLabel: "上一张图片",
     nextLabel: "下一张图片",
     galleryLabel: "产品图片",
@@ -266,5 +476,4 @@ export function getDryBulkHandlingContent(
   };
 }
 
-export const dryBulkOverviewImage =
-  `${assetRoot}/e39958bd2b5b894f442d90cb8a9417cd.jpg`;
+export const dryBulkOverviewImage = `${assetRoot}/e39958bd2b5b894f442d90cb8a9417cd.jpg`;

@@ -144,7 +144,7 @@ const content: Record<AppLocale, ResearchLayoutContent> = {
     title: "Đổi mới công nghệ",
     pageTitle: "Bố trí R&D",
     description:
-      "Mạng lưới nghiên cứu phát triển và các nền tảng đổi mới của Tập đoàn Thiết bị Cảng Sơn Đông.",
+      "Mạng lưới nghiên cứu phát triển và các nền tảng đổi mới của Tập đoàn Thiết bị Cảng Sealand Sơn Đông.",
     sections: [
       {
         id: "high-tech-enterprises",

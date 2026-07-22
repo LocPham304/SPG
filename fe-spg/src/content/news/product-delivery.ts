@@ -23,7 +23,8 @@ export type ProductDeliveryContent = {
 const englishArticles: readonly ProductDeliverySourceArticle[] = [
   {
     date: "2024-03-25",
-    title: 'For the fifth time! 10 door machines and 12 funnels smoothly "moved"~',
+    title:
+      'For the fifth time! 10 door machines and 12 funnels smoothly "moved"~',
     description:
       "A few days ago, with the last gantry crane going ashore steadily, the 10 gantry cranes and 12 funnel relocation projects of Shandong Port Equipment Group Luhai Heavy Industry Company were successfully completed. This is the establishment of Shandong Port, the company successfully implemented the fifth large-scale relocation project, the first time to carry out 10 sets of 700 tons of self-weight portal crane MC type 50t relocation operations, the use of sea barges to successfully complete the sea operations from Shandong Port Rizhao Port Shijiu Port to Lanshan Port Area across the county sea, this way is not only safer and more stable, but also greatly improved the relocation efficiency.",
     href: "https://mp.weixin.qq.com/s/Ox3oZUtGvNt4W8z83QEPmA",
@@ -60,7 +61,8 @@ const englishArticles: readonly ProductDeliverySourceArticle[] = [
   },
   {
     date: "2024-02-24",
-    title: "10 sets of 25-ton flatbed trucks were delivered in a centralized manner!",
+    title:
+      "10 sets of 25-ton flatbed trucks were delivered in a centralized manner!",
     description:
       "Recently, 10 sets of 25-ton easy-to-board automatic tilting hydraulic lifting pallet flatbed truck project developed by Shandong Port Equipment Group Luhai Heavy Industry Company Engineering Machinery Factory was successfully completed and delivered to users",
     href: "https://mp.weixin.qq.com/s/tQ4IFZiR-Em6o15AbNZGqg",
@@ -72,14 +74,15 @@ const englishArticles: readonly ProductDeliverySourceArticle[] = [
     title:
       "Forge ahead on a new journey and make contributions to a new era|Shandong Port Equipment Group has another new bridge crane ashore!",
     description:
-      'On January 11, the first bridge crane of Qingdao Port in Shandong Port this year, No. 91 remotely controlled bridge crane, was successfully landed at the QQCTU-U1 berth, creating new highlights, setting new benchmarks and achieving new breakthroughs for Shandong Port Qingdao Port in the process of "accelerating the construction of a world-class port group, \'double first-class\' construction, and building core competitive advantages".',
+      "On January 11, the first bridge crane of Qingdao Port in Shandong Port this year, No. 91 remotely controlled bridge crane, was successfully landed at the QQCTU-U1 berth, creating new highlights, setting new benchmarks and achieving new breakthroughs for Shandong Port Qingdao Port in the process of \"accelerating the construction of a world-class port group, 'double first-class' construction, and building core competitive advantages\".",
     href: "https://mp.weixin.qq.com/s/2rcO4b0c_ZOptKNPBQu3uQ",
     image:
       "/images/uploads/allimg/20240327/ecd644ac829253fe85d27cb4e86a04ff.jpg",
   },
   {
     date: "2023-12-24",
-    title: "67 units! Shangang equipment overseas market to achieve a new breakthrough~",
+    title:
+      "67 units! Shangang equipment overseas market to achieve a new breakthrough~",
     description:
       "Recently, Shandong Port Equipment Group Luhai Heavy Industry Co., Ltd. won the bid for 67 slurry pumps of a mining company in the Middle East in the first half of 2023. This is the largest order business in the history of the equipment group's slurry pump products, and it is also another breakthrough in the equipment group's transformation of overseas market development with technological innovation.",
     href: "https://mp.weixin.qq.com/s/KtgbpJKN7XLPTLw9Q19Y_w",
@@ -87,7 +90,8 @@ const englishArticles: readonly ProductDeliverySourceArticle[] = [
   },
   {
     date: "2023-12-24",
-    title: "Shandong Port Equipment Group launched new energy flow machine products",
+    title:
+      "Shandong Port Equipment Group launched new energy flow machine products",
     description:
       'On October 27, Shandong Port Equipment Group and Logistics Group held the "Delivery Ceremony of the First Batch of Three Electric Stackers", and the business integration bore fruit. The batch of equipment developed by Qingdao Equipment Co., Ltd. was delivered to users in only three months, and was highly recognized by users, and the follow-up two sides will carry out in-depth cooperation around electric reach stacker products.',
     href: "https://mp.weixin.qq.com/s/-_uoJAwEPlKky6lbuq7Zcg",
@@ -107,13 +111,13 @@ const englishArticles: readonly ProductDeliverySourceArticle[] = [
 const vietnameseArticles: readonly ProductDeliverySourceArticle[] = [
   {
     ...englishArticles[0],
-    title: 'Lần thứ năm! 10 cần trục cổng và 12 phễu đã “chuyển nhà” thuận lợi',
+    title: "Lần thứ năm! 10 cần trục cổng và 12 phễu đã “chuyển nhà” thuận lợi",
     description:
       "Với việc cần trục cổng cuối cùng được đưa lên bờ an toàn, dự án di dời 10 cần trục cổng và 12 phễu của Công ty Công nghiệp nặng Lục Hải đã hoàn thành. Đây là dự án di dời quy mô lớn thứ năm của công ty và là lần đầu tiên thực hiện di dời 10 cần trục cổng MC 50 tấn, tự trọng 700 tấn. Sà lan biển đã vận chuyển thiết bị từ khu cảng Thạch Cữu thuộc Cảng Nhật Chiếu đến khu cảng Lam Sơn, giúp hoạt động an toàn, ổn định và hiệu quả hơn đáng kể.",
   },
   {
     ...englishArticles[1],
-    title: 'Thiết bị “xanh” góp phần xây dựng bến cảng gần như “không carbon”',
+    title: "Thiết bị “xanh” góp phần xây dựng bến cảng gần như “không carbon”",
     description:
       "Công ty Thiết bị Thanh Đảo đã hoàn thành trước hai tháng việc chuyển đổi hai xe nâng container của Tập đoàn Logistics Cảng Sơn Đông và Cảng Thanh Đảo từ nhiên liệu sang điện. Đến nay công ty đã chuyển đổi thành công sáu xe nâng, hai máy xúc và hai xe nâng container, hình thành năng lực nâng cấp thiết bị xếp dỡ chạy nhiên liệu thành thiết bị điện, hỗ trợ xây dựng bến cảng và ga gần như không phát thải carbon.",
   },
@@ -139,26 +143,28 @@ const vietnameseArticles: readonly ProductDeliverySourceArticle[] = [
   {
     ...englishArticles[5],
     title:
-      "Tiến bước trên hành trình mới, đóng góp cho thời đại mới: thêm một cần trục giàn của Tập đoàn Thiết bị Cảng Sơn Đông cập bờ",
+      "Tiến bước trên hành trình mới, đóng góp cho thời đại mới: thêm một cần trục giàn của Tập đoàn Thiết bị Cảng Sealand Sơn Đông cập bờ",
     description:
       "Ngày 11 tháng 1, cần trục giàn điều khiển từ xa số 91, cần trục đầu tiên trong năm của Cảng Thanh Đảo, đã cập bến QQCTU-U1 thành công. Thiết bị tạo thêm điểm nhấn, chuẩn mực và bước đột phá mới trong quá trình đẩy nhanh xây dựng cụm cảng đẳng cấp thế giới, phát triển “hai đẳng cấp hàng đầu” và hình thành lợi thế cạnh tranh cốt lõi.",
   },
   {
     ...englishArticles[6],
-    title: "67 thiết bị: thị trường nước ngoài của thiết bị Sơn Cảng đạt đột phá mới",
+    title:
+      "67 thiết bị: thị trường nước ngoài của thiết bị Sơn Cảng đạt đột phá mới",
     description:
       "Công ty Công nghiệp nặng Lục Hải trúng thầu 67 máy bơm bùn cho một doanh nghiệp khai khoáng tại Trung Đông. Đây là đơn hàng máy bơm bùn lớn nhất trong lịch sử tập đoàn và là bước đột phá mới tại thị trường nước ngoài nhờ đổi mới công nghệ.",
   },
   {
     ...englishArticles[7],
-    title: "Tập đoàn Thiết bị Cảng Sơn Đông ra mắt dòng máy xếp dỡ năng lượng mới",
+    title:
+      "Tập đoàn Thiết bị Cảng Sealand Sơn Đông ra mắt dòng máy xếp dỡ năng lượng mới",
     description:
-      "Ngày 27 tháng 10, Tập đoàn Thiết bị Cảng Sơn Đông và Tập đoàn Logistics tổ chức lễ bàn giao lô ba xe nâng container chạy điện đầu tiên. Thiết bị do Công ty Thiết bị Thanh Đảo phát triển và bàn giao chỉ trong ba tháng, nhận được sự đánh giá cao từ khách hàng. Hai bên sẽ tiếp tục hợp tác sâu rộng về các dòng xe nâng container chạy điện.",
+      "Ngày 27 tháng 10, Tập đoàn Thiết bị Cảng Sealand Sơn Đông và Tập đoàn Logistics tổ chức lễ bàn giao lô ba xe nâng container chạy điện đầu tiên. Thiết bị do Công ty Thiết bị Thanh Đảo phát triển và bàn giao chỉ trong ba tháng, nhận được sự đánh giá cao từ khách hàng. Hai bên sẽ tiếp tục hợp tác sâu rộng về các dòng xe nâng container chạy điện.",
   },
   {
     ...englishArticles[8],
     title:
-      'Bùng cháy với “lõi” Trung Quốc: cần trục cổng do Thiết bị Sơn Cảng phát triển vươn ra nước ngoài',
+      "Bùng cháy với “lõi” Trung Quốc: cần trục cổng do Thiết bị Sơn Cảng phát triển vươn ra nước ngoài",
     description:
       "Ngày 16 tháng 10, hai chiếc đầu tiên trong số bốn cần trục cổng DBM6045 do Công ty Thiết bị Thanh Đảo phát triển cho khách hàng Nga đã được xếp lên tàu và khởi hành thành công.",
   },
@@ -260,7 +266,7 @@ const detailCopy: Record<
       "The completed work strengthens practical operating capacity and creates a solid basis for continued cooperation with customers and partners.",
   },
   vi: {
-    author: "Tập đoàn Thiết bị Cảng Sơn Đông",
+    author: "Tập đoàn Thiết bị Cảng Sealand Sơn Đông",
     categoryName: "Bàn giao sản phẩm",
     introduction: (title) =>
       `Dự án được giới thiệu trong bài “${title}” đã đạt cột mốc bàn giao quan trọng sau quá trình phối hợp sản xuất, kiểm tra và chuẩn bị.`,

@@ -2,7 +2,8 @@ export const ARTICLE_TRANSLATION_PROVIDER = Symbol(
   'ARTICLE_TRANSLATION_PROVIDER',
 );
 
-export type TranslationTargetLocale = 'en' | 'zh';
+export type TranslationLocale = 'vi' | 'en' | 'zh';
+export type TranslationTargetLocale = TranslationLocale;
 
 export type TranslationArticleContent = {
   title: string;
@@ -14,7 +15,7 @@ export type TranslationArticleContent = {
 };
 
 export type TranslationProviderResult = Record<
-  TranslationTargetLocale,
+  TranslationLocale,
   TranslationArticleContent
 >;
 
@@ -23,6 +24,7 @@ export interface TranslationProvider {
   isConfigured(): boolean;
   translateArticle(
     source: TranslationArticleContent,
+    sourceLocale: TranslationLocale,
     targets: TranslationTargetLocale[],
   ): Promise<Partial<TranslationProviderResult>>;
 }

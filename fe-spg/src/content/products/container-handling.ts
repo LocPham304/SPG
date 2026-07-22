@@ -176,30 +176,113 @@ const galleryAssets: Record<
     },
   ],
   "portal-crane": [
-    ["7944e491f330f09056626d8dcc7a61b9_lp.jpg", "Fujian Jiangyin Port - 40T43M portal crane", "Cẩu chân đế 40T43M tại Cảng Giang Âm, Phúc Kiến", "福建江阴港-40T43M门机"],
-    ["7ddbc3f321cf7d5a6abf27139d484492_lp.jpg", "Jiangxi Zhangshugang - 25T25M portal crane", "Cẩu chân đế 25T25M tại Cảng Chương Thụ, Giang Tây", "江西樟树港-25T25M门机"],
-    ["4e555637187070aa673240814bac12e7_lp.jpg", "Jiangsu Yangzhou Port - 40T40M portal crane", "Cẩu chân đế 40T40M tại Cảng Dương Châu, Giang Tô", "江苏扬州港-40T40M门机"],
-    ["63945706d6c79b2703eb303995cea398_lp.jpg", "Russia Vladivostok - 60T45M portal crane", "Cẩu chân đế 60T45M tại Vladivostok, Nga", "俄罗斯海参崴-60T45M门机"],
-    ["2168d86c21587ba4d950b98a84ac3b8b_lp.jpg", "Jiangsu Zhenjiang Port - 40T40T portal crane", "Cẩu chân đế 40T40T tại Cảng Trấn Giang, Giang Tô", "江苏镇江港-40T40T门机"],
-    ["3342a75ed56be700aec700fff1351606.gif", "Automatic portal crane", "Cẩu chân đế tự động", "自动化门机"],
-    ["08aa27ea475dcbbaf51687216dc1e48d_lp.jpg", "Qingdao Port Datang - 40T40M portal crane", "Cẩu chân đế 40T40M tại Đại Đường, Cảng Thanh Đảo", "青岛港大唐-40T40M门机"],
-    ["33761b62910b20238320256ca3098837_lp.jpg", "Qingdao Port Dongfen - 40T40M portal crane", "Cẩu chân đế 40T40M tại Dongfen, Cảng Thanh Đảo", "青岛港董分-40T40M门机"],
-    ["64bbdad5c0ab1eba2f9419732c40142d_lp.jpg", "Qingdao Port Dongjiakou Huaneng - 40T40M portal crane", "Cẩu chân đế 40T40M tại Huaneng Dongjiakou, Cảng Thanh Đảo", "青岛港董家口华能-40T40M门机"],
-    ["b22a26a2b3b55c9d3253aa3d7a268974_lp.jpg", "Taixing Xinpu Chemical - 25T38M portal crane", "Cẩu chân đế 25T38M tại Xinpu Chemical, Thái Hưng", "泰兴新浦化学-25T38M门机"],
-    ["17a6bae22260c9dc8daf463ed545f8f9_lp.jpg", "Qingdao Port Dagang - 45T40M portal crane", "Cẩu chân đế 45T40M tại Dagang, Cảng Thanh Đảo", "青岛港大港-45T40M门机"],
-    ["0fc117591f1df320b564b18807e31aad_lp.jpg", "Qingdao Port Xilian - 40T43M portal crane", "Cẩu chân đế 40T43M tại Xilian, Cảng Thanh Đảo", "青岛港西联-40T43M门机"],
-    ["8e39b6891662d820106816e77ee18d2f_lp.jpg", "Tianjin Yuanhang - 40T45M portal crane", "Cẩu chân đế 40T45M tại Yuanhang, Thiên Tân", "天津远航-40T45M门机"],
-    ["82637bb82632b997eec8a832ef8ba69a_lp.jpg", "Tianjin Coal Terminal - 40T45M portal crane", "Cẩu chân đế 40T45M tại Bến than Thiên Tân", "天津煤码头-40T45M门机"],
-    ["c6edad351aec31e5bdcc170b04d6a220_lp.jpg", "Tianjin Port - 25T35M portal crane", "Cẩu chân đế 25T35M tại Cảng Thiên Tân", "天津港-25T35M门机"],
+    [
+      "7944e491f330f09056626d8dcc7a61b9_lp.jpg",
+      "Fujian Jiangyin Port - 40T43M portal crane",
+      "Cẩu chân đế 40T43M tại Cảng Giang Âm, Phúc Kiến",
+      "福建江阴港-40T43M门机",
+    ],
+    [
+      "7ddbc3f321cf7d5a6abf27139d484492_lp.jpg",
+      "Jiangxi Zhangshugang - 25T25M portal crane",
+      "Cẩu chân đế 25T25M tại Cảng Chương Thụ, Giang Tây",
+      "江西樟树港-25T25M门机",
+    ],
+    [
+      "4e555637187070aa673240814bac12e7_lp.jpg",
+      "Jiangsu Yangzhou Port - 40T40M portal crane",
+      "Cẩu chân đế 40T40M tại Cảng Dương Châu, Giang Tô",
+      "江苏扬州港-40T40M门机",
+    ],
+    [
+      "63945706d6c79b2703eb303995cea398_lp.jpg",
+      "Russia Vladivostok - 60T45M portal crane",
+      "Cẩu chân đế 60T45M tại Vladivostok, Nga",
+      "俄罗斯海参崴-60T45M门机",
+    ],
+    [
+      "2168d86c21587ba4d950b98a84ac3b8b_lp.jpg",
+      "Jiangsu Zhenjiang Port - 40T40T portal crane",
+      "Cẩu chân đế 40T40T tại Cảng Trấn Giang, Giang Tô",
+      "江苏镇江港-40T40T门机",
+    ],
+    [
+      "3342a75ed56be700aec700fff1351606.gif",
+      "Automatic portal crane",
+      "Cẩu chân đế tự động",
+      "自动化门机",
+    ],
+    [
+      "08aa27ea475dcbbaf51687216dc1e48d_lp.jpg",
+      "Qingdao Port Datang - 40T40M portal crane",
+      "Cẩu chân đế 40T40M tại Đại Đường, Cảng Thanh Đảo",
+      "青岛港大唐-40T40M门机",
+    ],
+    [
+      "33761b62910b20238320256ca3098837_lp.jpg",
+      "Qingdao Port Dongfen - 40T40M portal crane",
+      "Cẩu chân đế 40T40M tại Dongfen, Cảng Thanh Đảo",
+      "青岛港董分-40T40M门机",
+    ],
+    [
+      "64bbdad5c0ab1eba2f9419732c40142d_lp.jpg",
+      "Qingdao Port Dongjiakou Huaneng - 40T40M portal crane",
+      "Cẩu chân đế 40T40M tại Huaneng Dongjiakou, Cảng Thanh Đảo",
+      "青岛港董家口华能-40T40M门机",
+    ],
+    [
+      "b22a26a2b3b55c9d3253aa3d7a268974_lp.jpg",
+      "Taixing Xinpu Chemical - 25T38M portal crane",
+      "Cẩu chân đế 25T38M tại Xinpu Chemical, Thái Hưng",
+      "泰兴新浦化学-25T38M门机",
+    ],
+    [
+      "17a6bae22260c9dc8daf463ed545f8f9_lp.jpg",
+      "Qingdao Port Dagang - 45T40M portal crane",
+      "Cẩu chân đế 45T40M tại Dagang, Cảng Thanh Đảo",
+      "青岛港大港-45T40M门机",
+    ],
+    [
+      "0fc117591f1df320b564b18807e31aad_lp.jpg",
+      "Qingdao Port Xilian - 40T43M portal crane",
+      "Cẩu chân đế 40T43M tại Xilian, Cảng Thanh Đảo",
+      "青岛港西联-40T43M门机",
+    ],
+    [
+      "8e39b6891662d820106816e77ee18d2f_lp.jpg",
+      "Tianjin Yuanhang - 40T45M portal crane",
+      "Cẩu chân đế 40T45M tại Yuanhang, Thiên Tân",
+      "天津远航-40T45M门机",
+    ],
+    [
+      "82637bb82632b997eec8a832ef8ba69a_lp.jpg",
+      "Tianjin Coal Terminal - 40T45M portal crane",
+      "Cẩu chân đế 40T45M tại Bến than Thiên Tân",
+      "天津煤码头-40T45M门机",
+    ],
+    [
+      "c6edad351aec31e5bdcc170b04d6a220_lp.jpg",
+      "Tianjin Port - 25T35M portal crane",
+      "Cẩu chân đế 25T35M tại Cảng Thiên Tân",
+      "天津港-25T35M门机",
+    ],
   ].map(([file, en, vi, zh]) => ({ file, caption: { en, vi, zh } })),
   aigt: [
     {
       file: "4ff480c8ca26ed3b510811b2ec978704_lp.jpg",
-      caption: { en: "Qingdao Port QQCTU-AIGT", vi: "AIGT QQCTU tại Cảng Thanh Đảo", zh: "青岛港QQCTU-AIGT" },
+      caption: {
+        en: "Qingdao Port QQCTU-AIGT",
+        vi: "AIGT QQCTU tại Cảng Thanh Đảo",
+        zh: "青岛港QQCTU-AIGT",
+      },
     },
     {
       file: "65818e1932015a2086e7f311cbd6a275_lp.jpg",
-      caption: { en: "Qingdao Port QQCTU-AIGT", vi: "AIGT QQCTU tại Cảng Thanh Đảo", zh: "青岛港QQCTU-AIGT" },
+      caption: {
+        en: "Qingdao Port QQCTU-AIGT",
+        vi: "AIGT QQCTU tại Cảng Thanh Đảo",
+        zh: "青岛港QQCTU-AIGT",
+      },
     },
   ],
 };
@@ -336,23 +419,30 @@ const sectionText: Record<
   },
 };
 
-const localeCopy: Record<AppLocale, Omit<ContainerHandlingContent, "sections">> = {
+const localeCopy: Record<
+  AppLocale,
+  Omit<ContainerHandlingContent, "sections">
+> = {
   en: {
     title: "Container handling systems",
-    description: "Customized container handling equipment and intelligent terminal solutions from Shandong Port Equipment Group.",
+    description:
+      "Customized container handling equipment and intelligent terminal solutions from Shandong Port Equipment Group.",
     productsLabel: "Products & Solutions",
     introLabel: "Solution Introduction",
-    intro: "Provide a full range of customized products such as automatic bridge grab ship unloader, automatic continuous bulk cargo ship loader, automated port loading and unloading portal crane, automatic stacker/reclaimer, belt conveyor, round pipe belt conveyor, automatic loading building/transfer machine room and supporting equipment, and support digital material yard, automatic collision avoidance, one-key automatic anchoring, intelligent status management system, intelligent lubrication, automatic fire protection, intelligent lightning protection, unmanned inspection and intelligent lighting and other functions according to demand.",
+    intro:
+      "Provide a full range of customized products such as automatic bridge grab ship unloader, automatic continuous bulk cargo ship loader, automated port loading and unloading portal crane, automatic stacker/reclaimer, belt conveyor, round pipe belt conveyor, automatic loading building/transfer machine room and supporting equipment, and support digital material yard, automatic collision avoidance, one-key automatic anchoring, intelligent status management system, intelligent lubrication, automatic fire protection, intelligent lightning protection, unmanned inspection and intelligent lighting and other functions according to demand.",
     previousLabel: "Previous image",
     nextLabel: "Next image",
     galleryLabel: "Product gallery",
   },
   vi: {
     title: "Hệ thống xếp dỡ container",
-    description: "Thiết bị xếp dỡ container tùy chỉnh và giải pháp cảng thông minh của Tập đoàn Thiết bị Cảng Sơn Đông.",
+    description:
+      "Thiết bị xếp dỡ container tùy chỉnh và giải pháp cảng thông minh của Tập đoàn Thiết bị Cảng Sealand Sơn Đông.",
     productsLabel: "Sản phẩm & Giải pháp",
     introLabel: "Giới thiệu giải pháp",
-    intro: "Cung cấp đầy đủ các sản phẩm tùy chỉnh gồm cẩu giàn container bờ bán tự động điều khiển từ xa, cẩu giàn container chạy ray, bánh lốp và đường sắt tự động, cẩu chân đế đa dụng tự động, xe vận chuyển container không người lái; đồng thời tích hợp theo nhu cầu các chức năng quét biên dạng tàu, nhận dạng biển số và số container, định vị xe, chống nâng nhầm xe, chống va chạm tự động, neo tự động một chạm, quản lý trạng thái thông minh, bôi trơn và chữa cháy tự động, chống sét thông minh, cổng kiểm soát và chiếu sáng thông minh.",
+    intro:
+      "Cung cấp đầy đủ các sản phẩm tùy chỉnh gồm cẩu giàn container bờ bán tự động điều khiển từ xa, cẩu giàn container chạy ray, bánh lốp và đường sắt tự động, cẩu chân đế đa dụng tự động, xe vận chuyển container không người lái; đồng thời tích hợp theo nhu cầu các chức năng quét biên dạng tàu, nhận dạng biển số và số container, định vị xe, chống nâng nhầm xe, chống va chạm tự động, neo tự động một chạm, quản lý trạng thái thông minh, bôi trơn và chữa cháy tự động, chống sét thông minh, cổng kiểm soát và chiếu sáng thông minh.",
     previousLabel: "Ảnh trước",
     nextLabel: "Ảnh tiếp theo",
     galleryLabel: "Thư viện sản phẩm",
@@ -362,7 +452,8 @@ const localeCopy: Record<AppLocale, Omit<ContainerHandlingContent, "sections">> 
     description: "山东港口装备集团集装箱装卸设备与智慧码头解决方案。",
     productsLabel: "产品与解决方案",
     introLabel: "解决方案介绍",
-    intro: "提供远控半自动化岸边集装箱起重机、自动化轨道式/轮胎式/铁路专用集装箱门式起重机、自动化多用途门座式起重机、无人集卡等全系列定制化产品，并根据需求配套船型扫描、车号/箱号识别、集卡定位、集卡防吊起、自动防撞、一键自动锚定、智能状态管理系统、智能润滑、自动消防、智能防雷、智慧闸口及智慧照明等功能。",
+    intro:
+      "提供远控半自动化岸边集装箱起重机、自动化轨道式/轮胎式/铁路专用集装箱门式起重机、自动化多用途门座式起重机、无人集卡等全系列定制化产品，并根据需求配套船型扫描、车号/箱号识别、集卡定位、集卡防吊起、自动防撞、一键自动锚定、智能状态管理系统、智能润滑、自动消防、智能防雷、智慧闸口及智慧照明等功能。",
     previousLabel: "上一张图片",
     nextLabel: "下一张图片",
     galleryLabel: "产品图片",
@@ -393,5 +484,4 @@ export function getContainerHandlingContent(
   };
 }
 
-export const containerHandlingOverviewImage =
-  `${assetRoot}/ac1354015046793c99baba02c284a04a.jpg`;
+export const containerHandlingOverviewImage = `${assetRoot}/ac1354015046793c99baba02c284a04a.jpg`;

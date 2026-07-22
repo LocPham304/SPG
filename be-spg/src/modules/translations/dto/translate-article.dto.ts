@@ -2,17 +2,18 @@ import {
   ArrayNotEmpty,
   ArrayUnique,
   IsBoolean,
-  IsIn,
+  IsEnum,
   IsOptional,
 } from 'class-validator';
 
 import type { TranslationTargetLocale } from '../providers/translation-provider.interface';
+import { LocaleCode } from '../../categories/enums/locale-code.enum';
 
 export class TranslateArticleDto {
   @IsOptional()
   @ArrayNotEmpty()
   @ArrayUnique()
-  @IsIn(['en', 'zh'], { each: true })
+  @IsEnum(LocaleCode, { each: true })
   targets?: TranslationTargetLocale[];
 
   @IsOptional()

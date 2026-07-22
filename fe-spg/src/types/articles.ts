@@ -46,6 +46,7 @@ export type ArticleListItem = {
   publishedBy: ArticleUser | null;
   slug?: string | null;
   sourceUrl: string | null;
+  sourceLocale: LocaleCode;
   sourceVersion: number;
   status: ArticleStatus;
   summary: string | null;
@@ -113,6 +114,7 @@ export type GetAdminArticlesParams = {
 export type CreateArticleData = {
   categoryId: number;
   isFeatured?: boolean;
+  sourceLocale: LocaleCode;
   sourceUrl?: string;
   status: "draft" | "published";
   thumbnailId?: number;
@@ -121,6 +123,7 @@ export type CreateArticleData = {
 
 export type UpdateArticleData = {
   categoryId?: number;
+  sourceLocale?: LocaleCode;
   sourceUrl?: string | null;
   thumbnailId?: number | null;
   translations?: ArticleTranslationInput[];
@@ -128,12 +131,12 @@ export type UpdateArticleData = {
 
 export type TranslateArticleData = {
   overwrite?: boolean;
-  targets?: Array<Extract<LocaleCode, "en" | "zh">>;
+  targets?: LocaleCode[];
 };
 
 export type TranslateArticleResult = {
   contentHtml: string | null;
-  locale: Extract<LocaleCode, "en" | "zh">;
+  locale: LocaleCode;
   reason?: string;
   seoDescription: string | null;
   seoTitle: string | null;
@@ -150,5 +153,5 @@ export type TranslateArticleResponse = {
   articleId: number;
   provider: "gemini";
   results: TranslateArticleResult[];
-  sourceLocale: "vi";
+  sourceLocale: LocaleCode;
 };

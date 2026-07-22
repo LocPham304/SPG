@@ -1,22 +1,23 @@
 import type { AppLocale } from "@/i18n/routing";
-import type {
-  DetailedNewsDateListItem,
-  NewsDateListItem,
-} from "@/types/news";
+import type { DetailedNewsDateListItem, NewsDateListItem } from "@/types/news";
 
 const englishNotices: readonly NewsDateListItem[] = [
   {
     id: "en-notice-352",
     publishedAt: "2024-01-26",
-    title: "Announcement on the 2023 annual summary evaluation and commendation objects",
-    summary: "Announcement on the 2023 annual summary evaluation and commendation objects",
+    title:
+      "Announcement on the 2023 annual summary evaluation and commendation objects",
+    summary:
+      "Announcement on the 2023 annual summary evaluation and commendation objects",
     href: "http://en.spe.cn/html/notices/352.html",
   },
   {
     id: "en-notice-351",
     publishedAt: "2023-12-05",
-    title: 'In 2023, the "Most Beautiful Family in Shandong Port" will be announced',
-    summary: 'In 2023, the "Most Beautiful Family in Shandong Port" will be announced',
+    title:
+      'In 2023, the "Most Beautiful Family in Shandong Port" will be announced',
+    summary:
+      'In 2023, the "Most Beautiful Family in Shandong Port" will be announced',
     href: "http://en.spe.cn/html/notices/351.html",
   },
   {
@@ -34,14 +35,16 @@ const vietnameseNotices: readonly NewsDateListItem[] = [
   {
     ...englishNotices[0],
     id: "vi-notice-352",
-    title: "Thông báo kết quả tổng kết, đánh giá và các đối tượng được khen thưởng năm 2023",
-    summary: "Thông báo kết quả tổng kết, đánh giá và các đối tượng được khen thưởng năm 2023",
+    title:
+      "Thông báo kết quả tổng kết, đánh giá và các đối tượng được khen thưởng năm 2023",
+    summary:
+      "Thông báo kết quả tổng kết, đánh giá và các đối tượng được khen thưởng năm 2023",
   },
   {
     ...englishNotices[1],
     id: "vi-notice-351",
-    title: 'Công bố danh hiệu “Gia đình đẹp nhất Cảng Sơn Đông” năm 2023',
-    summary: 'Công bố danh hiệu “Gia đình đẹp nhất Cảng Sơn Đông” năm 2023',
+    title: "Công bố danh hiệu “Gia đình đẹp nhất Cảng Sơn Đông” năm 2023",
+    summary: "Công bố danh hiệu “Gia đình đẹp nhất Cảng Sơn Đông” năm 2023",
   },
   {
     ...englishNotices[2],
@@ -92,7 +95,7 @@ const detailCopy: Record<
       "Readers are advised to check the published information carefully and follow the stated requirements or feedback process within the applicable period.",
   },
   vi: {
-    author: "Tập đoàn Thiết bị Cảng Sơn Đông",
+    author: "Tập đoàn Thiết bị Cảng Sealand Sơn Đông",
     categoryName: "Thông báo",
     purpose: (title) =>
       `Thông báo này cung cấp thông tin chính thức về “${title}” để các tổ chức, cá nhân liên quan kịp thời theo dõi và đối chiếu.`,
@@ -119,23 +122,17 @@ function addNoticeDetails(
     ...notice,
     author: copy.author,
     categoryName: copy.categoryName,
-    content: [
-      notice.summary,
-      copy.purpose(notice.title),
-      copy.instructions,
-    ],
+    content: [notice.summary, copy.purpose(notice.title), copy.instructions],
     sourceUrl: notice.href,
   }));
 }
 
-const noticesByLocale: Record<
-  AppLocale,
-  readonly DetailedNewsDateListItem[]
-> = {
-  en: addNoticeDetails("en", englishNotices),
-  vi: addNoticeDetails("vi", vietnameseNotices),
-  zh: addNoticeDetails("zh", chineseNotices),
-};
+const noticesByLocale: Record<AppLocale, readonly DetailedNewsDateListItem[]> =
+  {
+    en: addNoticeDetails("en", englishNotices),
+    vi: addNoticeDetails("vi", vietnameseNotices),
+    zh: addNoticeDetails("zh", chineseNotices),
+  };
 
 export function getNotices(locale: AppLocale) {
   return noticesByLocale[locale].slice(0, 3);

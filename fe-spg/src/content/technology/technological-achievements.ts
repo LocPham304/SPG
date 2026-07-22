@@ -145,7 +145,8 @@ const content: Record<AppLocale, TechnologyAchievementsContent> = {
           },
           {
             title: "Mayor's Cup Certificate",
-            description: "Recognized achievement in industrial design innovation",
+            description:
+              "Recognized achievement in industrial design innovation",
           },
         ]),
       },
@@ -155,7 +156,7 @@ const content: Record<AppLocale, TechnologyAchievementsContent> = {
     title: "Đổi mới công nghệ",
     pageTitle: "Thành tựu công nghệ",
     description:
-      "Các giải thưởng khoa học công nghệ và thành tựu đổi mới được công nhận của Tập đoàn Thiết bị Cảng Sơn Đông.",
+      "Các giải thưởng khoa học công nghệ và thành tựu đổi mới được công nhận của Tập đoàn Thiết bị Cảng Sealand Sơn Đông.",
     groups: [
       {
         id: "association-awards",
@@ -218,14 +219,12 @@ const content: Record<AppLocale, TechnologyAchievementsContent> = {
         title: "Giải thưởng Khoa học và Công nghệ của Chính phủ",
         items: createItems(governmentImages, [
           {
-            title:
-              "Giải Ba Tiến bộ Khoa học và Công nghệ Thanh Đảo năm 2021",
+            title: "Giải Ba Tiến bộ Khoa học và Công nghệ Thanh Đảo năm 2021",
             description:
               "Nghiên cứu và ứng dụng cần trục bánh lốp thuần điện thông minh, tự động hoàn toàn tại Cảng Thanh Đảo",
           },
           {
-            title:
-              "Giải Ba Tiến bộ Khoa học và Công nghệ Sơn Đông năm 2021",
+            title: "Giải Ba Tiến bộ Khoa học và Công nghệ Sơn Đông năm 2021",
             description:
               "Nghiên cứu và ứng dụng hệ thống nâng cầu bờ siêu cao, tải trọng lớn, tự nâng",
           },
@@ -248,7 +247,8 @@ const content: Record<AppLocale, TechnologyAchievementsContent> = {
           },
           {
             title: "Chứng nhận Cúp Thị trưởng",
-            description: "Thành tựu được công nhận về đổi mới thiết kế công nghiệp",
+            description:
+              "Thành tựu được công nhận về đổi mới thiết kế công nghiệp",
           },
         ]),
       },
