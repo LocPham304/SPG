@@ -278,6 +278,11 @@
   gap: clamp(24px, 1.56vw, 30px);
 }
 
+.networkGridItem,
+.networkCard {
+  height: 100%;
+}
+
 .networkCard {
   min-height: clamp(230px, 17.71vw, 340px);
   padding: clamp(30px, 2.08vw, 40px);
@@ -290,6 +295,12 @@
 .networkDetails {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 18px 34px;
+}
+
+@media (width >= 1024px) {
+  .networkCard h3 {
+    min-height: 2.9em;
+  }
 }
 
 @media (width <= 1023px) {

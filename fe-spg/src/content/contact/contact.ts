@@ -2,7 +2,6 @@ import type { AppLocale } from "@/i18n/routing";
 
 export type ContactDetails = {
   address: string;
-  businessPhone?: string;
   company: string;
   fax?: string;
   mailbox?: string;
@@ -71,10 +70,10 @@ const content: Record<AppLocale, ContactContent> = {
     },
     primary: {
       company: "Shandong Port Equipment Group Co., Ltd",
-      address: "No. 877, Lijiang West Road, Huangdao District, Qingdao City",
-      phone: "0532-82983063",
-      mailbox: "zbjt@spe.cn",
-      businessPhone: "0532-82985191",
+      address:
+        "1B đường D13, Khu Biệt Thự Tân Cảng, Phường Thạnh Mỹ Tây, TP Hồ Chí Minh",
+      phone: "+84772066685",
+      mailbox: "neocegc@spe.cn",
     },
     network: [
       {
@@ -142,12 +141,11 @@ const content: Record<AppLocale, ContactContent> = {
       postcode: "Mã bưu chính",
     },
     primary: {
-      company: "Tập đoàn Thiết bị Sealand Sơn Đông",
+      company: "Tập đoàn Thiết bị Cảng Sealand Sơn Đông",
       address:
         "1B đường D13, Khu Biệt Thự Tân Cảng, Phường Thạnh Mỹ Tây, TP Hồ Chí Minh",
       phone: "+84772066685",
       mailbox: "neocegc@spe.cn",
-      businessPhone: "+84772066685",
     },
     network: [
       {
@@ -214,10 +212,10 @@ const content: Record<AppLocale, ContactContent> = {
     },
     primary: {
       company: "山东陆海装备集团有限公司",
-      address: "青岛市黄岛区漓江西路877号",
-      phone: "0532-82983063",
-      mailbox: "sealand@sd-port.com",
-      businessPhone: "0532-82985606",
+      address:
+        "1B đường D13, Khu Biệt Thự Tân Cảng, Phường Thạnh Mỹ Tây, TP Hồ Chí Minh",
+      phone: "+84772066685",
+      mailbox: "neocegc@spe.cn",
     },
     network: [
       {

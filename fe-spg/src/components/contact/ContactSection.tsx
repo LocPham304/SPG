@@ -126,7 +126,7 @@ export function ContactSection({
                 items={[
                   { label: labels.address, value: primary.address },
                   {
-                    label: labels.phone,
+                    label: labels.businessPhone,
                     type: "phone",
                     value: primary.phone,
                   },
@@ -134,11 +134,6 @@ export function ContactSection({
                     label: labels.mailbox,
                     type: "email",
                     value: primary.mailbox,
-                  },
-                  {
-                    label: labels.businessPhone,
-                    type: "phone",
-                    value: primary.businessPhone,
                   },
                 ]}
               />
@@ -181,6 +176,7 @@ export function ContactSection({
           <div className={styles.networkGrid}>
             {network.map((contact, index) => (
               <ScrollReveal
+                className={styles.networkGridItem}
                 delay={getStaggerDelay(index)}
                 key={contact.company}
                 threshold={0.15}
