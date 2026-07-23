@@ -8,6 +8,7 @@ import { NewsLocaleLinksSync } from "@/components/layout/NewsLocaleLinksContext"
 import { NewsArticleDetail } from "@/components/news/NewsArticleDetail";
 import { NewsPageHero } from "@/components/news/NewsPageHero";
 import { PublicNewsStateSection } from "@/components/news/PublicNewsStateSection";
+import { RelatedNewsSection } from "@/components/news/RelatedNewsSection";
 import {
   defaultLocale,
   isAppLocale,
@@ -28,6 +29,7 @@ import {
   isPublicNewsCategorySlug,
   type PublicNewsCategorySlug,
   type PublicNewsDetail,
+  type PublicNewsItem,
 } from "@/types/public-news";
 
 type PageProps = {
@@ -48,14 +50,17 @@ const categoryTranslationKeys = {
 const detailLabels = {
   en: {
     error: "Unable to load this article. Please try again.",
+    related: "Related articles",
     source: "View original source",
   },
   vi: {
     error: "Không thể tải bài viết. Vui lòng thử lại.",
+    related: "Bài viết liên quan",
     source: "Xem nguồn bài viết",
   },
   zh: {
     error: "无法加载文章，请重试。",
+    related: "相关文章",
     source: "查看原文",
   },
 } as const;
@@ -219,6 +224,22 @@ export default async function NewsArticlePage({ params }: PageProps) {
 
   if (!isArticleInCategory(article, category)) notFound();
 
+  let relatedArticles: PublicNewsItem[] = [];
+
+  try {
+    const relatedResponse = await getPublicNews({
+      category,
+      locale: activeLocale,
+      page: 1,
+      limit: 4,
+    });
+    relatedArticles = relatedResponse.data
+      .filter((item) => item.id !== article.id)
+      .slice(0, 3);
+  } catch (error) {
+    console.error("Unable to load related public news", error);
+  }
+
   const articleHref = `/news/${category}/${article.slug}`;
   const languagePaths = await getArticleLanguagePaths(article);
   const description = article.seoDescription || article.summary;
@@ -254,6 +275,12 @@ export default async function NewsArticlePage({ params }: PageProps) {
         categoryName={categoryTitle}
         locale={activeLocale}
         sourceLabel={detailLabels[activeLocale].source}
+      />
+      <RelatedNewsSection
+        articles={relatedArticles}
+        category={category}
+        locale={activeLocale}
+        title={detailLabels[activeLocale].related}
       />
     </>
   );

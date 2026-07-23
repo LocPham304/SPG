@@ -52,6 +52,7 @@ type ArticleFormProps = {
 
 type CommonFormErrors = {
   categoryId?: string;
+  publishedAt?: string;
   sourceUrl?: string;
 };
 
@@ -157,6 +158,25 @@ function formatDate(value: string) {
     : dateFormatter.format(date);
 }
 
+function toDateTimeLocalValue(value: string | null) {
+  if (!value) return "";
+
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+
+  const localDate = new Date(
+    date.getTime() - date.getTimezoneOffset() * 60 * 1000,
+  );
+  return localDate.toISOString().slice(0, 16);
+}
+
+function toPublishedAtIso(value: string) {
+  if (!value) return undefined;
+
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? undefined : date.toISOString();
+}
+
 function getCategoryName(category: NewsCategory) {
   return (
     category.translations.find((translation) => translation.locale === "vi")
@@ -223,6 +243,7 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
   const [article, setArticle] = useState<ArticleDetail | null>(null);
   const [categories, setCategories] = useState<NewsCategory[]>([]);
   const [categoryId, setCategoryId] = useState("");
+  const [publishedAt, setPublishedAt] = useState("");
   const [sourceUrl, setSourceUrl] = useState("");
   const [sourceLocale, setSourceLocale] = useState<LocaleCode>("vi");
   const [isFeatured, setIsFeatured] = useState(false);
@@ -287,6 +308,7 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
         setSourceLocale(articleResponse.sourceLocale);
         setActiveLocale(articleResponse.sourceLocale);
         setCategoryId(String(articleResponse.categoryId ?? ""));
+        setPublishedAt(toDateTimeLocalValue(articleResponse.publishedAt));
         setSourceUrl(articleResponse.sourceUrl ?? "");
         setIsFeatured(articleResponse.isFeatured);
 
@@ -393,6 +415,9 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
 
     if (!categoryId) {
       nextCommonErrors.categoryId = "Vui lòng chọn danh mục.";
+    }
+    if (publishedAt && !toPublishedAtIso(publishedAt)) {
+      nextCommonErrors.publishedAt = "Ngày đăng không hợp lệ.";
     }
     if (sourceUrl.trim()) {
       try {
@@ -551,6 +576,7 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
     const requestedStatus =
       submitter?.value === "published" ? "published" : "draft";
     if (!validateForm()) return;
+    const publishedAtIso = toPublishedAtIso(publishedAt);
     setIsSaving(true);
     setApiError("");
     setTranslationNotice(null);
@@ -571,6 +597,7 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
       if (articleId !== undefined) {
         const payload: UpdateArticleData = {
           categoryId: Number(categoryId),
+          ...(publishedAtIso ? { publishedAt: publishedAtIso } : {}),
           sourceLocale,
           sourceUrl: sourceUrl.trim() || null,
           thumbnailId: thumbnail?.id ?? null,
@@ -583,6 +610,7 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
           categoryId: Number(categoryId),
           sourceLocale,
           ...(isAdmin ? { isFeatured } : {}),
+          ...(publishedAtIso ? { publishedAt: publishedAtIso } : {}),
           ...(sourceUrl.trim() ? { sourceUrl: sourceUrl.trim() } : {}),
           status: requestedStatus,
           ...(thumbnail ? { thumbnailId: thumbnail.id } : {}),
@@ -797,30 +825,57 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
                     </div>
                   </div>
                 ) : null}
-                <label>
-                  <span className="mb-2 block text-sm font-semibold text-slate-700">
-                    Source URL
-                    <span className="ml-1 font-normal text-slate-400">
-                      (không bắt buộc)
+                <div className="grid gap-5 md:grid-cols-2">
+                  <label>
+                    <span className="mb-2 block text-sm font-semibold text-slate-700">
+                      Source URL
+                      <span className="ml-1 font-normal text-slate-400">
+                        (không bắt buộc)
+                      </span>
                     </span>
-                  </span>
-                  <input
-                    className={inputClassName}
-                    disabled={isSaving}
-                    maxLength={1000}
-                    onChange={(event) => {
-                      setSourceUrl(event.target.value);
-                      setCommonErrors((current) => ({
-                        ...current,
-                        sourceUrl: undefined,
-                      }));
-                    }}
-                    placeholder="https://..."
-                    type="url"
-                    value={sourceUrl}
-                  />
-                  <FieldError message={commonErrors.sourceUrl} />
-                </label>
+                    <input
+                      className={inputClassName}
+                      disabled={isSaving}
+                      maxLength={1000}
+                      onChange={(event) => {
+                        setSourceUrl(event.target.value);
+                        setCommonErrors((current) => ({
+                          ...current,
+                          sourceUrl: undefined,
+                        }));
+                      }}
+                      placeholder="https://..."
+                      type="url"
+                      value={sourceUrl}
+                    />
+                    <FieldError message={commonErrors.sourceUrl} />
+                  </label>
+                  <label>
+                    <span className="mb-2 block text-sm font-semibold text-slate-700">
+                      Ngày đăng
+                      <span className="ml-1 font-normal text-slate-400">
+                        (không bắt buộc)
+                      </span>
+                    </span>
+                    <input
+                      className={inputClassName}
+                      disabled={isSaving}
+                      onChange={(event) => {
+                        setPublishedAt(event.target.value);
+                        setCommonErrors((current) => ({
+                          ...current,
+                          publishedAt: undefined,
+                        }));
+                      }}
+                      type="datetime-local"
+                      value={publishedAt}
+                    />
+                    <p className="mt-1.5 text-xs text-slate-500">
+                      Dùng để hiển thị và sắp xếp bài viết ngoài website.
+                    </p>
+                    <FieldError message={commonErrors.publishedAt} />
+                  </label>
+                </div>
                 {!isEditing && isAdmin ? (
                   <label className="flex items-center gap-2 text-sm font-semibold text-slate-700">
                     <input
@@ -1022,6 +1077,19 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
                       onChange={(html) =>
                         updateTranslation(activeLocale, "contentHtml", html)
                       }
+                      onImageUploadNotice={(notice) => {
+                        if (notice.tone === "error") {
+                          setTranslationNotice(null);
+                          setApiError(notice.message);
+                          return;
+                        }
+
+                        setApiError("");
+                        setTranslationNotice({
+                          kind: "success",
+                          text: notice.message,
+                        });
+                      }}
                       value={activeTranslation.contentHtml}
                     />
                     <FieldError

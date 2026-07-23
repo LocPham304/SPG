@@ -36,6 +36,9 @@ const MANUAL_EN_SLUG = 'e2e-articles-manual-en';
 const MANUAL_ZH_SLUG = 'e2e-articles-manual-zh';
 const REVIEWED_EN_SLUG = 'e2e-articles-employee-en';
 const INCOMPLETE_SLUG = 'e2e-articles-incomplete';
+const DELETE_SLUG = 'e2e-articles-hard-delete';
+const PUBLICATION_DATE_SLUG = 'e2e-articles-publication-date';
+const INVALID_PUBLICATION_DATE_SLUG = 'e2e-articles-invalid-publication-date';
 const TEST_SLUG_PREFIX = 'e2e-articles-';
 
 function asRecord(value: unknown): Record<string, unknown> {
@@ -741,6 +744,64 @@ describe('Articles API (e2e)', () => {
     expect(typeof body.publishedAt).toBe('string');
   });
 
+  it('allows the author to change the publication date of a published article', async () => {
+    const publishedAt = '2024-03-27T02:30:00.000Z';
+    const createResponse = await request(app.getHttpServer())
+      .post('/api/v1/admin/articles')
+      .set('Authorization', `Bearer ${employeeToken}`)
+      .send({
+        categoryId,
+        title: 'Bài viết kiểm tra ngày đăng',
+        slug: PUBLICATION_DATE_SLUG,
+        summary: 'Tóm tắt bài viết kiểm tra ngày đăng.',
+        contentHtml: '<p>Nội dung bài viết kiểm tra ngày đăng.</p>',
+        status: ArticleStatus.Published,
+      })
+      .expect(201);
+    const articleId = asRecord(createResponse.body as unknown).id as number;
+    articleIds.push(articleId);
+
+    const response = await request(app.getHttpServer())
+      .patch(`/api/v1/admin/articles/${articleId}`)
+      .set('Authorization', `Bearer ${employeeToken}`)
+      .send({ publishedAt })
+      .expect(200);
+
+    expect(
+      new Date(
+        asRecord(response.body as unknown).publishedAt as string,
+      ).toISOString(),
+    ).toBe(publishedAt);
+
+    const storedArticle = await dataSource
+      .getRepository(NewsArticleEntity)
+      .findOneByOrFail({ id: articleId });
+    expect(storedArticle.publishedAt?.toISOString()).toBe(publishedAt);
+  });
+
+  it('rejects an invalid publication date', async () => {
+    const createResponse = await request(app.getHttpServer())
+      .post('/api/v1/admin/articles')
+      .set('Authorization', `Bearer ${employeeToken}`)
+      .send({
+        categoryId,
+        title: 'Bài viết kiểm tra ngày đăng không hợp lệ',
+        slug: INVALID_PUBLICATION_DATE_SLUG,
+        summary: 'Tóm tắt bài viết kiểm tra ngày đăng không hợp lệ.',
+        contentHtml:
+          '<p>Nội dung bài viết kiểm tra ngày đăng không hợp lệ.</p>',
+      })
+      .expect(201);
+    const articleId = asRecord(createResponse.body as unknown).id as number;
+    articleIds.push(articleId);
+
+    await request(app.getHttpServer())
+      .patch(`/api/v1/admin/articles/${articleId}`)
+      .set('Authorization', `Bearer ${employeeToken}`)
+      .send({ publishedAt: 'not-a-date' })
+      .expect(400);
+  });
+
   it('exposes a published article publicly with Vietnamese fallback', async () => {
     const listResponse = await request(app.getHttpServer())
       .get('/api/v1/news')
@@ -830,25 +891,62 @@ describe('Articles API (e2e)', () => {
     expect(asArray(asRecord(response.body as unknown).data)).toHaveLength(0);
   });
 
-  it('soft deletes, excludes from admin list, and restores an article', async () => {
+  it('hard deletes an article and cascades all translations', async () => {
+    const createResponse = await request(app.getHttpServer())
+      .post('/api/v1/admin/articles')
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send({
+        categoryId,
+        title: 'Bài viết kiểm tra xóa cứng',
+        slug: DELETE_SLUG,
+        summary: 'Tóm tắt bài viết kiểm tra xóa cứng.',
+        contentHtml: '<p>Nội dung bài viết kiểm tra xóa cứng.</p>',
+      })
+      .expect(201);
+    const deletedArticleId = asRecord(createResponse.body as unknown)
+      .id as number;
+    articleIds.push(deletedArticleId);
+
+    expect(
+      await dataSource.getRepository(NewsArticleTranslationEntity).count({
+        where: { articleId: deletedArticleId },
+      }),
+    ).toBe(3);
+
     await request(app.getHttpServer())
-      .delete(`/api/v1/admin/articles/${employeeArticleId}`)
+      .delete(`/api/v1/admin/articles/${deletedArticleId}`)
       .set('Authorization', `Bearer ${adminToken}`)
       .expect(204);
-    const listResponse = await request(app.getHttpServer())
-      .get('/api/v1/admin/articles')
-      .query({ search: 'employee E2E' })
-      .set('Authorization', `Bearer ${adminToken}`)
-      .expect(200);
-    expect(asArray(asRecord(listResponse.body as unknown).data)).toHaveLength(
-      0,
-    );
 
-    const restoreResponse = await request(app.getHttpServer())
-      .post(`/api/v1/admin/articles/${employeeArticleId}/restore`)
+    await request(app.getHttpServer())
+      .get(`/api/v1/admin/articles/${deletedArticleId}`)
       .set('Authorization', `Bearer ${adminToken}`)
-      .expect(201);
-    expect(asRecord(restoreResponse.body as unknown).deletedAt).toBeNull();
+      .expect(404);
+
+    expect(
+      await dataSource
+        .getRepository(NewsArticleEntity)
+        .findOneBy({ id: deletedArticleId }),
+    ).toBeNull();
+    expect(
+      await dataSource.getRepository(NewsArticleTranslationEntity).count({
+        where: { articleId: deletedArticleId },
+      }),
+    ).toBe(0);
+
+    const deletionLog = await dataSource
+      .getRepository(ActivityLogEntity)
+      .findOneBy({
+        action: 'article.deleted',
+        entityType: 'news_article',
+        entityId: deletedArticleId,
+      });
+    expect(deletionLog?.changes).toEqual(
+      expect.objectContaining({
+        hardDeleted: true,
+        deletedTranslations: 3,
+      }),
+    );
   });
 
   it('records create, update, publish and lifecycle activity', async () => {
@@ -872,8 +970,6 @@ describe('Articles API (e2e)', () => {
         'article.published',
         'article.hidden',
         'article.featured',
-        'article.deleted',
-        'article.restored',
         'article.auto_translated',
       ]),
     );

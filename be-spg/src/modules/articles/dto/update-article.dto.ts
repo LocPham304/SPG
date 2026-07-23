@@ -2,6 +2,7 @@ import { Transform, Type, type TransformFnParams } from 'class-transformer';
 import {
   ArrayMaxSize,
   IsArray,
+  IsDateString,
   IsEnum,
   IsInt,
   IsOptional,
@@ -97,6 +98,10 @@ export class UpdateArticleDto {
   @IsUrl({ require_protocol: true })
   @MaxLength(1000)
   sourceUrl?: string | null;
+
+  @IsOptional()
+  @IsDateString()
+  publishedAt?: string;
 
   @IsOptional()
   @IsArray()

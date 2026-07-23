@@ -241,7 +241,10 @@ export function HomeNewsClient({
   articles,
   copy,
 }: HomeNewsClientProps) {
-  const [activeCategory, setActiveCategory] = useState(categories[0]?.key);
+  const [activeCategory, setActiveCategory] = useState(
+    categories.find((category) => category.key === "groupNews")?.key ??
+      categories[0]?.key,
+  );
   const tabRefs = useRef<Array<HTMLButtonElement | null>>([]);
   const activeIndex = categories.findIndex(
     (category) => category.key === activeCategory,

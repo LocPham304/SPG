@@ -23,6 +23,7 @@ import {
   Link2,
   List,
   ListOrdered,
+  LoaderCircle,
   Quote,
   Redo2,
   Strikethrough,
@@ -31,6 +32,19 @@ import {
   Unlink,
   type LucideIcon,
 } from "lucide-react";
+import {
+  type ChangeEvent,
+  useCallback,
+  useEffect,
+  useId,
+  useRef,
+  useState,
+} from "react";
+import { createPortal } from "react-dom";
+
+import { ApiError } from "@/lib/api";
+import { uploadMedia } from "@/services/media.service";
+import { MEDIA_MIME_TYPES } from "@/types/media";
 
 import styles from "./RichTextEditor.module.scss";
 
@@ -39,6 +53,10 @@ type RichTextEditorProps = {
   errorId?: string;
   labelId: string;
   onChange: (html: string) => void;
+  onImageUploadNotice?: (notice: {
+    message: string;
+    tone: "error" | "success";
+  }) => void;
   value: string;
 };
 
@@ -47,14 +65,18 @@ type ToolbarButtonProps = {
   disabled?: boolean;
   icon: LucideIcon;
   label: string;
+  loading?: boolean;
   onClick: () => void;
 };
+
+const MAX_CONTENT_IMAGE_SIZE_BYTES = 5 * 1024 * 1024;
 
 function ToolbarButton({
   active = false,
   disabled = false,
   icon: Icon,
   label,
+  loading = false,
   onClick,
 }: ToolbarButtonProps) {
   return (
@@ -71,8 +93,151 @@ function ToolbarButton({
       title={label}
       type="button"
     >
-      <Icon aria-hidden="true" size={17} />
+      <Icon
+        aria-hidden="true"
+        className={loading ? "animate-spin" : undefined}
+        size={17}
+      />
     </button>
+  );
+}
+
+type LinkDialogProps = {
+  error: string;
+  hasExistingLink: boolean;
+  onCancel: () => void;
+  onChange: (value: string) => void;
+  onSubmit: () => void;
+  value: string;
+};
+
+function LinkDialog({
+  error,
+  hasExistingLink,
+  onCancel,
+  onChange,
+  onSubmit,
+  value,
+}: LinkDialogProps) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const descriptionId = useId();
+  const errorId = useId();
+  const titleId = useId();
+
+  useEffect(() => {
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    inputRef.current?.focus();
+    inputRef.current?.select();
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") onCancel();
+    }
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [onCancel]);
+
+  if (typeof document === "undefined") return null;
+
+  return createPortal(
+    <div
+      className="fixed inset-0 z-[1100] flex items-center justify-center bg-slate-950/45 p-4 backdrop-blur-[2px]"
+      onMouseDown={(event) => {
+        if (event.target === event.currentTarget) onCancel();
+      }}
+    >
+      <section
+        aria-describedby={descriptionId}
+        aria-labelledby={titleId}
+        aria-modal="true"
+        className="w-full max-w-[480px] rounded-2xl border border-slate-200 bg-white p-6 shadow-[0_24px_70px_rgba(15,23,42,0.28)] sm:p-7"
+        role="dialog"
+      >
+        <div className="flex items-start gap-4">
+          <span
+            aria-hidden="true"
+            className="flex size-11 shrink-0 items-center justify-center rounded-full bg-indigo-50 text-[#1d2088]"
+          >
+            <Link2 size={21} strokeWidth={2.2} />
+          </span>
+          <div className="min-w-0 pt-0.5">
+            <h2
+              className="text-lg font-bold leading-7 text-slate-900"
+              id={titleId}
+            >
+              {hasExistingLink ? "Chỉnh sửa liên kết" : "Thêm liên kết"}
+            </h2>
+            <p
+              className="mt-1.5 text-sm leading-6 text-slate-600"
+              id={descriptionId}
+            >
+              Nhập đường dẫn muốn gắn vào phần nội dung đang chọn.
+            </p>
+          </div>
+        </div>
+
+        <form
+          className="mt-6"
+          onSubmit={(event) => {
+            event.preventDefault();
+            onSubmit();
+          }}
+        >
+          <label
+            className="mb-2 block text-sm font-semibold text-slate-700"
+            htmlFor={`${titleId}-url`}
+          >
+            Đường dẫn liên kết
+          </label>
+          <input
+            aria-describedby={error ? errorId : descriptionId}
+            aria-invalid={Boolean(error)}
+            className={`h-11 w-full rounded-lg border bg-white px-3.5 text-sm text-slate-900 outline-none transition focus:ring-4 ${
+              error
+                ? "border-red-400 focus:border-red-500 focus:ring-red-500/10"
+                : "border-slate-300 focus:border-[#1d2088] focus:ring-[#1d2088]/10"
+            }`}
+            id={`${titleId}-url`}
+            onChange={(event) => onChange(event.target.value)}
+            placeholder="https://example.com"
+            ref={inputRef}
+            spellCheck={false}
+            type="text"
+            value={value}
+          />
+          {error ? (
+            <p className="mt-2 text-sm text-red-600" id={errorId} role="alert">
+              {error}
+            </p>
+          ) : (
+            <p className="mt-2 text-xs leading-5 text-slate-500">
+              Có thể nhập đầy đủ https:// hoặc chỉ nhập tên miền.
+            </p>
+          )}
+
+          <div className="mt-7 flex flex-col-reverse gap-2.5 sm:flex-row sm:justify-end">
+            <button
+              className="h-10 rounded-lg border border-slate-300 bg-white px-4 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-slate-300/30"
+              onClick={onCancel}
+              type="button"
+            >
+              Hủy
+            </button>
+            <button
+              className="h-10 rounded-lg bg-[#1d2088] px-4 text-sm font-semibold text-white transition hover:bg-[#171a70] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#1d2088]/25"
+              type="submit"
+            >
+              {hasExistingLink ? "Lưu thay đổi" : "Thêm liên kết"}
+            </button>
+          </div>
+        </form>
+      </section>
+    </div>,
+    document.body,
   );
 }
 
@@ -102,13 +267,38 @@ function normalizeUrl(value: string) {
   return `https://${url}`;
 }
 
+function isValidLinkUrl(value: string) {
+  if (/^(\/[^/]|#\S)/.test(value)) return true;
+
+  try {
+    const url = new URL(value);
+    if (url.protocol === "mailto:" || url.protocol === "tel:") {
+      return Boolean(url.pathname);
+    }
+    return (
+      (url.protocol === "http:" || url.protocol === "https:") &&
+      Boolean(url.hostname)
+    );
+  } catch {
+    return false;
+  }
+}
+
 export function RichTextEditor({
   error = false,
   errorId,
   labelId,
   onChange,
+  onImageUploadNotice,
   value,
 }: RichTextEditorProps) {
+  const imageInputRef = useRef<HTMLInputElement>(null);
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
+  const [linkDialog, setLinkDialog] = useState<{
+    hasExistingLink: boolean;
+    value: string;
+  } | null>(null);
+  const [linkError, setLinkError] = useState("");
   const editor = useEditor({
     content: normalizeInitialContent(value),
     editorProps: {
@@ -184,20 +374,32 @@ export function RichTextEditor({
     }),
   });
 
-  function setLink() {
+  const closeLinkDialog = useCallback(() => {
+    setLinkDialog(null);
+    setLinkError("");
+  }, []);
+
+  function openLinkDialog() {
     if (!editor) return;
 
     const currentUrl = editor.getAttributes("link").href as string | undefined;
-    const input = window.prompt(
-      "Nhập đường dẫn liên kết:",
-      currentUrl ?? "https://",
-    );
+    setLinkError("");
+    setLinkDialog({
+      hasExistingLink: Boolean(currentUrl),
+      value: currentUrl ?? "https://",
+    });
+  }
 
-    if (input === null) return;
+  function applyLink() {
+    if (!editor || !linkDialog) return;
 
-    const url = normalizeUrl(input);
+    const url = normalizeUrl(linkDialog.value);
     if (!url) {
-      editor.chain().focus().extendMarkRange("link").unsetLink().run();
+      setLinkError("Vui lòng nhập đường dẫn liên kết.");
+      return;
+    }
+    if (!isValidLinkUrl(url)) {
+      setLinkError("Đường dẫn liên kết không hợp lệ.");
       return;
     }
 
@@ -207,27 +409,107 @@ export function RichTextEditor({
       .extendMarkRange("link")
       .setLink({ href: url })
       .run();
+    closeLinkDialog();
   }
 
-  function insertImage() {
-    if (!editor) return;
+  function chooseImage() {
+    if (!editor || isUploadingImage) return;
+    imageInputRef.current?.click();
+  }
 
-    const input = window.prompt(
-      "Nhập URL ảnh (chưa hỗ trợ tải ảnh lên):",
-      "https://",
-    );
-    if (input === null) return;
+  async function handleImageChange(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+    if (!file || !editor) return;
 
-    const url = normalizeUrl(input);
-    if (!url) return;
+    if (
+      !MEDIA_MIME_TYPES.includes(
+        file.type as (typeof MEDIA_MIME_TYPES)[number],
+      )
+    ) {
+      onImageUploadNotice?.({
+        message: "Chỉ hỗ trợ ảnh JPG, JPEG, PNG hoặc WebP.",
+        tone: "error",
+      });
+      return;
+    }
 
-    editor.chain().focus().setImage({ src: url }).run();
+    if (file.size > MAX_CONTENT_IMAGE_SIZE_BYTES) {
+      onImageUploadNotice?.({
+        message: "Ảnh chèn vào nội dung không được vượt quá 5MB.",
+        tone: "error",
+      });
+      return;
+    }
+
+    if (file.size === 0) {
+      onImageUploadNotice?.({
+        message: "Tệp ảnh không có nội dung.",
+        tone: "error",
+      });
+      return;
+    }
+
+    setIsUploadingImage(true);
+    try {
+      const fallbackAltText = file.name.replace(/\.[^.]+$/, "");
+      const media = await uploadMedia(file, fallbackAltText);
+      editor
+        .chain()
+        .focus()
+        .setImage({
+          alt: media.altText ?? fallbackAltText,
+          src: media.publicUrl,
+          title: media.originalName,
+        })
+        .run();
+      onImageUploadNotice?.({
+        message: "Tải và chèn ảnh vào nội dung thành công",
+        tone: "success",
+      });
+    } catch (error: unknown) {
+      let message = "Không thể tải ảnh lên. Vui lòng thử lại.";
+      if (error instanceof ApiError) {
+        if (error.status === 403) {
+          message = "Bạn không có quyền tải ảnh lên.";
+        } else if (error.message) {
+          message = error.message;
+        }
+      }
+      onImageUploadNotice?.({ message, tone: "error" });
+    } finally {
+      setIsUploadingImage(false);
+    }
   }
 
   return (
-    <div
-      className={`${styles.editor} ${error ? styles.editorError : ""}`}
-    >
+    <>
+      {linkDialog ? (
+        <LinkDialog
+          error={linkError}
+          hasExistingLink={linkDialog.hasExistingLink}
+          onCancel={closeLinkDialog}
+          onChange={(value) => {
+            setLinkDialog((current) =>
+              current ? { ...current, value } : current,
+            );
+            if (linkError) setLinkError("");
+          }}
+          onSubmit={applyLink}
+          value={linkDialog.value}
+        />
+      ) : null}
+      <div
+        className={`${styles.editor} ${error ? styles.editorError : ""}`}
+      >
+      <input
+        accept={MEDIA_MIME_TYPES.join(",")}
+        className="sr-only"
+        onChange={(event) => void handleImageChange(event)}
+        ref={imageInputRef}
+        tabIndex={-1}
+        type="file"
+      />
       <div aria-label="Thanh công cụ soạn thảo" className={styles.toolbar}>
         <div className={styles.toolbarGroup}>
           <ToolbarButton
@@ -334,7 +616,7 @@ export function RichTextEditor({
             active={toolbarState?.link}
             icon={Link2}
             label="Thêm hoặc sửa liên kết"
-            onClick={setLink}
+            onClick={openLinkDialog}
           />
           <ToolbarButton
             disabled={!toolbarState?.link}
@@ -345,9 +627,15 @@ export function RichTextEditor({
             }
           />
           <ToolbarButton
-            icon={ImageIcon}
-            label="Chèn ảnh bằng URL"
-            onClick={insertImage}
+            disabled={!editor || isUploadingImage}
+            icon={isUploadingImage ? LoaderCircle : ImageIcon}
+            label={
+              isUploadingImage
+                ? "Đang tải ảnh lên"
+                : "Chèn ảnh từ thiết bị"
+            }
+            loading={isUploadingImage}
+            onClick={chooseImage}
           />
         </div>
 
@@ -368,6 +656,7 @@ export function RichTextEditor({
       </div>
 
       <EditorContent className={styles.content} editor={editor} />
-    </div>
+      </div>
+    </>
   );
 }

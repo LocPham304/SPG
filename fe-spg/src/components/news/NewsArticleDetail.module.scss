@@ -1,10 +1,12 @@
 @use "../../styles/mixins" as *;
 
 .article {
-  width: 100%;
-  max-width: 1200px;
-  margin-inline: auto;
+  width: calc(100% - (2 * var(--container-gutter)));
+  max-width: 1500px;
+  margin: clamp(42px, 4vw, 72px) auto;
   padding-block: clamp(56px, 6vw, 96px);
+  border: 1px solid var(--color-border);
+  background: #fff;
 }
 
 .header {
@@ -27,12 +29,14 @@
   font-size: clamp(2rem, 4vw, 3.25rem);
   line-height: 1.2;
   letter-spacing: -0.025em;
+  text-align: center;
 }
 
 .meta {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  justify-content: center;
   gap: 10px;
   color: var(--color-text-muted);
   font-size: 0.95rem;
@@ -129,6 +133,8 @@
 
 @include mobile {
   .article {
+    width: calc(100% - 32px);
+    margin-block: 30px;
     padding-block: 48px 64px;
   }
 

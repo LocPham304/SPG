@@ -30,12 +30,12 @@ export function NewsArticleDetail({
         <p className={styles.category}>
           {article.category?.name ?? categoryName}
         </p>
-        <h1 className={styles.title}>{article.title}</h1>
         <div className={styles.meta}>
           <time dateTime={article.publishedAt}>
             {formatNewsDate(article.publishedAt, locale).full}
           </time>
         </div>
+        <h1 className={styles.title}>{article.title}</h1>
       </header>
 
       {article.thumbnail ? (

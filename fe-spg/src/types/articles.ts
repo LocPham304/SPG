@@ -114,6 +114,7 @@ export type GetAdminArticlesParams = {
 export type CreateArticleData = {
   categoryId: number;
   isFeatured?: boolean;
+  publishedAt?: string;
   sourceLocale: LocaleCode;
   sourceUrl?: string;
   status: "draft" | "published";
@@ -123,6 +124,7 @@ export type CreateArticleData = {
 
 export type UpdateArticleData = {
   categoryId?: number;
+  publishedAt?: string;
   sourceLocale?: LocaleCode;
   sourceUrl?: string | null;
   thumbnailId?: number | null;

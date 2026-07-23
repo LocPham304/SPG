@@ -368,7 +368,10 @@ export class ArticlesService {
         }
 
         const isPublished = dto.status === ArticleStatus.Published;
-        const now = isPublished ? new Date() : null;
+        const defaultPublishedAt = isPublished ? new Date() : null;
+        const publishedAt = dto.publishedAt
+          ? new Date(dto.publishedAt)
+          : defaultPublishedAt;
         const article = manager.create(NewsArticleEntity, {
           categoryId: dto.categoryId,
           thumbnailId: dto.thumbnailId ?? null,
@@ -380,7 +383,7 @@ export class ArticlesService {
           createdBy: currentUser.id,
           updatedBy: currentUser.id,
           publishedBy: isPublished ? currentUser.id : null,
-          publishedAt: now,
+          publishedAt,
         });
         const savedArticle = await manager.save(article);
         articleId = savedArticle.id;
@@ -456,6 +459,10 @@ export class ArticlesService {
 
         if (dto.sourceUrl !== undefined) {
           article.sourceUrl = dto.sourceUrl || null;
+        }
+
+        if (dto.publishedAt !== undefined) {
+          article.publishedAt = new Date(dto.publishedAt);
         }
 
         const translationInputs = this.getUpdateTranslationInputs(dto);
@@ -570,7 +577,7 @@ export class ArticlesService {
       const previousStatus = article.status;
       article.status = ArticleStatus.Published;
       article.publishedBy = currentUser.id;
-      article.publishedAt = new Date();
+      article.publishedAt ??= new Date();
       article.updatedBy = currentUser.id;
       await manager.save(article);
       await this.recordArticleLog(manager, article, currentUser, {
@@ -662,14 +669,21 @@ export class ArticlesService {
       this.articlePolicy.assertCanManage(currentUser, article, 'delete');
       const title =
         this.getSourceTranslation(article).title ?? `Bài viết #${id}`;
-      article.deletedAt = new Date();
-      article.updatedBy = currentUser.id;
-      await manager.save(article);
+      const deletedTranslations = article.translations.length;
+      const deleteResult = await manager
+        .getRepository(NewsArticleEntity)
+        .delete({ id: article.id });
+      if (!deleteResult.affected) {
+        throw new NotFoundException(ARTICLE_NOT_FOUND);
+      }
       await this.recordArticleLog(manager, article, currentUser, {
         action: 'article.deleted',
         title,
-        description: `Đã xóa mềm bài viết "${title}".`,
-        changes: { deletedAt: article.deletedAt.toISOString() },
+        description: `Đã xóa vĩnh viễn bài viết "${title}" khỏi hệ thống.`,
+        changes: {
+          hardDeleted: true,
+          deletedTranslations,
+        },
         requestInfo,
       });
     });

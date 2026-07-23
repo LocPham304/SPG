@@ -2,6 +2,7 @@ import { Transform, Type, type TransformFnParams } from 'class-transformer';
 import {
   ArrayMaxSize,
   IsBoolean,
+  IsDateString,
   IsEnum,
   IsIn,
   IsInt,
@@ -92,6 +93,10 @@ export class CreateArticleDto {
   @IsOptional()
   @IsIn([ArticleStatus.Draft, ArticleStatus.Published])
   status: ArticleStatus.Draft | ArticleStatus.Published = ArticleStatus.Draft;
+
+  @IsOptional()
+  @IsDateString()
+  publishedAt?: string;
 
   @IsOptional()
   @IsBoolean()
