@@ -159,7 +159,7 @@ export function GroupNewsSection({
                   >
                     <NewsImage
                       article={article}
-                      sizes="(max-width: 767px) 1px, 28vw"
+                      sizes="(max-width: 767px) 1px, (max-width: 1024px) 44vw, 28vw"
                     />
                   </LocalizedLink>
                   <time

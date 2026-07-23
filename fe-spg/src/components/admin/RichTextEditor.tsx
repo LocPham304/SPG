@@ -44,7 +44,10 @@ import { createPortal } from "react-dom";
 
 import { ApiError } from "@/lib/api";
 import { uploadMedia } from "@/services/media.service";
-import { MEDIA_MIME_TYPES } from "@/types/media";
+import {
+  MEDIA_FILE_ACCEPT,
+  isSupportedMediaFile,
+} from "@/types/media";
 
 import styles from "./RichTextEditor.module.scss";
 
@@ -69,7 +72,7 @@ type ToolbarButtonProps = {
   onClick: () => void;
 };
 
-const MAX_CONTENT_IMAGE_SIZE_BYTES = 5 * 1024 * 1024;
+const MAX_CONTENT_IMAGE_SIZE_BYTES = 10 * 1024 * 1024;
 
 function ToolbarButton({
   active = false,
@@ -422,13 +425,9 @@ export function RichTextEditor({
     event.target.value = "";
     if (!file || !editor) return;
 
-    if (
-      !MEDIA_MIME_TYPES.includes(
-        file.type as (typeof MEDIA_MIME_TYPES)[number],
-      )
-    ) {
+    if (!isSupportedMediaFile(file)) {
       onImageUploadNotice?.({
-        message: "Chỉ hỗ trợ ảnh JPG, JPEG, PNG hoặc WebP.",
+        message: "Chỉ hỗ trợ ảnh JPG, JPEG, PNG, WebP hoặc HEIC.",
         tone: "error",
       });
       return;
@@ -436,7 +435,7 @@ export function RichTextEditor({
 
     if (file.size > MAX_CONTENT_IMAGE_SIZE_BYTES) {
       onImageUploadNotice?.({
-        message: "Ảnh chèn vào nội dung không được vượt quá 5MB.",
+        message: "Ảnh chèn vào nội dung không được vượt quá 10MB.",
         tone: "error",
       });
       return;
@@ -503,7 +502,7 @@ export function RichTextEditor({
         className={`${styles.editor} ${error ? styles.editorError : ""}`}
       >
       <input
-        accept={MEDIA_MIME_TYPES.join(",")}
+        accept={MEDIA_FILE_ACCEPT}
         className="sr-only"
         onChange={(event) => void handleImageChange(event)}
         ref={imageInputRef}

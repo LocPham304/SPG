@@ -26,9 +26,14 @@ const EMPLOYEE_EMAIL = 'media.employee-fixture@example.com';
 const EMPLOYEE_PASSWORD = 'Employee@123';
 const EMPLOYEE_FILE_NAME = 'e2e-employee-image.png';
 const ADMIN_FILE_NAME = 'e2e-admin-image.png';
-const TEST_FILE_NAMES = [EMPLOYEE_FILE_NAME, ADMIN_FILE_NAME];
+const HEIC_FILE_NAME = 'e2e-admin-image.heic';
+const TEST_FILE_NAMES = [EMPLOYEE_FILE_NAME, ADMIN_FILE_NAME, HEIC_FILE_NAME];
 const VALID_PNG_BUFFER = Buffer.from(
   'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Wl2nWQAAAAASUVORK5CYII=',
+  'base64',
+);
+const VALID_HEIC_BUFFER = Buffer.from(
+  'AAAAEGZ0eXBoZWljAAAAAAAAADBtZXRhAAAAAAAAACRpcHJwAAAAHGlwY28AAAAUaXNwZQAAAAAAAAKAAAAB4A==',
   'base64',
 );
 
@@ -271,6 +276,34 @@ describe('Media API (e2e)', () => {
     );
   });
 
+  it('allows an admin to upload a valid HEIC image', async () => {
+    const response = await request(app.getHttpServer())
+      .post('/api/v1/admin/media')
+      .set('Authorization', `Bearer ${adminAccessToken}`)
+      .attach('file', VALID_HEIC_BUFFER, {
+        filename: HEIC_FILE_NAME,
+        contentType: 'image/heic',
+      })
+      .expect(201);
+    const media = asRecord(response.body as unknown);
+
+    if (typeof media.id !== 'number') {
+      throw new Error('Upload response không có media id hợp lệ.');
+    }
+
+    temporaryMediaIds.push(media.id);
+
+    expect(media).toEqual(
+      expect.objectContaining({
+        originalName: HEIC_FILE_NAME,
+        mimeType: 'image/heic',
+        width: 640,
+        height: 480,
+        uploadedBy: adminId,
+      }),
+    );
+  });
+
   it('rejects a file with an invalid MIME type and magic bytes', () => {
     return request(app.getHttpServer())
       .post('/api/v1/admin/media')
@@ -282,7 +315,7 @@ describe('Media API (e2e)', () => {
       .expect(400);
   });
 
-  it('rejects an image larger than 5MB', () => {
+  it('rejects an image larger than 10MB', () => {
     const oversizedFile = Buffer.alloc(MAX_MEDIA_FILE_SIZE + 1);
     VALID_PNG_BUFFER.copy(oversizedFile);
 

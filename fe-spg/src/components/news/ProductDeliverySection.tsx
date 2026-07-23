@@ -56,7 +56,7 @@ export function ProductDeliverySection({
                         alt={article.thumbnail.altText ?? article.title}
                         fill
                         imageClassName={styles.newsImage}
-                        sizes="(max-width: 767px) 1px, 28vw"
+                        sizes="(max-width: 767px) 1px, (max-width: 1024px) 44vw, 28vw"
                         src={article.thumbnail.publicUrl}
                       />
                     ) : (

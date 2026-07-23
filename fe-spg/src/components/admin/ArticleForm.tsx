@@ -34,7 +34,8 @@ import {
   type NewsCategory,
 } from "@/types/categories";
 import {
-  MEDIA_MIME_TYPES,
+  MEDIA_FILE_ACCEPT,
+  isSupportedMediaFile,
   type MediaFile,
 } from "@/types/media";
 
@@ -92,7 +93,7 @@ const dateFormatter = new Intl.DateTimeFormat("vi-VN", {
   timeStyle: "short",
 });
 const ARTICLE_LOCALES = ["vi", "en", "zh"] as const;
-const MAX_THUMBNAIL_SIZE_BYTES = 5 * 1024 * 1024;
+const MAX_THUMBNAIL_SIZE_BYTES = 10 * 1024 * 1024;
 const localeLabels: Record<LocaleCode, string> = {
   vi: "Tiếng Việt",
   en: "English",
@@ -358,17 +359,13 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
   function handleThumbnailFile(file: File | undefined) {
     if (!file) return;
 
-    if (
-      !MEDIA_MIME_TYPES.includes(
-        file.type as (typeof MEDIA_MIME_TYPES)[number],
-      )
-    ) {
-      setThumbnailError("Chỉ hỗ trợ ảnh JPG, JPEG, PNG hoặc WebP.");
+    if (!isSupportedMediaFile(file)) {
+      setThumbnailError("Chỉ hỗ trợ ảnh JPG, JPEG, PNG, WebP hoặc HEIC.");
       return;
     }
 
     if (file.size > MAX_THUMBNAIL_SIZE_BYTES) {
-      setThumbnailError("Ảnh đại diện không được vượt quá 5MB.");
+      setThumbnailError("Ảnh đại diện không được vượt quá 10MB.");
       return;
     }
 
@@ -761,7 +758,7 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
                         <ImageIcon aria-hidden="true" size={18} />
                         Chọn ảnh từ thiết bị
                         <input
-                          accept={MEDIA_MIME_TYPES.join(",")}
+                          accept={MEDIA_FILE_ACCEPT}
                           className="sr-only"
                           onChange={(event) => {
                             handleThumbnailFile(event.target.files?.[0]);
@@ -791,7 +788,7 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
                       </p>
                     ) : (
                       <p className="mt-1.5 text-xs text-slate-500">
-                        Hỗ trợ JPG, JPEG, PNG, WebP; tối đa 5MB.
+                        Hỗ trợ JPG, JPEG, PNG, WebP, HEIC; tối đa 10MB.
                       </p>
                     )}
                   </div>

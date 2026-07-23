@@ -38,7 +38,7 @@ class MediaFileSizeExceptionFilter implements ExceptionFilter {
 
     response.status(HttpStatus.BAD_REQUEST).json({
       statusCode: HttpStatus.BAD_REQUEST,
-      message: 'Ảnh không được vượt quá 5MB.',
+      message: 'Ảnh không được vượt quá 10MB.',
       error: 'Bad Request',
     });
   }

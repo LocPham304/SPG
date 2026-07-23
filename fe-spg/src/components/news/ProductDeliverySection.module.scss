@@ -15,32 +15,36 @@
 .newsGrid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(20px, 1.67vw, 32px);
   list-style: none;
 }
 
 .newsGrid > li {
   min-width: 0;
-  border-right: 1px solid #dadada;
-  margin-bottom: 50px;
-}
-
-.newsGrid > li:nth-child(3n) {
-  border-right-color: transparent;
+  margin-bottom: clamp(22px, 1.82vw, 35px);
 }
 
 .newsCard {
   position: relative;
-  min-height: clamp(440px, 31.25vw, 600px);
-  padding: clamp(40px, 3.13vw, 60px) clamp(26px, 2.08vw, 40px)
-    clamp(100px, 7.03vw, 135px);
+  min-height: clamp(430px, 28.13vw, 540px);
+  padding: clamp(26px, 1.82vw, 35px) clamp(34px, 2.29vw, 44px)
+    clamp(86px, 5.21vw, 100px);
   overflow: hidden;
+  border-radius: 10px;
+  background: linear-gradient(180deg, #fff 0%, #f8fbfd 100%);
+  box-shadow:
+    0 12px 32px rgb(18 73 106 / 7%),
+    inset 0 1px 0 rgb(255 255 255 / 85%);
+  transition:
+    box-shadow 280ms ease,
+    transform 280ms ease;
 }
 
 .newsCard::before {
   position: absolute;
   inset: 0;
   z-index: 0;
-  background: #edf7ff;
+  background: linear-gradient(145deg, #edf7ff, #f9fcff 68%);
   content: "";
   opacity: 0;
   transition: opacity 280ms ease;
@@ -73,6 +77,7 @@
   height: min(12.5vw, 240px);
   margin-bottom: 20px;
   overflow: hidden;
+  border-radius: 7px;
   transition:
     height 280ms ease,
     margin 280ms ease,
@@ -99,9 +104,9 @@
 }
 
 .cardTitle {
-  margin-bottom: 35px;
+  margin-bottom: 28px;
   font-size: clamp(17px, 1.15vw, 22px);
-  font-weight: 400;
+  font-weight: 500;
   line-height: 1.45;
 }
 
@@ -128,8 +133,8 @@
 
 .cardLink {
   position: absolute;
-  bottom: 50px;
-  left: clamp(26px, 2.08vw, 40px);
+  bottom: clamp(30px, 2.08vw, 40px);
+  left: clamp(34px, 2.29vw, 44px);
   display: inline-flex;
   align-items: center;
   gap: 11px;
@@ -181,6 +186,14 @@
 }
 
 @media (hover: hover) and (width > 1024px) {
+  .newsCard:hover,
+  .newsCard:focus-within {
+    box-shadow:
+      0 18px 38px rgb(18 73 106 / 12%),
+      inset 0 1px 0 rgb(255 255 255 / 90%);
+    transform: translateY(-4px);
+  }
+
   .newsCard:hover::before,
   .newsCard:focus-within::before {
     opacity: 1;
@@ -206,12 +219,16 @@
 }
 
 @media (width <= 1024px) {
+  .newsGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .cardImage {
-    height: 15.5vw;
+    height: 24vw;
   }
 
   .newsCard {
-    min-height: 430px;
+    min-height: 420px;
   }
 }
 
@@ -231,14 +248,14 @@
   }
 
   .newsGrid > li {
-    margin-bottom: 0;
-    border-right: 0;
-    border-bottom: 1px solid #dadada;
+    margin-bottom: 14px;
   }
 
   .newsCard {
     min-height: 0;
-    padding: 20px 0;
+    padding: 22px 24px;
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgb(18 73 106 / 7%);
   }
 
   .newsCard::before,

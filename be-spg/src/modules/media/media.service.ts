@@ -20,22 +20,27 @@ import { UpdateMediaDto } from './dto/update-media.dto';
 import { MediaFileEntity } from './entities/media-file.entity';
 import { StorageService } from './services/storage.service';
 
-export const MAX_MEDIA_FILE_SIZE = 5 * 1024 * 1024;
+export const MAX_MEDIA_FILE_SIZE = 10 * 1024 * 1024;
 
 const MEDIA_NOT_FOUND_MESSAGE = 'Không tìm thấy ảnh.';
 const MEDIA_IN_USE_MESSAGE = 'Không thể xóa ảnh đang được sử dụng';
 const INVALID_IMAGE_MESSAGE =
-  'File không hợp lệ. Chỉ chấp nhận ảnh JPEG, PNG hoặc WebP tối đa 5MB.';
+  'File không hợp lệ. Chỉ chấp nhận ảnh JPEG, PNG, WebP hoặc HEIC tối đa 10MB.';
 const ALLOWED_EXTENSIONS_BY_MIME: Record<string, string[]> = {
   'image/jpeg': ['.jpg', '.jpeg'],
   'image/png': ['.png'],
   'image/webp': ['.webp'],
+  'image/heic': ['.heic'],
+  'image/heif': ['.heic'],
 };
 const STORAGE_EXTENSION_BY_MIME: Record<string, string> = {
   'image/jpeg': 'jpg',
   'image/png': 'png',
   'image/webp': 'webp',
+  'image/heic': 'heic',
+  'image/heif': 'heic',
 };
+const HEIC_MIME_TYPES = new Set(['image/heic', 'image/heif']);
 
 type RequestInfo = {
   ipAddress?: string | null;
@@ -352,7 +357,7 @@ export class MediaService {
 
     if (
       !detectedMimeType ||
-      detectedMimeType !== browserMimeType ||
+      !this.areEquivalentMimeTypes(detectedMimeType, browserMimeType) ||
       !allowedBrowserMimeTypes.includes(detectedMimeType)
     ) {
       throw new BadRequestException(INVALID_IMAGE_MESSAGE);
@@ -401,6 +406,13 @@ export class MediaService {
       buffer.length >= 12 &&
       buffer.subarray(0, 4).toString('ascii') === 'RIFF' &&
       buffer.subarray(8, 12).toString('ascii') === 'WEBP';
+    const isIsoBaseMediaFile =
+      buffer.length >= 12 && buffer.subarray(4, 8).toString('ascii') === 'ftyp';
+    const isoBaseMediaBrand = isIsoBaseMediaFile
+      ? buffer.subarray(8, 12).toString('ascii')
+      : '';
+    const isHeic = ['heic', 'heix', 'hevc', 'hevx'].includes(isoBaseMediaBrand);
+    const isHeif = ['mif1', 'msf1'].includes(isoBaseMediaBrand);
 
     if (isJpeg) {
       return 'image/jpeg';
@@ -414,7 +426,26 @@ export class MediaService {
       return 'image/webp';
     }
 
+    if (isHeic) {
+      return 'image/heic';
+    }
+
+    if (isHeif) {
+      return 'image/heif';
+    }
+
     return null;
+  }
+
+  private areEquivalentMimeTypes(
+    detectedMimeType: string,
+    browserMimeType: string,
+  ): boolean {
+    return (
+      detectedMimeType === browserMimeType ||
+      (HEIC_MIME_TYPES.has(detectedMimeType) &&
+        HEIC_MIME_TYPES.has(browserMimeType))
+    );
   }
 
   private normalizeAltText(altText: string | null | undefined): string | null {
