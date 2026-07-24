@@ -50,12 +50,14 @@
   z-index: 1;
   max-width: none;
   border: 0;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 320ms ease;
 }
 
-.hero[data-media-mode="poster"] .video,
-.hero[data-video-state="blocked"] .video,
-.hero[data-video-state="error"] .video {
-  display: none;
+.hero[data-media-mode="video"] .video {
+  opacity: 1;
+  visibility: visible;
 }
 
 .overlayTop {

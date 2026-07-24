@@ -83,7 +83,7 @@ export function HomeHeroClient({
     const reducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     );
-    const desktopViewport = window.matchMedia("(min-width: 768px)");
+    const mobileViewport = window.matchMedia("(max-width: 767px)");
     const staticMedia =
       new URLSearchParams(window.location.search).get("hero-media") ===
       "poster";
@@ -106,27 +106,20 @@ export function HomeHeroClient({
         return;
       }
 
-      if (!desktopViewport.matches) {
-        heroRoot.dataset.mediaMode = "poster";
-        heroRoot.dataset.videoState = "mobile-poster";
-        setShouldLoadVideo(false);
-        return;
-      }
-
       heroRoot.dataset.videoState = "scheduled";
       loadTimer = window.setTimeout(() => {
         setShouldLoadVideo(true);
-      }, 1200);
+      }, mobileViewport.matches ? 450 : 1200);
     }
 
     reducedMotion.addEventListener("change", updateVideoEligibility);
-    desktopViewport.addEventListener("change", updateVideoEligibility);
+    mobileViewport.addEventListener("change", updateVideoEligibility);
     updateVideoEligibility();
 
     return () => {
       window.clearTimeout(loadTimer);
       reducedMotion.removeEventListener("change", updateVideoEligibility);
-      desktopViewport.removeEventListener("change", updateVideoEligibility);
+      mobileViewport.removeEventListener("change", updateVideoEligibility);
     };
   }, []);
 
@@ -207,6 +200,7 @@ export function HomeHeroClient({
           src={homeHeroMedia.poster}
         />
         <video
+          autoPlay
           className={styles.video}
           loop
           muted
