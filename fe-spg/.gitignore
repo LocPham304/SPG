@@ -16,8 +16,6 @@
 # local scrape artifacts
 /.firecrawl/
 
-# local high-resolution source media
-/.local-assets/
 
 # next.js
 /.next/

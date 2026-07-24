@@ -5,11 +5,7 @@ import { ScrollReveal } from "@/components/news/ScrollReveal";
 import type { AppLocale } from "@/i18n/routing";
 
 import styles from "./HomeAbout.module.scss";
-import { HomeAboutVideo } from "./HomeAboutVideo.client";
-
-const HOME_ABOUT_POSTER =
-  "/images/public/files/image/index_img2.jpg" as const;
-const HOME_ABOUT_VIDEO = "/videos/spe-introduce-web.mp4" as const;
+import { HomeAboutYouTube } from "./HomeAboutYouTube.client";
 
 type HomeAboutSectionProps = {
   locale: AppLocale;
@@ -62,11 +58,10 @@ export async function HomeAboutSection({ locale }: HomeAboutSectionProps) {
         delay="0.1s"
         duration="0.75s"
       >
-        <HomeAboutVideo
-          className={styles.video}
-          label={aboutT("imageAlt")}
-          poster={HOME_ABOUT_POSTER}
-          src={HOME_ABOUT_VIDEO}
+        <HomeAboutYouTube
+          closeLabel={aboutT("videoCloseLabel")}
+          playLabel={aboutT("videoPlayLabel")}
+          title={aboutT("videoTitle")}
         />
       </ScrollReveal>
     </section>

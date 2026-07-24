@@ -119,7 +119,10 @@
         "introduction": "山东陆海装备集团有限公司（以下简称“陆海装备集团”）是山东省港口集团有限公司直属一级企业，成立于2020年3月，旗下拥有青岛、日照、烟台三个研发制造基地，海阳高端港口装备、岚山高端海工装备两个产业园区以及研发中心（青岛总院、上海分院）。",
         "business": "陆海装备集团主营港口装备、海工装备、港航配套服务等三大业务，覆盖<highlight>港口</highlight>、<highlight>航运</highlight>、<highlight>船舶</highlight>、<highlight>水工疏浚</highlight>、<highlight>水产养殖</highlight>、<highlight>市政工程</highlight>、<highlight>铁路物流</highlight>、<highlight>粮食仓储</highlight>、<highlight>石化</highlight>、<highlight>采矿</highlight>、<highlight>电力</highlight>、<highlight>水泥</highlight>、<highlight>冶金</highlight>、<highlight>造纸</highlight>、<highlight>化工</highlight>等行业。产品应用遍布天津港、镇江港、福州港、防城港、安徽港航等国内各大港口集团以及上百家公司客户，覆盖全国28个省级行政区，并远销欧洲、美洲、澳洲、非洲、东南亚等60多个国家和地区。"
       },
-      "imageAlt": "山东港口装备集团作业区域内的港口起重机与船舶"
+      "imageAlt": "山东港口装备集团作业区域内的港口起重机与船舶",
+      "videoTitle": "山东港口装备集团宣传视频",
+      "videoPlayLabel": "播放宣传视频",
+      "videoCloseLabel": "关闭视频"
     },
     "bases": {
       "title": "旗下基地",

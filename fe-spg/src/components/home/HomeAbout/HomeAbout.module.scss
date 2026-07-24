@@ -157,14 +157,208 @@
   }
 }
 
-.video {
+.videoTrigger {
+  position: relative;
+  display: grid;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  place-items: center;
+  border: 0;
+  background: #e7f1f7;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.videoThumbnail,
+.videoShade {
+  position: absolute;
+  inset: 0;
+}
+
+.videoThumbnail {
+  background: #d8eaf4
+    url("/images/public/files/image/index_img2.jpg") center / cover no-repeat;
+  transition: transform 420ms ease;
+}
+
+.videoShade {
+  background: linear-gradient(180deg, rgba(4, 34, 54, 0.02), rgba(4, 34, 54, 0.18));
+}
+
+.videoPlayIcon {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  width: clamp(66px, 5vw, 90px);
+  aspect-ratio: 1;
+  isolation: isolate;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: #078bca;
+  box-shadow:
+    0 0 0 10px rgba(7, 139, 202, 0.22),
+    0 12px 28px rgba(0, 76, 126, 0.3);
+  color: #ffffff;
+  transition:
+    background-color 180ms ease,
+    transform 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.videoPlayIcon::before,
+.videoPlayIcon::after {
+  position: absolute;
+  z-index: -1;
+  inset: -12px;
+  border: 10px solid rgba(7, 139, 202, 0.2);
+  border-radius: inherit;
+  content: "";
+  pointer-events: none;
+  animation: videoPlayRipple 2s ease-in-out infinite;
+}
+
+.videoPlayIcon::after {
+  display: none;
+}
+
+.videoPlayIcon svg {
+  position: relative;
+  z-index: 1;
+  width: 42%;
+  height: 42%;
+  margin-inline-start: 5%;
+  fill: currentcolor;
+}
+
+.videoTrigger:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: -3px;
+}
+
+.videoModalBackdrop {
+  position: fixed;
+  z-index: 10000;
+  inset: 0;
+  display: grid;
+  padding: clamp(12px, 2vw, 32px);
+  place-items: center;
+  background: rgba(7, 15, 23, 0.82);
+  backdrop-filter: blur(4px);
+  animation: videoBackdropIn 180ms ease-out;
+}
+
+.videoModalShell {
+  position: relative;
+  width: auto;
+  max-width: 90vw;
+  height: min(calc(100vh - 64px), 50.625vw, 787.5px);
+  aspect-ratio: 16 / 9;
+  animation: videoModalIn 220ms ease-out;
+}
+
+.videoModal {
+  width: 100%;
+  height: 100%;
+  background: #000000;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.42);
+  overflow: hidden;
+}
+
+.videoIframe {
   display: block;
   width: 100%;
   height: 100%;
   border: 0;
-  background: #e7f1f7;
-  object-fit: cover;
-  object-position: center;
+}
+
+.videoModalClose {
+  position: fixed;
+  z-index: 2;
+  top: clamp(14px, 1.5vw, 28px);
+  right: clamp(14px, 1.5vw, 28px);
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.12);
+  color: #ffffff;
+  cursor: pointer;
+  filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.5));
+  transition:
+    background-color 180ms ease,
+    transform 180ms ease;
+}
+
+.videoModalClose span::before,
+.videoModalClose span::after {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 28px;
+  height: 2px;
+  background: currentcolor;
+  content: "";
+}
+
+.videoModalClose span::before {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.videoModalClose span::after {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+.videoModalClose:focus-visible {
+  outline: 3px solid #ffffff;
+  outline-offset: 2px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .videoTrigger:hover .videoThumbnail {
+    transform: scale(1.025);
+  }
+
+  .videoTrigger:hover .videoPlayIcon {
+    background: #0578b3;
+    box-shadow:
+      0 0 0 12px rgba(7, 139, 202, 0.25),
+      0 15px 34px rgba(0, 76, 126, 0.38);
+    transform: scale(1.08);
+  }
+
+  .videoModalClose:hover {
+    background: rgba(255, 255, 255, 0.14);
+    transform: rotate(90deg);
+  }
+}
+
+@keyframes videoBackdropIn {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes videoModalIn {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+}
+
+@keyframes videoPlayRipple {
+  0%,
+  100% {
+    opacity: 0.8;
+    transform: scale(0.94);
+  }
+
+  50% {
+    opacity: 0.35;
+    transform: scale(1.12);
+  }
 }
 
 @media (width >= 901px) and (width <= 1100px) {
@@ -248,10 +442,44 @@
     min-height: 40px;
     font-size: 12px;
   }
+
+  .videoPlayIcon {
+    width: 62px;
+  }
+
+  .videoModalBackdrop {
+    padding: 12px;
+  }
+
+  .videoModalShell {
+    width: auto;
+    max-width: 100%;
+    height: min(calc(100vh - 24px), 56.25vw);
+  }
+
+  .videoModalClose {
+    top: 10px;
+    right: 10px;
+    width: 42px;
+    height: 42px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .learnMore {
+  .learnMore,
+  .videoThumbnail,
+  .videoPlayIcon,
+  .videoModalClose {
     transition: none;
+  }
+
+  .videoModalBackdrop,
+  .videoModalShell {
+    animation: none;
+  }
+
+  .videoPlayIcon::before,
+  .videoPlayIcon::after {
+    animation: none;
   }
 }
