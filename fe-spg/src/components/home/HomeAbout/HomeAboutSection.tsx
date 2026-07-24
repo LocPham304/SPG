@@ -1,14 +1,15 @@
 import { getTranslations } from "next-intl/server";
 
 import { LocalizedLink } from "@/components/common/LocalizedLink";
-import { ImageWithSkeleton } from "@/components/news/ImageWithSkeleton";
 import { ScrollReveal } from "@/components/news/ScrollReveal";
 import type { AppLocale } from "@/i18n/routing";
 
 import styles from "./HomeAbout.module.scss";
+import { HomeAboutVideo } from "./HomeAboutVideo.client";
 
-const HOME_ABOUT_IMAGE =
+const HOME_ABOUT_POSTER =
   "/images/public/files/image/index_img2.jpg" as const;
+const HOME_ABOUT_VIDEO = "/videos/spe-introduce-web.mp4" as const;
 
 type HomeAboutSectionProps = {
   locale: AppLocale;
@@ -61,14 +62,11 @@ export async function HomeAboutSection({ locale }: HomeAboutSectionProps) {
         delay="0.1s"
         duration="0.75s"
       >
-        <ImageWithSkeleton
-          aspectRatio="auto"
-          className={styles.imageFrame}
-          imageClassName={styles.image}
-          src={HOME_ABOUT_IMAGE}
-          alt={aboutT("imageAlt")}
-          fill
-          sizes="(max-width: 900px) 100vw, 57vw"
+        <HomeAboutVideo
+          className={styles.video}
+          label={aboutT("imageAlt")}
+          poster={HOME_ABOUT_POSTER}
+          src={HOME_ABOUT_VIDEO}
         />
       </ScrollReveal>
     </section>
