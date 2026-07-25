@@ -51,7 +51,7 @@
     "containerHandling": "Hệ thống xếp dỡ container",
     "contactPage": "Liên hệ",
     "corporateCulture": "Văn hóa doanh nghiệp",
-    "currentAffairs": "Thời sự",
+    "currentAffairs": "Thị Trường",
     "dryBulk": "Hệ thống xếp dỡ hàng rời khô",
     "grainSilo": "Hệ thống bốc dỡ silo ngũ cốc",
     "groupNews": "Tin tức tập đoàn",
@@ -63,7 +63,7 @@
     "openMenu": "Mở menu",
     "organization": "Sơ đồ tổ chức",
     "otherServices": "Sản phẩm và dịch vụ khác",
-    "productDelivery": "Tiến độ bàn giao sản phẩm",
+    "productDelivery": "Cảng thông minh",
     "qualifications": "Năng lực công ty",
     "rdLayout": "Bố trí R&D",
     "search": "Tìm kiếm",
@@ -107,9 +107,9 @@
       "backToTop": "Về đầu trang",
       "loading": "Đang tải tin tức trang chủ",
       "categories": {
-        "currentAffairs": "Thời sự",
+        "currentAffairs": "Thị Trường",
         "groupNews": "Tin tức tập đoàn",
-        "productDelivery": "Tiến độ bàn giao sản phẩm",
+        "productDelivery": "Cảng thông minh",
         "notices": "Thông báo"
       },
       "empty": {
@@ -264,7 +264,7 @@
     "title": "Tin tức",
     "subNavigationLabel": "Điều hướng tin tức",
     "currentAffairs": {
-      "title": "Thời sự",
+      "title": "Thị Trường",
       "readMore": "Đọc thêm"
     },
     "groupNews": {
@@ -272,9 +272,9 @@
       "readMore": "Đọc thêm"
     },
     "productDelivery": {
-      "title": "Tiến độ bàn giao sản phẩm",
+      "title": "Cảng thông minh",
       "readMore": "Đọc thêm",
-      "pagination": "Các trang tiến độ bàn giao sản phẩm",
+      "pagination": "Các trang Cảng thông minh",
       "previousPage": "Trang trước",
       "nextPage": "Trang tiếp theo"
     },

@@ -257,7 +257,7 @@ const detailCopy: Record<
 > = {
   en: {
     author: "Shandong Port Equipment Group",
-    categoryName: "Product delivery",
+    categoryName: "Smart Port",
     introduction: (title) =>
       `The project featured in “${title}” has reached an important delivery milestone following coordinated production, inspection, and preparation work.`,
     impact: (title) =>
@@ -267,7 +267,7 @@ const detailCopy: Record<
   },
   vi: {
     author: "Tập đoàn Thiết bị Cảng Sealand Sơn Đông",
-    categoryName: "Bàn giao sản phẩm",
+    categoryName: "Cảng thông minh",
     introduction: (title) =>
       `Dự án được giới thiệu trong bài “${title}” đã đạt cột mốc bàn giao quan trọng sau quá trình phối hợp sản xuất, kiểm tra và chuẩn bị.`,
     impact: (title) =>
@@ -277,7 +277,7 @@ const detailCopy: Record<
   },
   zh: {
     author: "山东港口装备集团",
-    categoryName: "产品交付",
+    categoryName: "智慧港口",
     introduction: (title) =>
       `《${title}》所介绍的项目，在生产、检验和交付准备等环节协同推进后，顺利完成重要交付节点。`,
     impact: (title) =>

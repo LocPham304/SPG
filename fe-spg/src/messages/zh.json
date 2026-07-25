@@ -42,7 +42,7 @@
     "containerHandling": "集装箱装卸系统解决方案",
     "contactPage": "联系我们",
     "corporateCulture": "企业文化",
-    "currentAffairs": "时事新闻",
+    "currentAffairs": "市场",
     "dryBulk": "干散货装卸输送系统解决方案",
     "grainSilo": "粮食筒仓装卸系统",
     "groupNews": "集团新闻",
@@ -54,7 +54,7 @@
     "openMenu": "打开菜单",
     "organization": "组织架构",
     "otherServices": "其他产品与服务",
-    "productDelivery": "产品交付动态",
+    "productDelivery": "智慧港口",
     "qualifications": "企业资质",
     "rdLayout": "研发布局",
     "search": "搜索",
@@ -98,9 +98,9 @@
       "backToTop": "返回顶部",
       "loading": "正在加载首页新闻",
       "categories": {
-        "currentAffairs": "时事新闻",
+        "currentAffairs": "市场",
         "groupNews": "集团新闻",
-        "productDelivery": "产品交付动态",
+        "productDelivery": "智慧港口",
         "notices": "公示公告"
       },
       "empty": {
@@ -255,7 +255,7 @@
     "title": "新闻资讯",
     "subNavigationLabel": "新闻资讯导航",
     "currentAffairs": {
-      "title": "时政要闻",
+      "title": "市场",
       "readMore": "阅读全文"
     },
     "groupNews": {
@@ -263,9 +263,9 @@
       "readMore": "阅读全文"
     },
     "productDelivery": {
-      "title": "产品交付动态",
+      "title": "智慧港口",
       "readMore": "阅读全文",
-      "pagination": "产品交付动态分页",
+      "pagination": "智慧港口分页",
       "previousPage": "上一页",
       "nextPage": "下一页"
     },

@@ -51,7 +51,7 @@
     "containerHandling": "Container Handling Systems",
     "contactPage": "Contact",
     "corporateCulture": "Corporate Culture",
-    "currentAffairs": "Current Affairs",
+    "currentAffairs": "Market",
     "dryBulk": "Dry Bulk Handling Systems",
     "grainSilo": "Grain Silo Loading and Unloading System",
     "groupNews": "Group News",
@@ -63,7 +63,7 @@
     "openMenu": "Open menu",
     "organization": "Organization Chart",
     "otherServices": "Other Products and Services",
-    "productDelivery": "Product Delivery Dynamics",
+    "productDelivery": "Smart Port",
     "qualifications": "Company Qualifications",
     "rdLayout": "R&D Layout",
     "search": "Search",
@@ -107,9 +107,9 @@
       "backToTop": "Back to top",
       "loading": "Loading homepage news",
       "categories": {
-        "currentAffairs": "Current affairs",
+        "currentAffairs": "Market",
         "groupNews": "Group news",
-        "productDelivery": "Product delivery dynamics",
+        "productDelivery": "Smart Port",
         "notices": "Notices"
       },
       "empty": {
@@ -264,7 +264,7 @@
     "title": "News",
     "subNavigationLabel": "News navigation",
     "currentAffairs": {
-      "title": "Current affairs",
+      "title": "Market",
       "readMore": "Read more"
     },
     "groupNews": {
@@ -272,9 +272,9 @@
       "readMore": "Read more"
     },
     "productDelivery": {
-      "title": "Product delivery dynamics",
+      "title": "Smart Port",
       "readMore": "Read more",
-      "pagination": "Product delivery pages",
+      "pagination": "Smart Port pages",
       "previousPage": "Previous page",
       "nextPage": "Next page"
     },

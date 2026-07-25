@@ -124,7 +124,7 @@ const detailCopy: Record<
 > = {
   en: {
     author: "Editorial Board",
-    categoryName: "Current affairs",
+    categoryName: "Market",
     context: (title) =>
       `The article “${title}” highlights the principal developments, policy direction, and issues receiving public attention at the time of publication.`,
     conclusion:
@@ -132,7 +132,7 @@ const detailCopy: Record<
   },
   vi: {
     author: "Ban biên tập",
-    categoryName: "Tin thời sự",
+    categoryName: "Thị Trường",
     context: (title) =>
       `Bài viết “${title}” làm rõ những diễn biến chính, định hướng và các vấn đề được quan tâm tại thời điểm công bố.`,
     conclusion:
@@ -140,7 +140,7 @@ const detailCopy: Record<
   },
   zh: {
     author: "编辑部",
-    categoryName: "时政要闻",
+    categoryName: "市场",
     context: (title) =>
       `文章《${title}》梳理了发布时的重要进展、工作方向和社会关注的重点内容。`,
     conclusion:

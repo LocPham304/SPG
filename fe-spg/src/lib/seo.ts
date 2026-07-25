@@ -86,17 +86,17 @@ const newsCategoryMetadata: Record<
 > = {
   "current-affairs": {
     vi: {
-      title: "Thời sự | Tin tức SPG",
+      title: "Thị Trường | Tin tức SPG",
       description:
-        "Cập nhật các thông tin thời sự, tin tức và hoạt động mới nhất từ SPG.",
+        "Cập nhật các thông tin thị trường, tin tức và hoạt động mới nhất từ SPG.",
     },
     en: {
-      title: "Current Affairs | SPG News",
-      description: "Latest current affairs, updates and activities from SPG.",
+      title: "Market | SPG News",
+      description: "Latest market news, updates and activities from SPG.",
     },
     zh: {
-      title: "时事 | SPG 新闻",
-      description: "获取 SPG 最新时事、新闻和活动信息。",
+      title: "市场 | SPG 新闻",
+      description: "获取 SPG 最新市场资讯、新闻和活动信息。",
     },
   },
   "group-news": {
@@ -115,17 +115,17 @@ const newsCategoryMetadata: Record<
   },
   "product-delivery": {
     vi: {
-      title: "Bàn giao sản phẩm | Tin tức SPG",
+      title: "Cảng thông minh | Tin tức SPG",
       description:
-        "Cập nhật thông tin về các hoạt động bàn giao sản phẩm của SPG.",
+        "Cập nhật thông tin về cảng thông minh và các giải pháp liên quan của SPG.",
     },
     en: {
-      title: "Product Delivery | SPG News",
-      description: "Updates on SPG product delivery activities.",
+      title: "Smart Port | SPG News",
+      description: "Updates on SPG smart port solutions and related activities.",
     },
     zh: {
-      title: "产品交付 | SPG 新闻",
-      description: "获取 SPG 产品交付活动的最新信息。",
+      title: "智慧港口 | SPG 新闻",
+      description: "获取 SPG 智慧港口解决方案及相关活动的最新信息。",
     },
   },
   notices: {
