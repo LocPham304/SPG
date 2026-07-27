@@ -52,10 +52,10 @@ export default async function HomePage({ params, searchParams }: HomePageProps) 
         firstLine={heroT("firstLine")}
         secondLine={heroT("secondLine")}
       />
+      <HomeAboutSection locale={locale} />
       <Suspense fallback={<NewsSkeleton label={newsT("loading")} />}>
         <HomeNewsSection locale={locale} qaState={qaState} />
       </Suspense>
-      <HomeAboutSection locale={locale} />
       <HomeBasesSection locale={locale} />
       <HomeSolutionsSection locale={locale} />
       <HomeTechnologySection locale={locale} />
