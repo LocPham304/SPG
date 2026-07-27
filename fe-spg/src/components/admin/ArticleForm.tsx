@@ -165,17 +165,43 @@ function toDateTimeLocalValue(value: string | null) {
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return "";
 
-  const localDate = new Date(
-    date.getTime() - date.getTimezoneOffset() * 60 * 1000,
-  );
-  return localDate.toISOString().slice(0, 16);
+  const pad = (part: number) => String(part).padStart(2, "0");
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(
+    date.getDate(),
+  )}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
 }
 
 function toPublishedAtIso(value: string) {
   if (!value) return undefined;
 
-  const date = new Date(value);
-  return Number.isNaN(date.getTime()) ? undefined : date.toISOString();
+  const match =
+    /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})(?::(\d{2}))?$/.exec(
+      value,
+    );
+  if (!match) return undefined;
+
+  const [, year, month, day, hour, minute, second = "0"] = match;
+  const date = new Date(
+    Number(year),
+    Number(month) - 1,
+    Number(day),
+    Number(hour),
+    Number(minute),
+    Number(second),
+  );
+  if (
+    Number.isNaN(date.getTime()) ||
+    date.getFullYear() !== Number(year) ||
+    date.getMonth() !== Number(month) - 1 ||
+    date.getDate() !== Number(day) ||
+    date.getHours() !== Number(hour) ||
+    date.getMinutes() !== Number(minute) ||
+    date.getSeconds() !== Number(second)
+  ) {
+    return undefined;
+  }
+
+  return date.toISOString();
 }
 
 function getCategoryName(category: NewsCategory) {
@@ -405,7 +431,7 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
     ].some((field) => field.trim().length > 0);
   }
 
-  function validateForm() {
+  function validateForm(publishedAtValue = publishedAt) {
     const nextCommonErrors: CommonFormErrors = {};
     const nextTranslationErrors = createEmptyTranslationErrors();
     let firstInvalidLocale: LocaleCode | null = null;
@@ -413,7 +439,7 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
     if (!categoryId) {
       nextCommonErrors.categoryId = "Vui lòng chọn danh mục.";
     }
-    if (publishedAt && !toPublishedAtIso(publishedAt)) {
+    if (publishedAtValue && !toPublishedAtIso(publishedAtValue)) {
       nextCommonErrors.publishedAt = "Ngày đăng không hợp lệ.";
     }
     if (sourceUrl.trim()) {
@@ -568,12 +594,20 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    const submittedPublishedAt = new FormData(event.currentTarget).get(
+      "publishedAt",
+    );
+    const nextPublishedAt =
+      typeof submittedPublishedAt === "string"
+        ? submittedPublishedAt.trim()
+        : publishedAt;
     const submitter = (event.nativeEvent as SubmitEvent)
       .submitter as HTMLButtonElement | null;
     const requestedStatus =
       submitter?.value === "published" ? "published" : "draft";
-    if (!validateForm()) return;
-    const publishedAtIso = toPublishedAtIso(publishedAt);
+    if (!validateForm(nextPublishedAt)) return;
+    setPublishedAt(nextPublishedAt);
+    const publishedAtIso = toPublishedAtIso(nextPublishedAt);
     setIsSaving(true);
     setApiError("");
     setTranslationNotice(null);
@@ -857,6 +891,7 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
                     <input
                       className={inputClassName}
                       disabled={isSaving}
+                      name="publishedAt"
                       onChange={(event) => {
                         setPublishedAt(event.target.value);
                         setCommonErrors((current) => ({

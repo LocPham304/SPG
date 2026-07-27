@@ -5,7 +5,7 @@
   align-items: end;
   padding-inline-start: var(--container-gutter);
   background: var(--color-surface);
-  margin-top: 120px;
+  margin-top: 50px;
 }
 
 .content {
@@ -177,13 +177,17 @@
 }
 
 .videoThumbnail {
-  background: #d8eaf4
-    url("/images/public/files/image/index_img2.jpg") center / cover no-repeat;
+  background: #d8eaf4 url("/images/public/files/image/index_img2.jpg") center /
+    cover no-repeat;
   transition: transform 420ms ease;
 }
 
 .videoShade {
-  background: linear-gradient(180deg, rgba(4, 34, 54, 0.02), rgba(4, 34, 54, 0.18));
+  background: linear-gradient(
+    180deg,
+    rgba(4, 34, 54, 0.02),
+    rgba(4, 34, 54, 0.18)
+  );
 }
 
 .videoPlayIcon {

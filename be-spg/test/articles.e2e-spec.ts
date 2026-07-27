@@ -745,6 +745,7 @@ describe('Articles API (e2e)', () => {
   });
 
   it('allows the author to change the publication date of a published article', async () => {
+    const initialPublishedAt = '2025-11-10T05:08:00.000Z';
     const publishedAt = '2024-03-27T02:30:00.000Z';
     const createResponse = await request(app.getHttpServer())
       .post('/api/v1/admin/articles')
@@ -756,10 +757,16 @@ describe('Articles API (e2e)', () => {
         summary: 'Tóm tắt bài viết kiểm tra ngày đăng.',
         contentHtml: '<p>Nội dung bài viết kiểm tra ngày đăng.</p>',
         status: ArticleStatus.Published,
+        publishedAt: initialPublishedAt,
       })
       .expect(201);
     const articleId = asRecord(createResponse.body as unknown).id as number;
     articleIds.push(articleId);
+    expect(
+      new Date(
+        asRecord(createResponse.body as unknown).publishedAt as string,
+      ).toISOString(),
+    ).toBe(initialPublishedAt);
 
     const response = await request(app.getHttpServer())
       .patch(`/api/v1/admin/articles/${articleId}`)
