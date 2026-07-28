@@ -32,6 +32,8 @@ import {
   type PublicNewsItem,
 } from "@/types/public-news";
 
+export const dynamic = "force-dynamic";
+
 type PageProps = {
   params: Promise<{
     category: string;

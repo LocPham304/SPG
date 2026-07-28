@@ -5,7 +5,7 @@ import { defaultLocale, isAppLocale } from "@/i18n/routing";
 import { getNewsCategoryMetadata } from "@/lib/seo";
 import { parsePublicNewsPage } from "@/services/public-news.service";
 
-export const revalidate = 300;
+export const dynamic = "force-dynamic";
 
 type PageProps = {
   params: Promise<{ locale: string }>;

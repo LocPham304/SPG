@@ -10,7 +10,6 @@ import type {
 } from "@/types/public-news";
 
 export const PUBLIC_NEWS_PAGE_SIZE = 6;
-export const PUBLIC_NEWS_REVALIDATE_SECONDS = 300;
 
 const apiBaseUrl = (
   process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001/api/v1"
@@ -55,8 +54,8 @@ async function requestPublicNews<T>(
   const response = await fetch(
     `${apiBaseUrl}${path}?${query.toString()}`,
     {
+      cache: "no-store",
       headers: { Accept: "application/json" },
-      next: { revalidate: PUBLIC_NEWS_REVALIDATE_SECONDS },
     },
   );
 

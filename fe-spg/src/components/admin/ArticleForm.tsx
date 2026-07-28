@@ -30,6 +30,7 @@ import type {
 } from "@/types/articles";
 import {
   FIXED_CATEGORY_CODES,
+  getAdminCategoryName,
   type LocaleCode,
   type NewsCategory,
 } from "@/types/categories";
@@ -202,15 +203,6 @@ function toPublishedAtIso(value: string) {
   }
 
   return date.toISOString();
-}
-
-function getCategoryName(category: NewsCategory) {
-  return (
-    category.translations.find((translation) => translation.locale === "vi")
-      ?.name ??
-    category.translations[0]?.name ??
-    category.code
-  );
 }
 
 function normalizeSlug(value: string) {
@@ -777,7 +769,7 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
                       <option value="">Chọn danh mục</option>
                       {categories.map((category) => (
                         <option key={category.id} value={category.id}>
-                          {getCategoryName(category)}
+                          {getAdminCategoryName(category)}
                         </option>
                       ))}
                     </select>

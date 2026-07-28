@@ -16,6 +16,8 @@ import { HomeTechnologySection } from "@/components/home/HomeTechnology";
 import { isAppLocale } from "@/i18n/routing";
 import { getHomePageMetadata } from "@/lib/seo";
 
+export const dynamic = "force-dynamic";
+
 type HomePageProps = {
   params: Promise<{ locale: string }>;
   searchParams?: Promise<{ newsState?: string }>;

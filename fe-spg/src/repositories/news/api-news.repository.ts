@@ -125,8 +125,8 @@ export class ApiNewsRepository implements NewsRepository {
     const url = new URL(path, this.apiBaseUrl);
     url.search = params.toString();
     const response = await fetch(url, {
+      cache: "no-store",
       headers: { Accept: "application/json" },
-      next: { revalidate: 60 },
     });
 
     if (!response.ok) {

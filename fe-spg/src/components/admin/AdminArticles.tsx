@@ -35,6 +35,8 @@ import type {
 } from "@/types/articles";
 import {
   FIXED_CATEGORY_CODES,
+  getAdminCategoryName,
+  getFixedCategoryName,
   type NewsCategory,
 } from "@/types/categories";
 
@@ -64,15 +66,6 @@ function formatDate(value: string | null) {
   return Number.isNaN(date.getTime())
     ? "Không xác định"
     : dateFormatter.format(date);
-}
-
-function getCategoryName(category: NewsCategory) {
-  return (
-    category.translations.find((translation) => translation.locale === "vi")
-      ?.name ??
-    category.translations[0]?.name ??
-    category.code
-  );
 }
 
 function ArticlesLoading() {
@@ -348,7 +341,7 @@ export function AdminArticles() {
               <option value="">Tất cả danh mục</option>
               {categories.map((category) => (
                 <option key={category.id} value={category.id}>
-                  {getCategoryName(category)}
+                  {getAdminCategoryName(category)}
                 </option>
               ))}
             </select>
@@ -440,9 +433,11 @@ export function AdminArticles() {
                         ) : null}
                       </td>
                       <td className="px-4 py-4 text-slate-600">
-                        {article.category?.name ??
-                          article.category?.code ??
-                          "—"}
+                        {article.category
+                          ? (getFixedCategoryName(article.category.code) ??
+                            article.category.name ??
+                            article.category.code)
+                          : "—"}
                       </td>
                       <td className="px-4 py-4 text-slate-600">
                         {article.createdBy.fullName}

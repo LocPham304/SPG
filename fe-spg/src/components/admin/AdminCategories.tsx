@@ -23,7 +23,10 @@ import type {
   FixedCategoryCode,
   NewsCategory,
 } from "@/types/categories";
-import { FIXED_CATEGORY_CODES } from "@/types/categories";
+import {
+  FIXED_CATEGORY_CODES,
+  getAdminCategoryName,
+} from "@/types/categories";
 
 import { AccessDenied } from "./AccessDenied";
 import { useAdminConfirm } from "./AdminConfirmDialog";
@@ -48,14 +51,6 @@ function formatDate(value: string) {
   return Number.isNaN(date.getTime())
     ? "Không xác định"
     : dateFormatter.format(date);
-}
-
-function getVietnameseName(category: NewsCategory) {
-  return (
-    category.translations.find((item) => item.locale === "vi")?.name ??
-    category.translations[0]?.name ??
-    category.code
-  );
 }
 
 function CategoriesLoading() {
@@ -366,7 +361,7 @@ export function AdminCategories() {
                       key={category.id}
                     >
                       <td className="px-4 py-4 font-semibold text-slate-800">
-                        {getVietnameseName(category)}
+                        {getAdminCategoryName(category)}
                       </td>
                       <td className="px-4 py-4 text-slate-600">
                         {category.code}
@@ -398,7 +393,7 @@ export function AdminCategories() {
                         <td className="px-4 py-4">
                           <div className="flex justify-end gap-1">
                             <Link
-                              aria-label={`Sửa ${getVietnameseName(category)}`}
+                              aria-label={`Sửa ${getAdminCategoryName(category)}`}
                               className="flex size-9 items-center justify-center rounded-lg text-slate-500 hover:bg-blue-50 hover:text-[#1d2088]"
                               href={`/admin/categories/${category.id}/edit`}
                               title="Sửa danh mục"
@@ -408,8 +403,8 @@ export function AdminCategories() {
                             <button
                               aria-label={
                                 category.isActive
-                                  ? `Ẩn ${getVietnameseName(category)}`
-                                  : `Bật ${getVietnameseName(category)}`
+                                  ? `Ẩn ${getAdminCategoryName(category)}`
+                                  : `Bật ${getAdminCategoryName(category)}`
                               }
                               className="flex size-9 items-center justify-center rounded-lg text-slate-500 hover:bg-amber-50 hover:text-amber-700 disabled:opacity-40"
                               disabled={pendingAction !== null}
