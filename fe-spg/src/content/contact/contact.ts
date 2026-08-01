@@ -79,7 +79,7 @@ const content: Record<AppLocale, ContactContent> = {
       postcode: "Postcode",
     },
     primary: {
-      company: "Shandong Port Equipment Group Co., Ltd",
+      company: "Representative Office in Vietnam",
       address:
         "1B đường D13, Khu Biệt Thự Tân Cảng, Phường Thạnh Mỹ Tây, TP Hồ Chí Minh",
       phone: "+84772066685",
@@ -152,7 +152,7 @@ const content: Record<AppLocale, ContactContent> = {
       postcode: "Mã bưu chính",
     },
     primary: {
-      company: "Tập đoàn Thiết bị Cảng Sealand Sơn Đông",
+      company: "Văn phòng đại diện tại Việt Nam",
       address:
         "1B đường D13, Khu Biệt Thự Tân Cảng, Phường Thạnh Mỹ Tây, TP Hồ Chí Minh",
       phone: "+84772066685",
@@ -223,7 +223,7 @@ const content: Record<AppLocale, ContactContent> = {
       postcode: "邮编",
     },
     primary: {
-      company: "山东陆海装备集团有限公司",
+      company: "越南代表处",
       address:
         "1B đường D13, Khu Biệt Thự Tân Cảng, Phường Thạnh Mỹ Tây, TP Hồ Chí Minh",
       phone: "+84772066685",

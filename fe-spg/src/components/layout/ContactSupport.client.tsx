@@ -8,13 +8,16 @@ import styles from "./SiteLayout.module.scss";
 type ContactSupportProps = {
   phoneLabel: string;
   supportLabel: string;
+  zaloLabel: string;
 };
 
 const supportPhone = "+84772066685";
+const supportZaloUrl = "https://zalo.me/0772066685";
 
 export function ContactSupport({
   phoneLabel,
   supportLabel,
+  zaloLabel,
 }: ContactSupportProps) {
   const [isOpen, setIsOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
@@ -49,6 +52,19 @@ export function ContactSupport({
         data-open={isOpen}
         id="contact-support-menu"
       >
+        <a
+          href={supportZaloUrl}
+          onClick={() => setIsOpen(false)}
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <span className={styles.contactSupportItemIcon}>
+            <MessageCircleMore aria-hidden="true" size={18} strokeWidth={1.8} />
+          </span>
+          <span>
+            <strong>{zaloLabel}</strong>
+          </span>
+        </a>
         <a href={`tel:${supportPhone}`} onClick={() => setIsOpen(false)}>
           <span className={styles.contactSupportItemIcon}>
             <Phone aria-hidden="true" size={18} strokeWidth={1.8} />
