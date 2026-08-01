@@ -15,15 +15,17 @@
 
 .list {
   display: grid;
-  gap: clamp(28px, 2.35vw, 45px);
+  gap: clamp(24px, 1.82vw, 35px);
   list-style: none;
 }
 
 .card {
-  display: flex;
-  min-height: clamp(160px, 10.42vw, 200px);
+  display: grid;
+  min-height: clamp(190px, 11.46vw, 220px);
   align-items: center;
-  padding-right: clamp(34px, 3.39vw, 65px);
+  grid-template-columns: clamp(260px, 17.19vw, 330px) minmax(0, 1fr) auto;
+  padding-right: clamp(28px, 2.6vw, 50px);
+  overflow: hidden;
   background: #fff;
   box-shadow: 0 0 20px rgb(18 73 106 / 10%);
   transition:
@@ -39,42 +41,105 @@
   transform: translateY(-5px);
 }
 
+.card:focus-visible {
+  outline: 3px solid rgb(20 123 193 / 45%);
+  outline-offset: 3px;
+}
+
+.media {
+  position: relative;
+  align-self: stretch;
+  min-height: clamp(190px, 11.46vw, 220px);
+  overflow: hidden;
+  background: #e9f3f9;
+}
+
+.thumbnailFrame {
+  position: absolute !important;
+  inset: 0;
+  height: 100%;
+  aspect-ratio: auto;
+}
+
+.thumbnail {
+  object-fit: cover;
+  transition: transform 420ms ease !important;
+}
+
+.imageFallback {
+  position: absolute;
+  inset: 0;
+  display: block;
+  background:
+    linear-gradient(135deg, rgb(20 123 193 / 18%), rgb(42 66 130 / 7%)),
+    linear-gradient(160deg, #eff7fb 0%, #dcecf5 100%);
+}
+
+.imageFallback::after {
+  position: absolute;
+  right: -28px;
+  bottom: -52px;
+  width: 190px;
+  height: 120px;
+  border: 1px solid rgb(20 123 193 / 16%);
+  border-radius: 50%;
+  content: "";
+  transform: rotate(-12deg);
+}
+
+.card:hover .thumbnail,
+.card:focus-visible .thumbnail {
+  transform: scale(1.045);
+}
+
 .date {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  z-index: 2;
   display: flex;
-  width: clamp(160px, 10.42vw, 200px);
-  min-height: clamp(160px, 10.42vw, 200px);
+  min-width: 76px;
   align-items: center;
   justify-content: center;
-  flex: 0 0 auto;
   flex-direction: column;
-  margin-right: clamp(40px, 3.13vw, 60px);
-  background: linear-gradient(90deg, #147bc1, #2a4282);
+  padding: 9px 12px 10px;
+  background: linear-gradient(135deg, #d9af5b, #98701d);
+  box-shadow: 0 8px 20px rgb(37 44 51 / 20%);
   color: #fff;
-  font-size: clamp(24px, 1.67vw, 32px);
-  font-style: italic;
+  font-size: 15px;
+  font-weight: 600;
   font-variant-numeric: tabular-nums;
-  line-height: 1;
+  line-height: 1.15;
 }
 
 .date span {
-  margin-bottom: clamp(14px, 1.04vw, 20px);
-  font-size: clamp(52px, 3.65vw, 70px);
-  line-height: 0.8;
+  margin-bottom: 3px;
+  font-size: 27px;
+  font-weight: 700;
+  line-height: 1;
 }
 
 .copy {
   display: grid;
   min-width: 0;
-  flex: 1 1 auto;
   gap: clamp(14px, 1.04vw, 20px);
+  padding: clamp(24px, 2.08vw, 40px) clamp(26px, 2.6vw, 50px);
 }
 
 .title {
+  display: -webkit-box;
   overflow: hidden;
   font-size: clamp(18px, 1.25vw, 24px);
   font-weight: 700;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  line-height: 1.35;
+  transition: color 220ms ease;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.card:hover .title,
+.card:focus-visible .title {
+  color: #147bc1;
 }
 
 .description {
@@ -91,7 +156,6 @@
   align-items: center;
   flex: 0 0 auto;
   gap: 14px;
-  margin-left: clamp(32px, 3.39vw, 65px);
   color: #147bc1;
   font-size: clamp(14px, 0.94vw, 18px);
   font-weight: 600;
@@ -120,34 +184,41 @@
   }
 
   .card {
-    min-height: 108px;
-    padding-right: 16px;
-    overflow: hidden;
+    min-height: 142px;
+    grid-template-columns: clamp(122px, 34vw, 170px) minmax(0, 1fr);
+    padding-right: 0;
+  }
+
+  .media {
+    min-height: 142px;
   }
 
   .date {
-    width: 108px;
-    min-height: 108px;
-    margin-right: 22px;
-    font-size: 19px;
+    bottom: 10px;
+    left: 10px;
+    min-width: 58px;
+    padding: 6px 8px 7px;
+    font-size: 11px;
   }
 
   .date span {
-    margin-bottom: 13px;
-    font-size: 42px;
+    margin-bottom: 2px;
+    font-size: 21px;
   }
 
   .copy {
-    gap: 8px;
+    gap: 7px;
+    padding: 16px;
   }
 
   .title {
     font-size: 17px;
+    line-height: 1.35;
   }
 
   .description {
     font-size: 14px;
-    line-height: 1.25;
+    line-height: 1.4;
   }
 
   .readMore {
@@ -156,22 +227,25 @@
 }
 
 @media (width <= 420px) {
-  .date {
-    width: 92px;
-    min-height: 104px;
-    margin-right: 16px;
-    font-size: 16px;
+  .card {
+    min-height: 132px;
+    grid-template-columns: 112px minmax(0, 1fr);
   }
 
-  .date span {
-    font-size: 36px;
+  .media {
+    min-height: 132px;
+  }
+
+  .copy {
+    padding: 13px;
   }
 
   .title {
-    font-size: 16px;
+    font-size: 15px;
   }
 
   .description {
-    font-size: 13px;
+    font-size: 12px;
+    -webkit-line-clamp: 3;
   }
 }

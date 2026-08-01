@@ -2,6 +2,7 @@ import type { AppLocale } from "@/i18n/routing";
 
 export type ContactDetails = {
   address: string;
+  businessPhone?: string;
   company: string;
   fax?: string;
   mailbox?: string;
@@ -35,8 +36,17 @@ export type ContactContent = {
   marketingDescription: string;
   marketingTitle: string;
   pageTitle: string;
+  parent: ContactDetails;
   primary: ContactDetails;
   network: readonly ContactDetails[];
+};
+
+const parentCompany: ContactDetails = {
+  company: "Shandong Port Equipment Group Co., Ltd",
+  address: "No. 877, Lijiang West Road, Huangdao District, Qingdao City",
+  phone: "0532-82983063",
+  mailbox: "zbjtl@spe.cn",
+  businessPhone: "0532-82985191",
 };
 
 const content: Record<AppLocale, ContactContent> = {
@@ -75,6 +85,7 @@ const content: Record<AppLocale, ContactContent> = {
       phone: "+84772066685",
       mailbox: "neocegc@spe.cn",
     },
+    parent: parentCompany,
     network: [
       {
         company: "Rizhao Gangda Shipbuilding Heavy Industry Co., Ltd",
@@ -147,6 +158,7 @@ const content: Record<AppLocale, ContactContent> = {
       phone: "+84772066685",
       mailbox: "neocegc@spe.cn",
     },
+    parent: parentCompany,
     network: [
       {
         company: "Công ty TNHH Công nghiệp nặng Đóng tàu Gangda Nhật Chiếu",
@@ -217,6 +229,7 @@ const content: Record<AppLocale, ContactContent> = {
       phone: "+84772066685",
       mailbox: "neocegc@spe.cn",
     },
+    parent: parentCompany,
     network: [
       {
         company: "日照港达船舶重工有限公司",

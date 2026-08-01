@@ -349,6 +349,12 @@
   }
 }
 
+@media (1600px <= width <= 2250px) {
+  .card {
+    min-height: 360px;
+  }
+}
+
 @media (width <= 767px) {
   .section {
     padding-block: 56px 76px;

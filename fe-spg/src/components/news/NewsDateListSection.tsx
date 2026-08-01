@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 
 import { Container } from "@/components/common/Container";
 import { LocalizedLink } from "@/components/common/LocalizedLink";
+import { ImageWithSkeleton } from "@/components/news/ImageWithSkeleton";
 import { ScrollReveal } from "@/components/news/ScrollReveal";
 import { getStaggerDelay } from "@/components/news/animation";
 import type { AppLocale } from "@/i18n/routing";
@@ -22,6 +23,31 @@ type NewsDateListSectionProps = {
   readMoreLabel: string;
   title: string;
 };
+
+function NewsThumbnail({
+  article,
+  priority,
+}: {
+  article: PublicNewsItem;
+  priority: boolean;
+}) {
+  if (!article.thumbnail) {
+    return <span aria-hidden="true" className={styles.imageFallback} />;
+  }
+
+  return (
+    <ImageWithSkeleton
+      alt={article.thumbnail.altText ?? article.title}
+      aspectRatio="auto"
+      className={styles.thumbnailFrame}
+      fill
+      imageClassName={styles.thumbnail}
+      priority={priority}
+      sizes="(max-width: 480px) 38vw, (max-width: 767px) 34vw, (max-width: 1199px) 28vw, 330px"
+      src={article.thumbnail.publicUrl}
+    />
+  );
+}
 
 export function NewsDateListSection({
   articles,
@@ -50,13 +76,19 @@ export function NewsDateListSection({
                     article.slug,
                   )}
                 >
-                  <time
-                    className={styles.date}
-                    dateTime={article.publishedAt}
-                  >
-                    <span>{date.day}</span>
-                    {date.yearMonth}
-                  </time>
+                  <div className={styles.media}>
+                    <NewsThumbnail
+                      article={article}
+                      priority={index === 0}
+                    />
+                    <time
+                      className={styles.date}
+                      dateTime={article.publishedAt}
+                    >
+                      <span>{date.day}</span>
+                      {date.yearMonth}
+                    </time>
+                  </div>
                   <span className={styles.copy}>
                     <strong className={styles.title}>{article.title}</strong>
                     <span className={styles.description}>

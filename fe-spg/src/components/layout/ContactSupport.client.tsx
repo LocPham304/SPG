@@ -1,6 +1,6 @@
 "use client";
 
-import { MessageCircle, MessageCircleMore, Phone } from "lucide-react";
+import { MessageCircleMore, Phone } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 import styles from "./SiteLayout.module.scss";
@@ -8,16 +8,13 @@ import styles from "./SiteLayout.module.scss";
 type ContactSupportProps = {
   phoneLabel: string;
   supportLabel: string;
-  zaloLabel: string;
 };
 
 const supportPhone = "+84772066685";
-const zaloUrl = "https://zalo.me/0772066685";
 
 export function ContactSupport({
   phoneLabel,
   supportLabel,
-  zaloLabel,
 }: ContactSupportProps) {
   const [isOpen, setIsOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
@@ -59,17 +56,6 @@ export function ContactSupport({
           <span>
             <strong>{phoneLabel}</strong>
           </span>
-        </a>
-        <a
-          href={zaloUrl}
-          onClick={() => setIsOpen(false)}
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          <span className={styles.contactSupportItemIcon}>
-            <MessageCircle aria-hidden="true" size={18} strokeWidth={1.8} />
-          </span>
-          <strong>{zaloLabel}</strong>
         </a>
       </div>
 

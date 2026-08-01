@@ -40,6 +40,11 @@
   padding: clamp(42px, 3.13vw, 60px);
 }
 
+.primaryCards {
+  display: grid;
+  gap: clamp(24px, 1.56vw, 30px);
+}
+
 .primaryLogoWatermark {
   position: absolute;
   bottom: -38px;

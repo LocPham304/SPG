@@ -15,7 +15,13 @@ import styles from "./ContactSection.module.scss";
 
 type ContactSectionProps = Pick<
   ContactContent,
-  "form" | "labels" | "marketingTitle" | "network" | "pageTitle" | "primary"
+  | "form"
+  | "labels"
+  | "marketingTitle"
+  | "network"
+  | "pageTitle"
+  | "parent"
+  | "primary"
 > & {
   locale: AppLocale;
 };
@@ -92,6 +98,66 @@ function NetworkCard({
   );
 }
 
+function PrimaryContactCard({
+  contact,
+  labels,
+  parent = false,
+  priority = false,
+}: {
+  contact: ContactDetails;
+  labels: ContactContent["labels"];
+  parent?: boolean;
+  priority?: boolean;
+}) {
+  const details: DetailItem[] = parent
+    ? [
+        { label: labels.address, value: contact.address },
+        { label: labels.phone, type: "phone", value: contact.phone },
+        { label: labels.mailbox, type: "email", value: contact.mailbox },
+        {
+          label: labels.businessPhone,
+          type: "phone",
+          value: contact.businessPhone,
+        },
+      ]
+    : [
+        { label: labels.address, value: contact.address },
+        {
+          label: labels.businessPhone,
+          type: "phone",
+          value: contact.phone,
+        },
+        { label: labels.mailbox, type: "email", value: contact.mailbox },
+      ];
+
+  return (
+    <article className={styles.primaryCard}>
+      <Image
+        alt=""
+        aria-hidden="true"
+        className={styles.primaryLogoWatermark}
+        height={317}
+        src="/images/public/files/image/bg_logo.png"
+        width={402}
+      />
+      <div className={styles.primaryContent}>
+        <h3>{contact.company}</h3>
+        <DetailsList items={details} />
+      </div>
+      <ImageWithSkeleton
+        alt=""
+        className={styles.contactImageFrame}
+        fill
+        imageClassName={styles.contactImage}
+        priority={priority}
+        sizes="(max-width: 767px) 85vw, 47vw"
+        src="/images/public/files/image/contact_img1.png"
+        transparent
+      />
+    </article>
+  );
+}
+
 export function ContactSection({
   form,
   labels,
@@ -99,6 +165,7 @@ export function ContactSection({
   marketingTitle,
   network,
   pageTitle,
+  parent,
   primary,
 }: ContactSectionProps) {
   return (
@@ -110,46 +177,19 @@ export function ContactSection({
               {pageTitle}
             </h2>
           </ScrollReveal>
-          <ScrollReveal animation="animate__fadeInUp" threshold={0.15}>
-            <article className={styles.primaryCard}>
-            <Image
-              alt=""
-              aria-hidden="true"
-              className={styles.primaryLogoWatermark}
-              height={317}
-              src="/images/public/files/image/bg_logo.png"
-              width={402}
-            />
-            <div className={styles.primaryContent}>
-              <h3>{primary.company}</h3>
-              <DetailsList
-                items={[
-                  { label: labels.address, value: primary.address },
-                  {
-                    label: labels.businessPhone,
-                    type: "phone",
-                    value: primary.phone,
-                  },
-                  {
-                    label: labels.mailbox,
-                    type: "email",
-                    value: primary.mailbox,
-                  },
-                ]}
+          <div className={styles.primaryCards}>
+            <ScrollReveal animation="animate__fadeInUp" threshold={0.15}>
+              <PrimaryContactCard
+                contact={parent}
+                labels={labels}
+                parent
+                priority
               />
-            </div>
-            <ImageWithSkeleton
-              alt=""
-              className={styles.contactImageFrame}
-              fill
-              imageClassName={styles.contactImage}
-              priority
-              sizes="(max-width: 767px) 85vw, 47vw"
-              src="/images/public/files/image/contact_img1.png"
-              transparent
-            />
-            </article>
-          </ScrollReveal>
+            </ScrollReveal>
+            <ScrollReveal animation="animate__fadeInUp" threshold={0.15}>
+              <PrimaryContactCard contact={primary} labels={labels} />
+            </ScrollReveal>
+          </div>
         </section>
 
         <section aria-labelledby="inquiry-heading" className={styles.block}>

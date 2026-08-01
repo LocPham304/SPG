@@ -74,6 +74,7 @@ export function ContactPageView({
         marketingTitle={content.marketingTitle}
         network={content.network}
         pageTitle={content.pageTitle}
+        parent={content.parent}
         primary={content.primary}
       />
     </>

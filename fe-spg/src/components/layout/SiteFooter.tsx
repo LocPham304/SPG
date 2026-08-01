@@ -156,7 +156,6 @@ export async function SiteFooter() {
       <ContactSupport
         phoneLabel={t("supportPhone")}
         supportLabel={t("supportLabel")}
-        zaloLabel={t("supportZalo")}
       />
       <BackToTop label={t("backToTop")} />
     </footer>
