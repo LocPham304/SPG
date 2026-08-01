@@ -148,13 +148,16 @@
 
 .dateBadge {
   position: absolute;
-  top: 18px;
-  left: 18px;
+  top: 0;
+  bottom: auto;
+  left: 0;
+  z-index: 2;
   display: grid;
-  width: 70px;
-  height: 65px;
+  width: 80px;
+  height: 70px;
   align-content: center;
   padding: 7px 6px;
+  border-radius: 0 0 50px 0;
   background: #c2942c;
   color: #fff;
   line-height: 1;
@@ -526,10 +529,11 @@
   }
 
   .dateBadge {
-    top: 12px;
-    left: 12px;
-    width: 60px;
-    height: 56px;
+    top: 0;
+    bottom: auto;
+    left: 0;
+    width: 70px;
+    height: 70px;
     padding: 6px 5px;
   }
 

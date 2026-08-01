@@ -94,8 +94,8 @@
 
 .date {
   position: absolute;
-  bottom: 16px;
-  left: 16px;
+  bottom: 0;
+  left: 0;
   z-index: 2;
   display: flex;
   min-width: 76px;
@@ -103,6 +103,7 @@
   justify-content: center;
   flex-direction: column;
   padding: 9px 12px 10px;
+  border-radius: 0 50px 0 0;
   background: linear-gradient(135deg, #d9af5b, #98701d);
   box-shadow: 0 8px 20px rgb(37 44 51 / 20%);
   color: #fff;
@@ -167,57 +168,95 @@
   line-height: 1;
 }
 
+@media (width <= 1199px) {
+  .card {
+    grid-template-columns: clamp(220px, 27vw, 290px) minmax(0, 1fr) auto;
+    padding-right: 24px;
+  }
+
+  .copy {
+    padding: 26px 28px;
+  }
+
+  .date {
+    min-width: 68px;
+    padding: 8px 10px 9px;
+    font-size: 13px;
+  }
+
+  .date span {
+    font-size: 24px;
+  }
+
+  .readMore {
+    gap: 10px;
+    font-size: 14px;
+  }
+}
+
+@media (width <= 900px) {
+  .card {
+    grid-template-columns: clamp(200px, 29vw, 250px) minmax(0, 1fr);
+    padding-right: 0;
+  }
+
+  .readMore {
+    display: none;
+  }
+}
+
 @media (width <= 767px) {
   .section {
     min-height: 640px;
-    padding-block: 64px 100px;
+    padding-block: 54px 88px;
   }
 
   .heading {
-    margin-bottom: 44px;
-    font-size: 30px;
+    margin-bottom: 36px;
+    font-size: 28px;
     text-align: center;
   }
 
   .list {
-    gap: 24px;
+    gap: 20px;
   }
 
   .card {
-    min-height: 142px;
-    grid-template-columns: clamp(122px, 34vw, 170px) minmax(0, 1fr);
+    min-height: 132px;
+    grid-template-columns: clamp(116px, 32vw, 155px) minmax(0, 1fr);
     padding-right: 0;
   }
 
   .media {
-    min-height: 142px;
+    min-height: 132px;
   }
 
   .date {
-    bottom: 10px;
-    left: 10px;
-    min-width: 58px;
-    padding: 6px 8px 7px;
-    font-size: 11px;
+    bottom: 0;
+    left: 0;
+    min-width: 52px;
+    padding: 5px 7px 6px;
+    border-radius: 0 34px 0 0;
+    font-size: 9px;
   }
 
   .date span {
-    margin-bottom: 2px;
-    font-size: 21px;
+    margin-bottom: 1px;
+    font-size: 18px;
   }
 
   .copy {
-    gap: 7px;
-    padding: 16px;
+    gap: 6px;
+    padding: 14px;
   }
 
   .title {
-    font-size: 17px;
+    font-size: clamp(15px, 3.8vw, 17px);
     line-height: 1.35;
   }
 
   .description {
-    font-size: 14px;
+    font-size: clamp(12px, 3.15vw, 14px);
     line-height: 1.4;
   }
 
@@ -226,18 +265,18 @@
   }
 }
 
-@media (width <= 420px) {
+@media (width <= 480px) {
   .card {
-    min-height: 132px;
-    grid-template-columns: 112px minmax(0, 1fr);
+    min-height: 126px;
+    grid-template-columns: 108px minmax(0, 1fr);
   }
 
   .media {
-    min-height: 132px;
+    min-height: 126px;
   }
 
   .copy {
-    padding: 13px;
+    padding: 12px;
   }
 
   .title {
@@ -247,5 +286,39 @@
   .description {
     font-size: 12px;
     -webkit-line-clamp: 3;
+  }
+}
+
+@media (width <= 360px) {
+  .card {
+    min-height: 118px;
+    grid-template-columns: 98px minmax(0, 1fr);
+  }
+
+  .media {
+    min-height: 118px;
+  }
+
+  .date {
+    min-width: 48px;
+    padding: 4px 6px 5px;
+    font-size: 8px;
+  }
+
+  .date span {
+    font-size: 16px;
+  }
+
+  .copy {
+    padding: 10px;
+  }
+
+  .title {
+    font-size: 14px;
+  }
+
+  .description {
+    font-size: 11px;
+    -webkit-line-clamp: 2;
   }
 }
